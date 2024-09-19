@@ -139,7 +139,7 @@ const HealthPlansPage = () => {
                 </CardBody>
                 <Button
                   color="primary"
-                  className="absolute bottom-2 left-0 right-0 mx-5"
+                  className="absolute bottom-2 left-0 right-0 mx-5 text-white"
                 >
                   Subscribe Now
                 </Button>
