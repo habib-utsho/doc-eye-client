@@ -9,16 +9,16 @@ export const siteConfig = {
       href: "/",
     },
     {
+      label: "Specialty",
+      href: "/specialty",
+    },
+    {
       label: "Health Plans",
       href: "/health-plans",
     },
     {
       label: "Pricing",
       href: "/pricing",
-    },
-    {
-      label: "Blog",
-      href: "/blog",
     },
     {
       label: "About",

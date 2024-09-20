@@ -2,7 +2,7 @@ import React from "react";
 
 const SpecialtyErrorCard = () => {
   return (
-    <div className="h-8 w-8 rounded-md shadow-md bg-red-500">
+    <div className="h-[150px] w-full rounded-md shadow-md bg-red-500 flex items-center justify-center">
       Something went wrong!
     </div>
   );

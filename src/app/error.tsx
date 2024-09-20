@@ -2,10 +2,11 @@
 import { Button } from "@nextui-org/button";
 import Link from "next/link";
 import React from "react";
+import Container from "../components/ui/Container";
 
 const ErrorPage = ({ error, reset }: { error: Error; reset: () => void }) => {
   return (
-    <div className="h-[80vh] flex flex-col gap-1 items-center justify-center">
+    <Container className="h-[80vh] flex flex-col gap-1 items-center justify-center">
       <h2 className="font-semibold mb-2">
         {" "}
         {error?.message || "Something went wrong!"}
@@ -14,11 +15,11 @@ const ErrorPage = ({ error, reset }: { error: Error; reset: () => void }) => {
         <Link href={"/"}>
           <Button>Back to home</Button>
         </Link>
-        <Button color="primary" onClick={reset}>
+        <Button color="primary" onClick={reset} className="text-white">
           Try again
         </Button>
       </div>
-    </div>
+    </Container>
   );
 };
 

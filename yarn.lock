@@ -341,6 +341,15 @@
     "@nextui-org/system" "2.2.6"
     "@nextui-org/use-measure" "2.0.2"
 
+"@nextui-org/image@^2.0.32":
+  version "2.0.32"
+  resolved "https://registry.yarnpkg.com/@nextui-org/image/-/image-2.0.32.tgz#4011ca965f691a615fcc396aaf09542ebcc47927"
+  integrity sha512-JpE0O8qAeJpQA61ZnXNLH76to+dbx93PR5tTOxSvmTxtnuqVg4wl5ar/SBY3czibJPr0sj33k8Mv2EfULjoH7Q==
+  dependencies:
+    "@nextui-org/react-utils" "2.0.17"
+    "@nextui-org/shared-utils" "2.0.8"
+    "@nextui-org/use-image" "2.0.6"
+
 "@nextui-org/input@2.2.4":
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/@nextui-org/input/-/input-2.2.4.tgz#782de39f278ca78c3f8bf61f6088ac832ddd4d85"
@@ -475,6 +484,14 @@
   version "2.0.8"
   resolved "https://registry.yarnpkg.com/@nextui-org/shared-utils/-/shared-utils-2.0.8.tgz#6e6e71a067c273581839c2226fd9fb4e1e3a3410"
   integrity sha512-ZEtoMPXS+IjT8GvpJTS9IWDnT1JNCKV+NDqqgysAf1niJmOFLyJgl6dh/9n4ufcGf1GbSEQN+VhJasEw7ajYGQ==
+
+"@nextui-org/skeleton@^2.0.32":
+  version "2.0.32"
+  resolved "https://registry.yarnpkg.com/@nextui-org/skeleton/-/skeleton-2.0.32.tgz#3815157bd137e5dd4004db22af0c56c6b216d7da"
+  integrity sha512-dS0vuRrc4oWktW3wa/KFhcBNnV0oiDqKXP4BqRj7wgS01fOAqj3cJiqwUDLKO8GbEnxLkbqLBFcUoLgktpRszQ==
+  dependencies:
+    "@nextui-org/react-utils" "2.0.17"
+    "@nextui-org/shared-utils" "2.0.8"
 
 "@nextui-org/snippet@2.0.41":
   version "2.0.41"
@@ -648,6 +665,13 @@
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/@nextui-org/use-clipboard/-/use-clipboard-2.0.6.tgz#d421efb08b7b89f0b8ee585a3a617dd08283d50f"
   integrity sha512-UQbCoAX1vqEKYeMF8Xp2RdTqbDD8Or16+7W4f8OQc5+uaJeKaAL6LPITi5M5ipgruTvzM845XooHdiAStH322Q==
+
+"@nextui-org/use-image@2.0.6":
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/@nextui-org/use-image/-/use-image-2.0.6.tgz#7f835521f77633e19bcbb5d4dae033fd04c8a0b6"
+  integrity sha512-VelN9y3vzwIpPfubFMh00YRQ0f4+I5FElcAvAqoo0Kfb0K7sGrTo1lZNApHm6yBN2gJMMeccG9u7bZB+wcDGZQ==
+  dependencies:
+    "@nextui-org/use-safe-layout-effect" "2.0.6"
 
 "@nextui-org/use-is-mobile@2.0.9":
   version "2.0.9"

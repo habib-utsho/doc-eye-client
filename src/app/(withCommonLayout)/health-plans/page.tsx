@@ -129,7 +129,7 @@ const HealthPlansPage = () => {
                     {features?.map((feature, ind) => (
                       <li key={ind} className="flex items-center gap-2">
                         {" "}
-                        <span>
+                        <span className="text-primary">
                           <CheckIcon></CheckIcon>
                         </span>{" "}
                         {feature}
