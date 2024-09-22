@@ -1,8 +1,10 @@
+import { ErrorIcon } from "@/src/components/icons";
 import React from "react";
 
 const SpecialtyErrorCard = () => {
   return (
-    <div className="h-[150px] w-full rounded-md shadow-md bg-red-500 flex items-center justify-center">
+    <div className="h-[180px] w-full rounded-md shadow-md bg-red-50 text-red-500 flex items-center justify-center gap-2">
+      <ErrorIcon />
       Something went wrong!
     </div>
   );
