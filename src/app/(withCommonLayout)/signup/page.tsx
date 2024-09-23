@@ -28,42 +28,26 @@ const SignupPage = () => {
   } = useMutation({
     mutationKey: ["registerPatient"],
     mutationFn: async (payload: TPatient) => await registerPatient(payload),
-    onSuccess(data, variables, context) {
+    onSuccess(data) {
       if (data?.success) {
         toast.success(data?.message || "User registered successfully!");
       }
-      console.log(
-        data,
-        variables,
-        context,
-        "data, variables, context after mutate"
-      );
-      // router.push("/signin");
+      router.push("/signin");
     },
-    onError(error, variables, context) {
+    onError(error) {
       toast.error(error?.message || "Failed to register user!");
-      console.log(
-        error?.message,
-        variables,
-        context,
-        "error, variables, context after mutate"
-      );
     },
   });
 
   const onSubmit: SubmitHandler<TPatient> = async (payload: TPatient) => {
-    console.log(
-      { ...payload, dateOfBirth: new Date(payload?.dateOfBirth) },
-      "form payload iso"
-    );
     const updatedValues = {
       ...payload,
       dateOfBirth: new Date(payload?.dateOfBirth),
     };
 
     handleRegisterUser(updatedValues);
-    // console.log(res, "res after mutate");
   };
+
   const defaultValues = {
     name: "Habib Utsho",
     email: "utsho926@gmail.com",
@@ -74,8 +58,6 @@ const SignupPage = () => {
     bloodGroup: "AB-",
     password: "1234@@aA",
   };
-
-  console.log({ isPending, isSuccess, error, data });
 
   return (
     <div
@@ -142,7 +124,12 @@ const SignupPage = () => {
               <MyInp type="date" name="dateOfBirth" label="Date of Birth" />
             </div>
 
-            <Button type="submit" color="primary" className="text-white">
+            <Button
+              isLoading={isPending}
+              type="submit"
+              color="primary"
+              className="text-white"
+            >
               Signup
             </Button>
 

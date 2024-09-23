@@ -16,3 +16,9 @@ export type TPatient = {
   allergies?: string;
   isDeleted: boolean;
 };
+
+export type TSignin = {
+  email: string;
+  password: string;
+};
+

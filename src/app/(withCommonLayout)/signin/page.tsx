@@ -10,66 +10,44 @@ import { Button } from "@nextui-org/button";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authValidationSchema } from "@/src/schemas/auth.schema";
+import { useMutation } from "@tanstack/react-query";
+import { TSignin } from "@/src/types/user";
+import { signinUser } from "@/src/services/authService";
+import { toast } from "sonner";
 
 // Need to change password
 const SigninPage = () => {
   const [showPass, setShowPass] = useState(false);
   // const { user, authLoading, setAuthLoading, profileControl, setProfileControl } = useAuth()
   const router = useRouter();
-  // const axiosInstance = useAxiosInstance()
-  // const cookies = useCookies()
 
-  // if (authLoading) {
-  //     return <div className='my-h-screen flex items-center justify-center bg-slate-100'><MyLoading /></div>
-  // } else if (user) {
-  //     router.push('/')
-  // }
+  const {
+    mutate: handleSignin,
+    isPending,
+    isSuccess,
+    data,
+    error,
+  } = useMutation({
+    mutationKey: ["signinUser"],
+    mutationFn: async (payload: TSignin) => await signinUser(payload),
+    onSuccess(data) {
+      if (data?.success) {
+        toast.success(data?.message || "User signin successfully!");
+      }
+      router.push("/");
+    },
+    onError(error) {
+      toast.error(error?.message || "Failed to signin user!");
+    },
+  });
 
-  // const onSubmit = form => {
-  //     // Using email or phone as username to signin
-  //     const { username, password } = form
-  //     axiosInstance.post('/signin', { username, password }).then(res => {
-  //         setAuthLoading(false)
+  const onSubmit: SubmitHandler<TSignin> = (payload: TSignin) => {
+    handleSignin(payload);
+  };
 
-  //         cookies.remove('docEyeAccessToken')
-  //         cookies.set('docEyeAccessToken', res?.data?.token);
-
-  //         toast.success('User signin successfully!', {
-  //             position: "bottom-right",
-  //             autoClose: 3000,
-  //             hideProgressBar: false,
-  //             closeOnClick: true,
-  //             pauseOnHover: true,
-  //             draggable: true,
-  //             progress: undefined,
-  //             theme: "light",
-  //         });
-
-  //         setProfileControl(!profileControl)
-  //         router.push('/')
-  //         reset()
-
-  //     }).catch(e => {
-  //         setAuthLoading(false)
-
-  //         console.log(e?.response?.data?.errors);
-
-  //         if (e?.response?.data?.errors?.common?.msg) {
-  //             toast.error(e?.response?.data?.errors?.common?.msg, {
-  //                 position: "bottom-right",
-  //                 autoClose: 3000,
-  //                 hideProgressBar: false,
-  //                 closeOnClick: true,
-  //                 pauseOnHover: true,
-  //                 draggable: true,
-  //                 progress: undefined,
-  //                 theme: "light",
-  //             });
-  //         }
-  //     })
-  // };
-  const onSubmit: SubmitHandler<FieldValues> = (form: any) => {
-    console.log(form, "form");
+  const defaultValues = {
+    email: "utsho926@gmail.com",
+    password: "1234@@aA",
   };
 
   return (
@@ -79,10 +57,10 @@ const SigninPage = () => {
     >
       <DEForm
         onSubmit={onSubmit}
+        defaultValues={defaultValues}
         resolver={zodResolver(authValidationSchema.signinValidationSchema)}
       >
         <div className="shadow w-5/6 md:w-8/12 xl:w-7/12 mx-auto block xl:flex flex-row my-5 md:my-32">
-          {/* signin form left */}
           <div className="w-full xl:w-3/6 bg-slate-50 px-8 py-14 rounded-l">
             <div className="mb-8 space-y-1">
               <h2 className="text-primary font-semibold">Hello and welcome </h2>
@@ -94,9 +72,13 @@ const SigninPage = () => {
             <div className="space-y-4">
               <MyInp type="email" name="email" label="Email" />
               <MyInp type="password" name="password" label="Password" />
-              <div></div>
 
-              <Button type="submit" color="primary" className="text-white">
+              <Button
+                isLoading={isPending}
+                type="submit"
+                color="primary"
+                className="text-white"
+              >
                 Signin
               </Button>
 

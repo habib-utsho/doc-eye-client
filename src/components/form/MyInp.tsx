@@ -1,8 +1,10 @@
 "use client";
 import { Input } from "@nextui-org/input";
 import { Select, SelectItem } from "@nextui-org/select";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
+import { EyeFilledIcon, EyeSlashFilledIcon } from "../icons";
+import { set } from "zod";
 type TMyInp = {
   name: string;
   type: string;
@@ -39,9 +41,38 @@ const MyInp = ({
     formState: { errors },
   } = useFormContext();
 
+  const [isVisible, setIsVisible] = React.useState(false);
+
   return (
     <>
-      {type === "select" ? (
+      {type === "password" ? (
+        <Input
+          size={size}
+          {...register(name)}
+          defaultValue={defaultValue}
+          radius={radius}
+          color={color}
+          label={label}
+          placeholder={placeholder}
+          isInvalid={!!errors[name]}
+          errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
+          type={isVisible ? "text" : "password"}
+          endContent={
+            <button
+              className="focus:outline-none"
+              type="button"
+              onClick={() => setIsVisible(!isVisible)}
+              aria-label="toggle password visibility"
+            >
+              {isVisible ? (
+                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+              ) : (
+                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+              )}
+            </button>
+          }
+        />
+      ) : type === "select" ? (
         <Select
           size={size}
           {...register(name)}

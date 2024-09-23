@@ -1,7 +1,7 @@
 "use server";
 
 import axiosInstance from "@/src/lib/axiosInstance";
-import { TPatient } from "@/src/types/user";
+import { TPatient, TSignin } from "@/src/types/user";
 
 const registerPatient = async (payload: TPatient) => {
   const formData = new FormData();
@@ -22,4 +22,14 @@ const registerPatient = async (payload: TPatient) => {
   }
 };
 
-export { registerPatient };
+const signinUser = async (payload: TSignin) => {
+  try {
+    const response = await axiosInstance.post(`/auth/login`, payload);
+    return response.data;
+  } catch (e: any) {
+    console.error(e.response?.data?.message || e.message, "error");
+    throw new Error(e.response?.data?.message || e.message);
+  }
+};
+
+export { registerPatient, signinUser };
