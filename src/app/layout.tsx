@@ -2,10 +2,10 @@ import "@/src/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 
-import { Providers } from "./providers";
-
 import { siteConfig } from "@/src/config/site";
 import { fontSans } from "@/src/config/fonts";
+import { Providers } from "../lib/providers";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: {
@@ -43,6 +43,9 @@ export default function RootLayout({
           {children}
         </Providers>
       </body>
+
+      {/* Sonner toast */}
+      <Toaster />
     </html>
   );
 }

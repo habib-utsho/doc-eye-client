@@ -1,3 +1,5 @@
+"use client";
+
 import React, { ReactNode } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
@@ -23,11 +25,13 @@ const DEForm = ({
   if (!!resolver) {
     formConfig["resolver"] = resolver;
   }
-  const methods = useForm();
+  const methods = useForm(formConfig);
   const handleSubmit = methods.handleSubmit;
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)}>{children}</form>
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+        {children}
+      </form>
     </FormProvider>
   );
 };

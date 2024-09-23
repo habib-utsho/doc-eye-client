@@ -7,18 +7,25 @@ const authRoutes = ["/signin", "/signup"];
 type TRole = keyof typeof roleBaseRoutes;
 
 const roleBaseRoutes = {
-  admin: ["/admin"],
+  admin: ["/admin", "/specialty"],
   user: [/^\/profile/, "/specialty"],
 };
 
+type TUser = {
+  name: string;
+  token: string;
+  role: TRole;
+} | null;
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const user = {
-    name: "John Doe",
-    token: "55AA55343joidfjsdjfoijf",
-    role: "admin",
-  };
-  //   const user = undefined;
+
+  // const user = {
+  //   name: "John Doe",
+  //   token: "55AA55343joidfjsdjfoijf",
+  //   role: "admin",
+  // } as TUser;
+  const user = null as TUser;
   if (!user) {
     if (authRoutes.includes(pathname)) {
       return NextResponse.next();
