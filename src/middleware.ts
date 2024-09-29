@@ -1,5 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import path from "path";
+import { getCurrentUser } from "./services/authService";
+import { TDecodedUser } from "./types/user";
 
 // This function can be marked `async` if using `await` inside
 const authRoutes = ["/signin", "/signup"];
@@ -7,30 +9,23 @@ const authRoutes = ["/signin", "/signup"];
 type TRole = keyof typeof roleBaseRoutes;
 
 const roleBaseRoutes = {
-  admin: ["/admin", "/specialty"],
-  user: [/^\/profile/, "/specialty"],
+  admin: ["/admin", /^\/dashboard/, "/specialty"], // regex for /dashboard/:id or anything start with dashboard
+  doctor: [/^\/dashboard/, "/specialty"], // regex for /dashboard/:id or anything start with dashboard
+  patient: ["/specialty", /^\/dashboard/], // regex for /dashboard/:id or anything start with dashboard
 };
 
-type TUser = {
-  name: string;
-  token: string;
-  role: TRole;
-} | null;
-
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // const user = {
-  //   name: "John Doe",
-  //   token: "55AA55343joidfjsdjfoijf",
-  //   role: "admin",
-  // } as TUser;
-  const user = null as TUser;
+  const user = (await getCurrentUser()) as TDecodedUser;
   if (!user) {
     if (authRoutes.includes(pathname)) {
       return NextResponse.next();
     }
-    return NextResponse.redirect(new URL("/signin", request.url));
+
+    return NextResponse.redirect(
+      new URL(`/signin?redirect=${pathname}`, request.url)
+    );
   }
 
   if (user?.role && roleBaseRoutes[user?.role as TRole]) {
@@ -53,5 +48,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/specialty", "/signin"],
+  matcher: ["/specialty", "/signin", "/dashboard/:page*", "/profile/:page*"],
 };

@@ -11,7 +11,7 @@ import {
   Logo,
   NextUILogo,
   TwitterIcon,
-} from "@/src/components/icons";
+} from "@/src/assets/img/icons";
 import Container from "../ui/Container";
 
 const Footer = () => {

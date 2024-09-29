@@ -15,14 +15,17 @@ import logo from "@/src/assets/img/logo.png";
 
 import { siteConfig } from "@/src/config/site";
 import { ThemeSwitch } from "@/src/components/theme-switch";
-import { GithubIcon } from "@/src/assets/img/icons";
+import {
+  GithubIcon,
+  MessageIcon,
+  NotificationIcon,
+} from "@/src/assets/img/icons";
 import Image from "next/image";
 import NavbarProfileDropdown from "./NavbarProfileDropdown";
-// import NavbarProfileDropdown from "./NavbarProfileDropdown";
 
-export const Navbar = () => {
+export const DashboardNavbar = () => {
   return (
-    <NextUINavbar maxWidth="xl" position="sticky">
+    <NextUINavbar maxWidth="full" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
@@ -30,28 +33,18 @@ export const Navbar = () => {
             <p className="font-bold text-inherit">DocEye</p>
           </NextLink>
         </NavbarBrand>
-        <ul className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
-              <NextLink
-                className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium"
-                )}
-                color="foreground"
-                href={item.href}
-              >
-                {item.label}
-              </NextLink>
-            </NavbarItem>
-          ))}
-        </ul>
       </NavbarContent>
 
       <NavbarContent
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
+        <NavbarItem className="hidden sm:flex gap-2">
+          <MessageIcon className="text-xl cursor-pointer" />
+        </NavbarItem>
+        <NavbarItem className="hidden sm:flex gap-2">
+          <NotificationIcon className="text-xl cursor-pointer" />
+        </NavbarItem>
         <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
         </NavbarItem>

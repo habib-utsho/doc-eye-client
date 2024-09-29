@@ -1,47 +1,129 @@
-// TODO
-import React from "react";
-
-type MyInpProps = {
-  name: string | string[];
-  label: string;
+"use client";
+import { Input, Textarea } from "@nextui-org/input";
+import { Select, SelectItem } from "@nextui-org/select";
+import React, { ReactNode } from "react";
+import { useFormContext } from "react-hook-form";
+import { EyeFilledIcon, EyeSlashFilledIcon } from "../../../assets/img/icons";
+import { set } from "zod";
+type TMyInp = {
+  name: string;
   type:
     | "text"
-    | "number"
     | "password"
     | "email"
-    | "checkbox"
-    | "radio"
+    | "date"
     | "select"
     | "textarea"
-    | "date";
-  rules?: any[];
-  disabled?: boolean;
-  placeholder: string;
-  defaultValue?: string;
+    | "textarea";
+  size?: "sm" | "md" | "lg";
+  color?:
+    | "default"
+    | "primary"
+    | "secondary"
+    | "success"
+    | "warning"
+    | "danger";
+  radius?: "none" | "sm" | "md" | "lg" | "full";
+  label: ReactNode;
+  placeholder?: string;
   value?: string;
-  options?: { label: string; value: string }[];
-  size?: "small" | "middle" | "large";
-  prefix?: React.ReactNode;
-  mode?: "multiple" | "tags" | undefined;
+  defaultValue?: string;
+  options?: { key: string; label: string }[];
 };
 
-// className="my-inp"
-// defaultValue={"admin@gmail.com"}
-const MyInp: React.FC<MyInpProps> = ({
-  type,
-  placeholder,
+const MyInp = ({
   name,
+  type = "text",
   label,
-  rules,
-  options,
-  disabled,
-  size = "large",
-  defaultValue,
+  placeholder,
+  radius = "md",
+  size = "sm",
+  color = "default",
   value,
-  prefix,
-  mode,
-}) => {
-  return "inp";
+  defaultValue,
+  options = [],
+}: TMyInp) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
+
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  return (
+    <>
+      {type === "textarea" ? (
+        <Textarea
+          type={type}
+          size={size}
+          {...register(name)}
+          defaultValue={defaultValue}
+          radius={radius}
+          color={color}
+          label={label}
+          placeholder={placeholder}
+          isInvalid={!!errors[name]}
+          errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
+        />
+      ) : type === "password" ? (
+        <Input
+          size={size}
+          {...register(name)}
+          defaultValue={defaultValue}
+          radius={radius}
+          color={color}
+          label={label}
+          placeholder={placeholder}
+          isInvalid={!!errors[name]}
+          errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
+          type={isVisible ? "text" : "password"}
+          endContent={
+            <button
+              className="focus:outline-none"
+              type="button"
+              onClick={() => setIsVisible(!isVisible)}
+              aria-label="toggle password visibility"
+            >
+              {isVisible ? (
+                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+              ) : (
+                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+              )}
+            </button>
+          }
+        />
+      ) : type === "select" ? (
+        <Select
+          size={size}
+          {...register(name)}
+          value={value}
+          radius={radius}
+          color={color}
+          label={label}
+          placeholder={placeholder}
+          isInvalid={!!errors[name]}
+          errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
+        >
+          {options.map((option) => (
+            <SelectItem key={option.key}>{option.label}</SelectItem>
+          ))}
+        </Select>
+      ) : (
+        <Input
+          type={type}
+          size={size}
+          {...register(name)}
+          defaultValue={defaultValue}
+          radius={radius}
+          color={color}
+          label={label}
+          placeholder={placeholder}
+          isInvalid={!!errors[name]}
+          errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
+        />
+      )}
+    </>
+  );
 };
 
 export default MyInp;

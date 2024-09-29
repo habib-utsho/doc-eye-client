@@ -1,18 +1,10 @@
 import Empty from "@/src/components/shared/Empty";
+import { getSpecialty } from "@/src/services/specialty";
 import { TSpecialty } from "@/src/types/specialty";
 import { Image } from "@nextui-org/image";
 import { Tooltip } from "@nextui-org/tooltip";
 import Link from "next/link";
 import React from "react";
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const getSpecialty = async () => {
-  //   throw new Error("Something went wrong!");
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/specialty?page=1&limit=9`
-  );
-  return res.json();
-};
 
 const SpecialtySection = async () => {
   const specialty = await getSpecialty();
@@ -31,11 +23,10 @@ const SpecialtySection = async () => {
               >
                 <figure className="">
                   <Image
-                    src={item.logo}
+                    src={item.icon}
                     alt={item.name}
                     isBlurred
-                    width={200}
-                    height={80}
+                    className="max-w-[50px] rounded-md"
                   />
                 </figure>
                 <div>

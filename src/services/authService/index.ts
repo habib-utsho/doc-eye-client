@@ -2,6 +2,8 @@
 
 import axiosInstance from "@/src/lib/axiosInstance";
 import { TPatient, TSignin } from "@/src/types/user";
+import { jwtDecode } from "jwt-decode";
+import { cookies } from "next/headers";
 
 const registerPatient = async (payload: TPatient) => {
   const formData = new FormData();
@@ -25,6 +27,10 @@ const registerPatient = async (payload: TPatient) => {
 const signinUser = async (payload: TSignin) => {
   try {
     const response = await axiosInstance.post(`/auth/login`, payload);
+    if (response.data?.success) {
+      cookies().set("DEaccessToken", response?.data?.data?.accessToken);
+      cookies().set("DErefreshToken", response?.data?.data?.refreshToken);
+    }
     return response.data;
   } catch (e: any) {
     console.error(e.response?.data?.message || e.message, "error");
@@ -32,4 +38,23 @@ const signinUser = async (payload: TSignin) => {
   }
 };
 
-export { registerPatient, signinUser };
+const signOut = () => {
+  cookies().delete("DEaccessToken");
+  cookies().delete("DErefreshToken");
+};
+
+const getCurrentUser = async () => {
+  const accessToken = cookies().get("DEaccessToken")?.value;
+  let decodedToken = null;
+  if (accessToken) {
+    decodedToken = await jwtDecode(accessToken);
+    return {
+      _id: decodedToken?._id,
+      email: decodedToken?.email,
+      role: decodedToken?.role,
+    };
+  }
+  return decodedToken;
+};
+
+export { registerPatient, signinUser, getCurrentUser, signOut };
