@@ -6,3 +6,13 @@
 .footer-top {
   clip-path: polygon(0 0, 100% 15%, 100% 100%, 0% 100%);
 }
+
+/* timeline */
+
+/* vertical timeline - why use DocEye section*/
+.vertical-timeline::before {
+  background-color: #09528c !important;
+}
+.vertical-timeline-element-content {
+  box-shadow: rgba(100, 100, 111, 0.3) 0px 7px 29px 0px !important;
+}

@@ -1,5 +1,7 @@
+"use client";
 import React from "react";
-import banner1 from "@/src/assets/img/Homepage/Banner/DocEyeBanner.svg";
+import banner1 from "@/src/assets/img/Homepage/Banner/DocEyeBanner.png";
+import banner2 from "@/src/assets/img/Homepage/Banner/DocEyeBanner_dark.png";
 import videoConsultation from "@/src/assets/img/Homepage/Banner/videoConsultation.png";
 import healthResource from "@/src/assets/img/Homepage/Banner/healthResource.png";
 import patientSupport from "@/src/assets/img/Homepage/Banner/patientSupport.png";
@@ -7,6 +9,7 @@ import orderMedicine from "@/src/assets/img/Homepage/Banner/orderMedicine.png";
 import Image from "next/image";
 import Container from "../../ui/Container";
 import { subtitle, title } from "../../primitives";
+import { useTheme } from "next-themes";
 
 const Banner = () => {
   const services = [
@@ -35,10 +38,16 @@ const Banner = () => {
     },
   ];
 
+  const { theme } = useTheme();
+
   return (
     <div
-      className="bg-center"
-      style={{ backgroundImage: `url(${banner1.src})` }}
+      className="bg-center bg-cover bg-no-repeat"
+      style={{
+        backgroundImage: `url(${
+          theme === "light" ? banner1.src : banner2.src
+        })`,
+      }}
     >
       <Container>
         <div className="!pt-28 pb-16  min-h-screen text-center">
@@ -59,13 +68,11 @@ const Banner = () => {
             forward together.
           </p>
 
- 
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 py-10">
             {services.map((service, ind) => (
               <div
                 key={ind}
-                className="py-7 px-3 rounded bg-white space-y-4 text-center my-shadow cursor-pointer hover:scale-105 hover:-translate-y-5 transition duration-500"
+                className="py-7 px-3 rounded bg-background shadow shadow-foreground/10 space-y-4 text-center my-shadow cursor-pointer hover:scale-105 hover:-translate-y-5 transition duration-500"
               >
                 <Image
                   alt="videoConsultation"
