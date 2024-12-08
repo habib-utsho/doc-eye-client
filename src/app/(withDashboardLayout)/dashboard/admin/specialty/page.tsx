@@ -1,5 +1,5 @@
 "use client";
-import { FileUploadIcon } from "@/src/assets/img/icons";
+import { FileUploadIcon } from "@/src/components/ui/icons";
 import Container from "@/src/components/ui/Container";
 import DEForm from "@/src/components/ui/Form/DEForm";
 import MyInp from "@/src/components/ui/Form/MyInp";

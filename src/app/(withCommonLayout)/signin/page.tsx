@@ -3,7 +3,7 @@ import React from "react";
 import signinBG from "@/src/assets/img/Sign/signinBG.jpg";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { GithubIcon } from "@/src/assets/img/icons";
+import { GithubIcon } from "@/src/components/ui/icons";
 import MyInp from "@/src/components/ui/Form/MyInp";
 import { Button } from "@nextui-org/button";
 import { SubmitHandler } from "react-hook-form";

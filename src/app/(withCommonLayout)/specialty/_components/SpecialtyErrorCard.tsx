@@ -1,4 +1,4 @@
-import { ErrorIcon } from "@/src/assets/img/icons";
+import { ErrorIcon } from "@/src/components/ui/icons";
 import React from "react";
 
 const SpecialtyErrorCard = () => {

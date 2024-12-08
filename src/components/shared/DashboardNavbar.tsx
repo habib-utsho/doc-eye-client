@@ -19,7 +19,7 @@ import {
   GithubIcon,
   MessageIcon,
   NotificationIcon,
-} from "@/src/assets/img/icons";
+} from "@/src/components/ui/icons";
 import Image from "next/image";
 import NavbarProfileDropdown from "./NavbarProfileDropdown";
 

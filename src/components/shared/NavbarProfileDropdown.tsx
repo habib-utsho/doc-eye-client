@@ -9,7 +9,7 @@ import {
   DropdownTrigger,
 } from "@nextui-org/dropdown";
 import React from "react";
-import { HeartFilledIcon } from "../../assets/img/icons";
+import { HeartFilledIcon } from "../ui/icons";
 import { Link } from "@nextui-org/link";
 import { signOut } from "@/src/services/authService";
 import useUserData from "@/src/hooks/user.hook";
@@ -73,7 +73,6 @@ const NavbarProfileDropdown = () => {
           as={Link}
           className="text-sm font-normal text-white"
           href={siteConfig.links.sponsor}
-          startContent={<HeartFilledIcon className="text-danger" />}
           variant="shadow"
           color="primary"
         >

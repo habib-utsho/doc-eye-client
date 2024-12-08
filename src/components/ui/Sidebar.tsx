@@ -1,5 +1,5 @@
 import SidebarLoading from "@/src/app/(withDashboardLayout)/dashboard/_components/SidebarLoading";
-import { GithubIcon, SignOutIcon } from "@/src/assets/img/icons";
+import { GithubIcon, SignOutIcon } from "@/src/components/ui/icons";
 import useUserData from "@/src/hooks/user.hook";
 import { Button } from "@nextui-org/button";
 import Link from "next/link";

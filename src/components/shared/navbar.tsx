@@ -15,7 +15,7 @@ import logo from "@/src/assets/img/logo.png";
 
 import { siteConfig } from "@/src/config/site";
 import { ThemeSwitch } from "@/src/components/theme-switch";
-import { GithubIcon } from "@/src/assets/img/icons";
+import { GithubIcon } from "@/src/components/ui/icons";
 import Image from "next/image";
 import NavbarProfileDropdown from "./NavbarProfileDropdown";
 // import NavbarProfileDropdown from "./NavbarProfileDropdown";
@@ -30,7 +30,10 @@ export const Navbar = () => {
             <p className="font-bold text-inherit">DocEye</p>
           </NextLink>
         </NavbarBrand>
-        <ul className="hidden lg:flex gap-4 justify-start ml-2">
+      </NavbarContent>
+
+      <NavbarContent justify="center" className="basis-1/5 sm:basis-full">
+        <ul className="hidden md:flex gap-4 justify-start ml-2">
           {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.href}>
               <NextLink
@@ -49,10 +52,10 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent
-        className="hidden sm:flex basis-1/5 sm:basis-full"
+        className="hidden md:flex basis-1/5 sm:basis-full !flex-grow-0"
         justify="end"
       >
-        <NavbarItem className="hidden sm:flex gap-2">
+        <NavbarItem className="hidden md:flex gap-2">
           <ThemeSwitch />
         </NavbarItem>
         <NavbarItem className="hidden md:flex">
@@ -60,14 +63,11 @@ export const Navbar = () => {
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Link isExternal aria-label="Github" href={siteConfig.links.github}>
-          <GithubIcon className="text-default-500" />
-        </Link>
+      {/* Mobile menu */}
+      <NavbarContent className="md:hidden basis-1 pl-4" justify="end">
         <ThemeSwitch />
         <NavbarMenuToggle />
       </NavbarContent>
-
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.navMenuItems.map((item, index) => (

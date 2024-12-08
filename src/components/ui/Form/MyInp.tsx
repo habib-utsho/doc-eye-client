@@ -3,7 +3,7 @@ import { Input, Textarea } from "@nextui-org/input";
 import { Select, SelectItem } from "@nextui-org/select";
 import React, { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
-import { EyeFilledIcon, EyeSlashFilledIcon } from "../../../assets/img/icons";
+import { EyeFilledIcon, EyeSlashFilledIcon } from "../icons";
 import { set } from "zod";
 type TMyInp = {
   name: string;

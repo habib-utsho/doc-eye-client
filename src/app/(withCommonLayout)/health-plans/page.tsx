@@ -1,4 +1,4 @@
-import { CheckIcon } from "@/src/assets/img/icons";
+import { CheckIcon } from "@/src/components/ui/icons";
 import Container from "@/src/components/ui/Container";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
