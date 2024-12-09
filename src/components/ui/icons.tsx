@@ -214,7 +214,7 @@ export const NextUILogo: React.FC<IconSvgProps> = (props) => {
   );
 };
 
-export const ArrowRightIcon: React.FC<IconSvgProps> = (props) => {
+export const AngleRightIcon: React.FC<IconSvgProps> = (props) => {
   const { width, height = 40 } = props;
 
   return (
@@ -235,6 +235,47 @@ export const ArrowRightIcon: React.FC<IconSvgProps> = (props) => {
         strokeLinecap="round"
         strokeLinejoin="round"
         d="m8.25 4.5 7.5 7.5-7.5 7.5"
+      />
+    </svg>
+  );
+};
+export const ArrowRightIcon: React.FC<IconSvgProps> = (props) => {
+  return (
+    <svg
+      stroke="currentColor"
+      fill="currentColor"
+      stroke-width="0"
+      viewBox="0 0 448 512"
+      height="1em"
+      width="1em"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"></path>
+    </svg>
+  );
+};
+export const PhoneIcon: React.FC<IconSvgProps> = (props) => {
+  const { width, height = 40 } = props;
+
+  return (
+    <svg
+      fill="none"
+      height={height}
+      width={width}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+      xmlnsXlink="http://www.w3.org/2000/svg"
+      fillOpacity="none"
+      viewBox="0 0 24 24"
+      strokeWidth="1.5"
+      stroke="currentColor"
+      className="size-6"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"
       />
     </svg>
   );

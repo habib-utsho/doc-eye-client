@@ -2,11 +2,13 @@ import React from "react";
 import about1 from "@/src/assets/img/Homepage/About/About1.jpg";
 import about2 from "@/src/assets/img/Homepage/About/About2.jpg";
 import about3 from "@/src/assets/img/Homepage/About/About3.jpg";
-import about4 from "@/src/assets/img/Homepage/About/About4.jpg";
 import Image from "next/image";
 import CommonSectionTitle from "../../ui/CommonSectionTitle";
-import { ArrowRightIcon, GithubIcon } from "../../ui/icons";
+import { ArrowRightIcon, PhoneIcon } from "../../ui/icons";
 import Container from "../../ui/Container";
+import MyMotion from "../../ui/MyMotion";
+import { subtitle, title } from "../../primitives";
+import { Divider } from "@nextui-org/divider";
 
 const AboutUs = () => {
   return (
@@ -14,12 +16,30 @@ const AboutUs = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* About us left */}
         <div className="flex items-center relative">
-          <Image src={about1} alt="about1" height="auto" />
-          <figure className="absolute -left-28 -bottom-24">
-            <Image src={about2} alt="about2" width="300" height="300"></Image>
+          <MyMotion scale={1.5}>
+            <Image src={about1} alt="about1" className="rounded-md" />
+          </MyMotion>
+          <figure className="absolute -left-28 -bottom-24 hidden lg:block">
+            <MyMotion x={-80} delay={0.5}>
+              <Image
+                src={about2}
+                alt="about2"
+                width="300"
+                height="300"
+                className="rounded-md"
+              />
+            </MyMotion>
           </figure>
-          <figure className="absolute -left-28 -top-24">
-            <Image src={about3} alt="about3" width="300" height="300"></Image>
+          <figure className="absolute -left-28 -top-24 hidden lg:block">
+            <MyMotion x={-80}>
+              <Image
+                src={about3}
+                alt="about3"
+                width="300"
+                height="300"
+                className="rounded-md"
+              />
+            </MyMotion>
           </figure>
           {/* <Image src={about4} alt='about4' width='40%' height='auto'></Image> */}
         </div>
@@ -36,54 +56,59 @@ const AboutUs = () => {
             talking relationship between a therapist & patient.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-4 flex flex-col justify-between">
-              <ul className="space-y-4 pb-7 border-b border-slate-200">
-                <li className="flex items-center gap-2 font-semibold text-slate-500">
+            <div className="flex flex-col justify-between">
+              <ul className="space-y-4">
+                <li className="flex items-center gap-2 font-semibold">
                   {" "}
                   <span className="text-primary">
-                    <GithubIcon />
+                    <ArrowRightIcon />
                   </span>{" "}
                   We{"'"}re here to help you feel better.
                 </li>
-                <li className="flex items-center gap-2 font-semibold text-slate-500">
+                <li className="flex items-center gap-2 font-semibold">
                   {" "}
                   <span className="text-primary">
                     <ArrowRightIcon />
                   </span>{" "}
                   Your health is important.
                 </li>
-                <li className="flex items-center gap-2 font-semibold text-slate-500">
+                <li className="flex items-center gap-2 font-semibold">
                   {" "}
                   <span className="text-primary">
-                    <GithubIcon />
+                    <ArrowRightIcon />
                   </span>{" "}
                   Trust us with your care.
                 </li>
-                <li className="flex items-center gap-2 font-semibold text-slate-500">
+                <li className="flex items-center gap-2 font-semibold">
                   {" "}
                   <span className="text-primary">
-                    <GithubIcon />
+                    <ArrowRightIcon />
                   </span>{" "}
                   Your health is our goal.
                 </li>
               </ul>
+              <Divider className="!my-6" />
               <div className="flex gap-4 items-center">
                 <span className="bg-primary text-white p-4 rounded-full h-fit">
-                  <GithubIcon />
+                  <PhoneIcon />
                 </span>
                 <div>
-                  <p className="font-semibold text-slate-500">
-                    Feel free to contact us here
-                  </p>
+                  <p className="font-semibold">Feel free to contact us here</p>
                   <h3>+880170678-5160</h3>
                 </div>
               </div>
             </div>
 
-            <div className="bg-blue-100 rounded text-center my-shadow p-8 space-y-4">
-              <span className="my-title text-primary">100%</span>
-              <p className="my-subtitle">Satisfaction guarantees</p>
-              <p>
+            <div className="border border-foreground/10 rounded text-center my-shadow p-8 space-y-4">
+              <span
+                className={`${title({
+                  className: "!text-[26px] md:!text-[32px]",
+                })} text-primary`}
+              >
+                100%
+              </span>
+              <p className={`${subtitle()}`}>Satisfaction Guarantees</p>
+              <p className="text-[14px]">
                 It is a long established fact that a reader will be distracted
                 by the readable content
               </p>

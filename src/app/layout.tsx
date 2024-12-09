@@ -3,7 +3,7 @@ import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 
 import { siteConfig } from "@/src/config/site";
-import { fontSans } from "@/src/config/fonts";
+import { fontSans, poppins } from "@/src/config/fonts";
 import { Providers } from "../lib/providers";
 import { Toaster } from "sonner";
 
@@ -36,7 +36,8 @@ export default function RootLayout({
       <body
         className={clsx(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
+          // fontSans.variable
+          poppins.className
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>

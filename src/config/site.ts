@@ -2,7 +2,8 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: "DocEye",
-  description: "Doctor portal website!",
+  description:
+    "DocEye is a telemedicine platform that connects patients with doctors for online consultations and prescription services.",
   navItems: [
     {
       label: "Home",

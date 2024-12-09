@@ -5,7 +5,7 @@ import Image from "next/image";
 import DownloadOnGooglePlay from "@/src/assets/img/Homepage/appSection/DownloadOnGooglePlay.png";
 import DownloadOnAppStore from "@/src/assets/img/Homepage/appSection/DownloadOnAppStore.png";
 import {
-  ArrowRightIcon,
+  AngleRightIcon,
   DiscordIcon,
   GithubIcon,
   Logo,
@@ -86,7 +86,7 @@ const Footer = () => {
               >
                 {" "}
                 <span className="group-hover:translate-x-2 transition text-[#E57373]">
-                  <ArrowRightIcon />
+                  <AngleRightIcon />
                 </span>
                 {fl.text}
               </Link>
@@ -103,7 +103,7 @@ const Footer = () => {
               >
                 {" "}
                 <span className="group-hover:translate-x-2 transition text-[#E57373]">
-                  <ArrowRightIcon />
+                  <AngleRightIcon />
                 </span>
                 {fl.text}
               </Link>
