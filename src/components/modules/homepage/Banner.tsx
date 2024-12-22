@@ -72,7 +72,7 @@ const Banner = () => {
             {services.map((service, ind) => (
               <div
                 key={ind}
-                className="py-7 px-3 rounded bg-background shadow shadow-foreground/10 space-y-4 text-center my-shadow cursor-pointer hover:scale-105 hover:-translate-y-5 transition duration-500"
+                className="py-7 px-3 rounded bg-background border space-y-4 text-center cursor-pointer hover:scale-105 hover:-translate-y-5 transition duration-500"
               >
                 <Image
                   alt="videoConsultation"
