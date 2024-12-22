@@ -59,7 +59,12 @@ const Services = () => {
               with the help of advanced tools and the experience of pioneer
               cardiology team
             </p>
-            <Button color="primary" className="text-white" size="lg">
+            <Button
+              color="primary"
+              variant="flat"
+              className="text-primary dark:text-white"
+              size="lg"
+            >
               All services
             </Button>
           </div>
@@ -78,12 +83,17 @@ const Services = () => {
                       alt="doctorConsultation"
                       height={40}
                       width={40}
-                    ></Image>
+                      className="group-hover:animate-spin360"
+                    />
                   </figure>
 
                   <h2 className={`${subtitle()}`}>{service.title}</h2>
                   <p>{service.description}</p>
-                  <Button>
+                  <Button
+                    color="primary"
+                    variant="flat"
+                    className="text-primary dark:text-white"
+                  >
                     Learn more <FaPlus></FaPlus>
                   </Button>
                 </div>

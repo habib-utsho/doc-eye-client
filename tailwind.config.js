@@ -1,7 +1,7 @@
 import { nextui } from "@nextui-org/theme";
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -12,6 +12,15 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-sans)"],
         mono: ["var(--font-mono)"],
+      },
+      keyframes: {
+        spin360: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+      },
+      animation: {
+        spin360: "spin360 0.5s linear",
       },
     },
   },

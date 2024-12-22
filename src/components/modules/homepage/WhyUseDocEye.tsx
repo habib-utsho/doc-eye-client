@@ -102,9 +102,9 @@ const WhyUseDocEye = () => {
               >
                 <h3 className="font-bold text-lg md:text-xl">{title}</h3>
                 <p>{description}</p>
-                <p className="flex gap-2 items-center ">
+                <p className="flex gap-2 items-center text-slate-500 ">
                   {" "}
-                  <span className="text-xl !opacity-50">
+                  <span className="text-xl">
                     <GithubIcon />
                   </span>{" "}
                   {benefit}
