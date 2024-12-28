@@ -9,9 +9,9 @@ const authRoutes = ["/signin", "/signup"];
 type TRole = keyof typeof roleBaseRoutes;
 
 const roleBaseRoutes = {
-  admin: ["/admin", /^\/dashboard/, "/specialty"], // regex for /dashboard/:id or anything start with dashboard
-  doctor: [/^\/dashboard/, "/specialty"], // regex for /dashboard/:id or anything start with dashboard
-  patient: ["/specialty", /^\/dashboard/], // regex for /dashboard/:id or anything start with dashboard
+  admin: ["/admin", /^\/dashboard/], // regex for /dashboard/:id or anything start with dashboard
+  doctor: [/^\/dashboard/], // regex for /dashboard/:id or anything start with dashboard
+  patient: [/^\/dashboard/], // regex for /dashboard/:id or anything start with dashboard
 };
 
 export async function middleware(request: NextRequest) {
@@ -36,17 +36,9 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  //   else {
-  //     if (authRoutes.includes(pathname)) {
-  //       return NextResponse.redirect(new URL("/", request.url));
-  //     }
-
-  //     return NextResponse.next();
-  // }
-
   return NextResponse.redirect(new URL("/", request.url));
 }
 
 export const config = {
-  matcher: ["/specialty", "/signin", "/dashboard/:page*", "/profile/:page*"],
+  matcher: ["/signin", "/dashboard/:page*", "/profile/:page*"],
 };

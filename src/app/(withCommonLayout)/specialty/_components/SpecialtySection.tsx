@@ -19,7 +19,8 @@ const SpecialtySection = async () => {
             return (
               <Link
                 href={`/specialty/${item?._id}`}
-                className="flex items-center gap-5 shadow dark:shadow-white p-4 rounded-md"
+                className="flex items-center gap-5 border p-4 rounded-md hover:scale-[1.02] hover:-translate-y-1 transition duration-500"
+                
               >
                 <figure className="">
                   <Image
