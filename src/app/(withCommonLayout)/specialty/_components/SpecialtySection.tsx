@@ -6,6 +6,7 @@ import { Tooltip } from "@nextui-org/tooltip";
 import Link from "next/link";
 import React from "react";
 
+
 const SpecialtySection = async () => {
   const specialty = await getSpecialty();
 
