@@ -41,14 +41,14 @@ const SigninPage = () => {
       className="min-h-screen  flex items-center justify-center bg-cover bg-center bg-slate-800 bg-blend-overlay my-28 md:my-0"
       style={{ backgroundImage: `url(${signinBG.src})` }}
     >
-      <Container className="w-full xl:w-3/6 mx-auto">
+      <Container className="w-full xl:w-4/6 mx-auto">
         <DEForm
           onSubmit={onSubmit}
           defaultValues={defaultValues}
           resolver={zodResolver(authValidationSchema.signinValidationSchema)}
         >
-          <div className="shadow  block xl:flex flex-row my-5 md:my-32">
-            <div className="w-full xl:w-3/6 bg-slate-50 px-8 py-14 rounded xl:rounded-none xl:rounded-l">
+          <div className="shadow block xl:flex flex-row my-5 md:my-32">
+            <div className="w-full xl:w-3/6 bg-background px-8 py-14 rounded xl:rounded-none xl:rounded-l">
               <div className="mb-8 space-y-1">
                 <h2 className="text-primary font-semibold">
                   Hello and welcome{" "}

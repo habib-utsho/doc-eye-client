@@ -12,6 +12,7 @@ import { TPatient } from "@/src/types/user";
 import { useUserRegister } from "@/src/hooks/auth.hook";
 import Container from "@/src/components/ui/Container";
 import DEForm from "@/src/components/ui/Form/DEForm";
+import { Tab, Tabs } from "@nextui-org/tabs";
 
 // Need to change password
 const SignupPage = () => {
@@ -42,13 +43,13 @@ const SignupPage = () => {
       className="min-h-screen  flex items-center justify-center bg-cover bg-center bg-slate-800 bg-blend-overlay my-28 md:my-0"
       style={{ backgroundImage: `url(${signinBG.src})` }}
     >
-      <Container className="w-full xl:w-3/6 mx-auto">
+      <Container className="w-full xl:w-4/6 mx-auto">
         <DEForm
           onSubmit={onSubmit}
           defaultValues={defaultValues}
           resolver={zodResolver(authValidationSchema.signupValidationSchema)}
         >
-          <div className="shadow  my-5 md:my-32 rounded-md bg-white py-14 px-8">
+          <div className="shadow  my-5 md:my-32 rounded-md bg-background py-14 px-8">
             <div className="mb-8 space-y-1">
               <h2 className="text-primary font-semibold">
                 Register your account
@@ -59,6 +60,10 @@ const SignupPage = () => {
             </div>
 
             <div className="space-y-4">
+            <Tabs aria-label="Registration" color={"secondary"} radius="full">
+          <Tab key="patient" title="Patient" />
+          <Tab key="doctor" title="Doctor" />
+        </Tabs>
               <div className="flex flex-col md:flex-row gap-4">
                 <MyInp type="text" name="name" label="Name" />
                 <MyInp type="email" name="email" label="Email" />
