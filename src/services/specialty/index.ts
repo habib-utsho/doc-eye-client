@@ -3,7 +3,7 @@
 import axiosInstance from "@/src/lib/axiosInstance";
 import { revalidateTag } from "next/cache";
 
-export const getSpecialty = async () => {
+export const getSpecialties = async () => {
   const fetchOption = {
     next: {
       tags: ["specialty"],

@@ -1,7 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { createSpecialty } from "../services/specialty";
+import { createSpecialty, getSpecialties } from "../services/specialty";
 
 export const useCreateSpecialty = () => {
   const router = useRouter();
@@ -19,5 +19,12 @@ export const useCreateSpecialty = () => {
     onError(error) {
       toast.error(error?.message || "Failed to create specialty!");
     },
+  });
+};
+
+export const useGetAllSpecialties = () => {
+  return useQuery({
+    queryKey: ["specialties"],
+    queryFn: async () => await getSpecialties(),
   });
 };

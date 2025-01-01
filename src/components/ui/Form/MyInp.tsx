@@ -28,6 +28,7 @@ type TMyInp = {
   placeholder?: string;
   value?: string;
   defaultValue?: string;
+  disabled?: boolean;
   options?: { key: string; label: string }[];
 };
 
@@ -40,6 +41,7 @@ const MyInp = ({
   size = "sm",
   color = "default",
   value,
+  disabled,
   defaultValue,
   options = [],
 }: TMyInp) => {
@@ -63,6 +65,7 @@ const MyInp = ({
           label={label}
           placeholder={placeholder}
           isInvalid={!!errors[name]}
+          disabled={disabled}
           errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
         />
       ) : type === "password" ? (
@@ -76,6 +79,7 @@ const MyInp = ({
           placeholder={placeholder}
           isInvalid={!!errors[name]}
           errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
+          disabled={disabled}
           type={isVisible ? "text" : "password"}
           endContent={
             <button
@@ -102,6 +106,7 @@ const MyInp = ({
           label={label}
           placeholder={placeholder}
           isInvalid={!!errors[name]}
+          disabled={disabled}
           errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
         >
           {options.map((option) => (
@@ -117,6 +122,7 @@ const MyInp = ({
           radius={radius}
           color={color}
           label={label}
+          disabled={disabled}
           placeholder={placeholder}
           isInvalid={!!errors[name]}
           errorMessage={errors[name] ? (errors[name]?.message as string) : ""}

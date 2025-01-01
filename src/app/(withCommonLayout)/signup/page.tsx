@@ -13,10 +13,16 @@ import { useUserRegister } from "@/src/hooks/auth.hook";
 import Container from "@/src/components/ui/Container";
 import DEForm from "@/src/components/ui/Form/DEForm";
 import { Tab, Tabs } from "@nextui-org/tabs";
+import { doctorTitles, doctorTypes } from "@/src/constant/doctor.constant";
+import { useGetAllSpecialties } from "@/src/hooks/specialty.hook";
+import { TSpecialty } from "@/src/types/specialty";
 
 // Need to change password
 const SignupPage = () => {
   const { mutate: handleRegisterUser, isPending } = useUserRegister();
+
+  const { data: specialties, isLoading: isLoadingSpecialties } =
+    useGetAllSpecialties();
 
   const onSubmit: SubmitHandler<TPatient> = async (payload: TPatient) => {
     const updatedValues = {
@@ -37,6 +43,127 @@ const SignupPage = () => {
     bloodGroup: "AB-",
     password: "1234@@aA",
   };
+
+  const reusableInp = (
+    <div className="space-y-4">
+      <div className="flex flex-col md:flex-row gap-4">
+        <MyInp type="text" name="name" label="Name" />
+        <MyInp type="email" name="email" label="Email" />
+      </div>
+      <div className="flex flex-col md:flex-row gap-4">
+        <MyInp type="text" name="phone" label="Phone" />
+        <MyInp
+          type="select"
+          name="gender"
+          label="Gender"
+          placeholder="Select Gender"
+          options={genders?.map((gender) => ({
+            key: gender,
+            label: gender,
+          }))}
+        />
+      </div>
+      <div className="flex flex-col md:flex-row gap-4">
+        <MyInp
+          type="select"
+          name="district"
+          label="District"
+          placeholder="Select District"
+          options={districts?.map((district) => ({
+            key: district,
+            label: district,
+          }))}
+        />
+        <MyInp
+          type="select"
+          name="bloodGroup"
+          label="Blood Group"
+          placeholder="Select Blood Group"
+          options={bloodGroups?.map((bg) => ({
+            key: bg,
+            label: bg,
+          }))}
+        />
+      </div>
+      <div className="flex flex-col md:flex-row gap-4">
+        <MyInp type="password" name="password" label="Password" />
+        <MyInp type="date" name="dateOfBirth" label="Date of Birth" />
+      </div>
+    </div>
+  );
+
+  const tabs = [
+    {
+      key: "patient",
+      title: "Patient",
+      content: <>{reusableInp}</>,
+    },
+    {
+      key: "doctor",
+      title: "Doctor",
+      content: (
+        <div className="space-y-4">
+          {reusableInp}
+          <div className="flex flex-col md:flex-row gap-4">
+            <MyInp
+              type="select"
+              name="doctorTitle"
+              label="Doctor Title"
+              options={doctorTitles?.map((doctorTitle) => ({
+                key: doctorTitle,
+                label: doctorTitle,
+              }))}
+            />
+            <MyInp
+              type="select"
+              name="doctorType"
+              label="Email"
+              options={doctorTypes?.map((doctorType) => ({
+                key: doctorType,
+                label: doctorType,
+              }))}
+            />
+          </div>
+          <div className="flex flex-col md:flex-row gap-4">
+            <MyInp
+              type="select"
+              name="medicalSpecialty"
+              label="Medical Specialty"
+              disabled={isLoadingSpecialties || specialties?.data?.length === 0}
+              options={specialties?.data?.map((specialty: TSpecialty) => ({
+                key: specialty._id,
+                label: specialty.name,
+              }))}
+            />
+            <MyInp type="text" name="medicalDegree" label="Medical Degree" />
+          </div>
+
+          <div className="flex flex-col md:flex-row gap-4">
+            <MyInp
+              type="text"
+              name="totalExperienceYear"
+              label="Total Exp Year"
+            />
+            <MyInp
+              type="text"
+              name="currentWorkplace"
+              label="Current Workplace"
+            />
+          </div>
+          <div className="flex flex-col md:flex-row gap-4">
+            <MyInp
+              type="text"
+              name="consultationFee"
+              label="Consultation Fee"
+            />
+            <MyInp type="text" name="followupFee" label="Followup Fee" />
+          </div>
+        </div>
+      ),
+    },
+  ];
+
+  console.log(specialties, "specialties");
 
   return (
     <div
@@ -60,53 +187,13 @@ const SignupPage = () => {
             </div>
 
             <div className="space-y-4">
-            <Tabs aria-label="Registration" color={"secondary"} radius="full">
-          <Tab key="patient" title="Patient" />
-          <Tab key="doctor" title="Doctor" />
-        </Tabs>
-              <div className="flex flex-col md:flex-row gap-4">
-                <MyInp type="text" name="name" label="Name" />
-                <MyInp type="email" name="email" label="Email" />
-              </div>
-              <div className="flex flex-col md:flex-row gap-4">
-                <MyInp type="text" name="phone" label="Phone" />
-                <MyInp
-                  type="select"
-                  name="gender"
-                  label="Gender"
-                  placeholder="Select Gender"
-                  options={genders?.map((gender) => ({
-                    key: gender,
-                    label: gender,
-                  }))}
-                />
-              </div>
-              <div className="flex flex-col md:flex-row gap-4">
-                <MyInp
-                  type="select"
-                  name="district"
-                  label="District"
-                  placeholder="Select District"
-                  options={districts?.map((district) => ({
-                    key: district,
-                    label: district,
-                  }))}
-                />
-                <MyInp
-                  type="select"
-                  name="bloodGroup"
-                  label="Blood Group"
-                  placeholder="Select Blood Group"
-                  options={bloodGroups?.map((bg) => ({
-                    key: bg,
-                    label: bg,
-                  }))}
-                />
-              </div>
-              <div className="flex flex-col md:flex-row gap-4">
-                <MyInp type="password" name="password" label="Password" />
-                <MyInp type="date" name="dateOfBirth" label="Date of Birth" />
-              </div>
+              <Tabs aria-label="Registration" color={"secondary"} radius="full">
+                {tabs.map((tab) => (
+                  <Tab key={tab.key} title={tab.title}>
+                    {tab.content}
+                  </Tab>
+                ))}
+              </Tabs>
 
               <Button
                 isLoading={isPending}

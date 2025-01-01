@@ -1,14 +1,13 @@
 import Empty from "@/src/components/shared/Empty";
-import { getSpecialty } from "@/src/services/specialty";
+import { getSpecialties } from "@/src/services/specialty";
 import { TSpecialty } from "@/src/types/specialty";
 import { Image } from "@nextui-org/image";
 import { Tooltip } from "@nextui-org/tooltip";
 import Link from "next/link";
 import React from "react";
 
-
 const SpecialtySection = async () => {
-  const specialty = await getSpecialty();
+  const specialty = await getSpecialties();
 
   return (
     <>
@@ -21,7 +20,6 @@ const SpecialtySection = async () => {
               <Link
                 href={`/specialty/${item?._id}`}
                 className="flex items-center gap-5 border p-4 rounded-md hover:scale-[1.02] hover:-translate-y-1 transition duration-500"
-                
               >
                 <figure className="">
                   <Image
