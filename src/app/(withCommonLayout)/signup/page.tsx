@@ -117,7 +117,7 @@ const SignupPage = () => {
             <MyInp
               type="select"
               name="doctorType"
-              label="Email"
+              label="Doctor Type"
               options={doctorTypes?.map((doctorType) => ({
                 key: doctorType,
                 label: doctorType,
@@ -135,18 +135,25 @@ const SignupPage = () => {
                 label: specialty.name,
               }))}
             />
-            <MyInp type="text" name="medicalDegree" label="Medical Degree" />
+            <MyInp
+              type="text"
+              name="medicalDegree"
+              placeholder="e.g., BCS (Health), MBBS"
+              label="Medical Degree"
+            />
           </div>
 
           <div className="flex flex-col md:flex-row gap-4">
             <MyInp
               type="text"
               name="totalExperienceYear"
+              placeholder="e.g., 15 years"
               label="Total Exp Year"
             />
             <MyInp
               type="text"
               name="currentWorkplace"
+              placeholder="e.g., Dhaka Medical College"
               label="Current Workplace"
             />
           </div>
@@ -154,9 +161,43 @@ const SignupPage = () => {
             <MyInp
               type="text"
               name="consultationFee"
-              label="Consultation Fee"
+              placeholder="e.g., 1000"
+              label="Consultation Fee (BDT)"
             />
-            <MyInp type="text" name="followupFee" label="Followup Fee" />
+            <MyInp
+              type="text"
+              name="followupFee"
+              placeholder="e.g., 600"
+              label="Followup Fee (BDT)"
+            />
+          </div>
+          <div className="flex flex-col md:flex-row gap-4">
+            <MyInp
+              type="text"
+              name="availability"
+              placeholder="e.g., dayStart - dayEnd, timeStart - timeEnd"
+              label="Availability"
+            />
+            <MyInp
+              type="text"
+              name="workingExperiences"
+              placeholder="e.g., workPlace, department, designation, workingPeriod"
+              label="Working Experiences"
+            />
+          </div>
+          <div className="flex flex-col md:flex-row gap-4">
+            <MyInp
+              type="text"
+              name="nid"
+              placeholder="e.g., 663543434423"
+              label="NID"
+            />
+            <MyInp
+              type="text"
+              name="bmdc"
+              placeholder="e.g., 55754"
+              label="BMDC"
+            />
           </div>
         </div>
       ),
