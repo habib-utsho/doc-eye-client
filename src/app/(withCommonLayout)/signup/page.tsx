@@ -178,6 +178,7 @@ const SignupPage = () => {
               placeholder="e.g., dayStart - dayEnd, timeStart - timeEnd"
               label="Availability"
             />
+            
             <MyInp
               type="text"
               name="workingExperiences"
