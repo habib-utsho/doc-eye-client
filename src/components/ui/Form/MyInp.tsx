@@ -9,9 +9,11 @@ type TMyInp = {
   name: string;
   type:
     | "text"
+    | "number"
     | "password"
     | "email"
     | "date"
+    | "time"
     | "select"
     | "textarea"
     | "textarea";
@@ -29,6 +31,7 @@ type TMyInp = {
   value?: string;
   defaultValue?: string;
   disabled?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   options?: { key: string; label: string }[];
 };
 
@@ -43,6 +46,7 @@ const MyInp = ({
   value,
   disabled,
   defaultValue,
+  onChange,
   options = [],
 }: TMyInp) => {
   const {
@@ -66,6 +70,7 @@ const MyInp = ({
           placeholder={placeholder}
           isInvalid={!!errors[name]}
           disabled={disabled}
+          onChange={onChange}
           errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
         />
       ) : type === "password" ? (
@@ -80,6 +85,7 @@ const MyInp = ({
           isInvalid={!!errors[name]}
           errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
           disabled={disabled}
+          onChange={onChange}
           type={isVisible ? "text" : "password"}
           endContent={
             <button
@@ -124,6 +130,7 @@ const MyInp = ({
           label={label}
           disabled={disabled}
           placeholder={placeholder}
+          onChange={onChange}
           isInvalid={!!errors[name]}
           errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
         />

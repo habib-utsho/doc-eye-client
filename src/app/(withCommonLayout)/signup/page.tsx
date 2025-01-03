@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import signinBG from "@/src/assets/img/Sign/signinBG.jpg";
 import Link from "next/link";
 import MyInp from "@/src/components/ui/Form/MyInp";
@@ -16,6 +16,10 @@ import { Tab, Tabs } from "@nextui-org/tabs";
 import { doctorTitles, doctorTypes } from "@/src/constant/doctor.constant";
 import { useGetAllSpecialties } from "@/src/hooks/specialty.hook";
 import { TSpecialty } from "@/src/types/specialty";
+import { Divider } from "@nextui-org/divider";
+import { subtitle, title } from "@/src/components/primitives";
+import { days } from "@/src/constant/index.constant";
+import { DeleteIcon } from "@/src/components/ui/icons";
 
 // Need to change password
 const SignupPage = () => {
@@ -31,6 +35,40 @@ const SignupPage = () => {
     };
 
     handleRegisterUser(updatedValues);
+  };
+
+  const [experiences, setExperiences] = useState([
+    {
+      workPlace: "",
+      department: "",
+      designation: "",
+      workingPeriodStart: "",
+      workingPeriodEnd: "",
+    },
+  ]);
+
+  const onAddExperience = () => {
+    setExperiences([
+      ...experiences,
+      {
+        workPlace: "",
+        department: "",
+        designation: "",
+        workingPeriodStart: "",
+        workingPeriodEnd: "",
+      },
+    ]);
+  };
+
+  const onRemoveExperience = (index: number) => {
+    setExperiences(experiences.filter((_, i) => i !== index));
+  };
+
+  const onExperienceChange = (index: number, key: string, value: string) => {
+    const updatedExperiences = experiences.map((experience, i) => {
+      return i === index ? { ...experience, [key]: value } : experience;
+    });
+    setExperiences(updatedExperiences);
   };
 
   const defaultValues = {
@@ -171,21 +209,7 @@ const SignupPage = () => {
               label="Followup Fee (BDT)"
             />
           </div>
-          <div className="flex flex-col md:flex-row gap-4">
-            <MyInp
-              type="text"
-              name="availability"
-              placeholder="e.g., dayStart - dayEnd, timeStart - timeEnd"
-              label="Availability"
-            />
-            
-            <MyInp
-              type="text"
-              name="workingExperiences"
-              placeholder="e.g., workPlace, department, designation, workingPeriod"
-              label="Working Experiences"
-            />
-          </div>
+          {/* NID & BMDC */}
           <div className="flex flex-col md:flex-row gap-4">
             <MyInp
               type="text"
@@ -199,6 +223,166 @@ const SignupPage = () => {
               placeholder="e.g., 55754"
               label="BMDC"
             />
+          </div>
+
+          {/* Working experiences */}
+          <div>
+            <h2 className={`${subtitle()}`}>Working Experiences</h2>
+            <Divider className="w-[200px] mb-3" />
+            {/* <div className="space-y-4">
+              <div className="flex flex-col md:flex-row gap-4">
+                <MyInp
+                  type="text"
+                  name="workPlace"
+                  placeholder="e.g., Dhaka Medical College"
+                  label="Work Place"
+                />
+                <MyInp
+                  type="text"
+                  name="department"
+                  placeholder="e.g., Orthopaedics"
+                  label="Department"
+                />
+                <MyInp
+                  type="text"
+                  name="designation"
+                  placeholder="e.g., Assistant Professor"
+                  label="Designation"
+                />
+              </div>
+              <div className="flex flex-col md:flex-row gap-4">
+                <MyInp
+                  type="date"
+                  name="workingPeriodStart"
+                  label="Working Period Start"
+                />
+                <MyInp
+                  type="date"
+                  name="workingPeriodEnd"
+                  label="Working Period End"
+                />
+              </div>
+            </div> */}
+
+            <div className="space-y-4">
+              {experiences.map((experience, index) => (
+                <div key={index} className="space-y-4 border p-4 rounded-md">
+                  <div className="text-right">
+                    <Button
+                      size="sm"
+                      variant="bordered"
+                      className="text-danger"
+                      onClick={() => onRemoveExperience(index)}
+                      isIconOnly
+                    >
+                      <DeleteIcon />
+                    </Button>
+                  </div>
+
+                  <div className="flex flex-col md:flex-row gap-4">
+                    <MyInp
+                      type="text"
+                      name={`experiences[${index}].workPlace`}
+                      placeholder="e.g., Dhaka Medical College"
+                      label="Work Place"
+                      value={experience.workPlace}
+                      onChange={(e) =>
+                        onExperienceChange(index, "workPlace", e.target.value)
+                      }
+                    />
+                    <MyInp
+                      type="text"
+                      name={`experiences[${index}].department`}
+                      placeholder="e.g., Orthopaedics"
+                      label="Department"
+                      value={experience.department}
+                      onChange={(e) =>
+                        onExperienceChange(index, "department", e.target.value)
+                      }
+                    />
+                    <MyInp
+                      type="text"
+                      name={`experiences[${index}].designation`}
+                      placeholder="e.g., Assistant Professor"
+                      label="Designation"
+                      value={experience.designation}
+                      onChange={(e) =>
+                        onExperienceChange(index, "designation", e.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="flex flex-col md:flex-row gap-4">
+                    <MyInp
+                      type="date"
+                      name={`experiences[${index}].workingPeriodStart`}
+                      label="Working Period Start"
+                      value={experience.workingPeriodStart}
+                      onChange={(e) =>
+                        onExperienceChange(
+                          index,
+                          "workingPeriodStart",
+                          e.target.value
+                        )
+                      }
+                    />
+                    <MyInp
+                      type="date"
+                      name={`experiences[${index}].workingPeriodEnd`}
+                      label="Working Period End"
+                      value={experience.workingPeriodEnd}
+                      onChange={(e) =>
+                        onExperienceChange(
+                          index,
+                          "workingPeriodEnd",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+              ))}
+
+              <Button
+                size="sm"
+                color="primary"
+                className="text-white"
+                onClick={onAddExperience}
+              >
+                Add Experience
+              </Button>
+            </div>
+          </div>
+
+          {/* Availability */}
+          <div>
+            <h2 className={`${subtitle()}`}>Availability</h2>
+            <Divider className="w-[200px] mb-3" />
+            <div className="space-y-4">
+              <div className="flex flex-col md:flex-row gap-4">
+                <MyInp
+                  type="select"
+                  name="dayStart"
+                  options={days?.map((day) => ({
+                    key: day,
+                    label: day,
+                  }))}
+                  label="Day Start"
+                />
+                <MyInp
+                  type="select"
+                  name="dayEnd"
+                  options={days?.map((day) => ({
+                    key: day,
+                    label: day,
+                  }))}
+                  label="Day End"
+                />
+              </div>
+              <div className="flex flex-col md:flex-row gap-4">
+                <MyInp type="time" name="timeStart" label="Time Start" />
+                <MyInp type="time" name="timeEnd" label="Time End" />
+              </div>
+            </div>
           </div>
         </div>
       ),
