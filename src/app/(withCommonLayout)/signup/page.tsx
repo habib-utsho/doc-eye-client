@@ -19,10 +19,20 @@ import { TSpecialty } from "@/src/types/specialty";
 import { Divider } from "@nextui-org/divider";
 import { subtitle, title } from "@/src/components/primitives";
 import { days } from "@/src/constant/index.constant";
-import { DeleteIcon } from "@/src/components/ui/icons";
+import {
+  DeleteIcon,
+  FileUploadIcon,
+  PlusIcon,
+  UploadIcon,
+} from "@/src/components/ui/icons";
+import { Avatar } from "@nextui-org/avatar";
+import Image from "next/image";
 
 // Need to change password
 const SignupPage = () => {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
   const { mutate: handleRegisterUser, isPending } = useUserRegister();
 
   const { data: specialties, isLoading: isLoadingSpecialties } =
@@ -34,9 +44,12 @@ const SignupPage = () => {
       dateOfBirth: new Date(payload?.dateOfBirth),
     };
 
+    console.log(updatedValues);
+
     handleRegisterUser(updatedValues);
   };
 
+  // Working Experiences
   const [experiences, setExperiences] = useState([
     {
       workPlace: "",
@@ -46,7 +59,6 @@ const SignupPage = () => {
       workingPeriodEnd: "",
     },
   ]);
-
   const onAddExperience = () => {
     setExperiences([
       ...experiences,
@@ -59,11 +71,9 @@ const SignupPage = () => {
       },
     ]);
   };
-
   const onRemoveExperience = (index: number) => {
     setExperiences(experiences.filter((_, i) => i !== index));
   };
-
   const onExperienceChange = (index: number, key: string, value: string) => {
     const updatedExperiences = experiences.map((experience, i) => {
       return i === index ? { ...experience, [key]: value } : experience;
@@ -82,8 +92,79 @@ const SignupPage = () => {
     password: "1234@@aA",
   };
 
+  console.log(previewUrl, "previewUrl");
+
   const reusableInp = (
     <div className="space-y-4">
+      <div>
+        {previewUrl ? (
+          <div className="relative w-[300px] h-[300px] rounded overflow-hidden">
+            <Image
+              alt="test"
+              src={previewUrl}
+              height={500}
+              width={500}
+              className="object-cover"
+            />
+            <span className="bg-white bg-opacity-40 border border-danger p-2 rounded inline-block absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 cursor-pointer">
+              <DeleteIcon
+                className=" text-danger scale-150"
+                onClick={() => {
+                  setSelectedFile(null);
+                  setPreviewUrl(null);
+                }}
+              />
+            </span>
+          </div>
+        ) : (
+          <div
+            className="w-[300px] h-[300px] border flex items-center justify-center rounded-lg cursor-pointer relative"
+            style={{ backgroundImage: `url(${signinBG.src})` }}
+          >
+            <MyInp
+              type="file"
+              name="file"
+              label="Profile Picture"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const validImageTypes = [
+                    "image/jpg",
+                    "image/jpeg",
+                    "image/png",
+                    "image/gif",
+                  ];
+                  if (!validImageTypes.includes(file.type)) {
+                    alert(
+                      "Please select a valid image file (JPEG, JPG, PNG, or GIF)"
+                    );
+                    return;
+                  }
+
+                  // Set the selected file state
+                  setSelectedFile(file);
+
+                  // Read the file for preview
+                  const fileReader = new FileReader();
+                  fileReader.onload = () => {
+                    setPreviewUrl(fileReader.result as string);
+                  };
+                  fileReader.readAsDataURL(file);
+                } else {
+                  setSelectedFile(null);
+                  setPreviewUrl(null);
+                }
+              }}
+              className="opacity-0 absolute top-0 left-0 w-full h-full"
+            />
+
+            <Button isIconOnly className="h-full w-full bg-opacity-50">
+              <FileUploadIcon />
+            </Button>
+          </div>
+        )}
+      </div>
+
       <div className="flex flex-col md:flex-row gap-4">
         <MyInp type="text" name="name" label="Name" />
         <MyInp type="email" name="email" label="Email" />
@@ -345,10 +426,11 @@ const SignupPage = () => {
               <Button
                 size="sm"
                 color="primary"
-                className="text-white"
+                className="!text-white"
                 onClick={onAddExperience}
+                isIconOnly
               >
-                Add Experience
+                <PlusIcon />
               </Button>
             </div>
           </div>
@@ -388,8 +470,6 @@ const SignupPage = () => {
       ),
     },
   ];
-
-  console.log(specialties, "specialties");
 
   return (
     <div

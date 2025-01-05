@@ -9,6 +9,7 @@ type TMyInp = {
   name: string;
   type:
     | "text"
+    | "file"
     | "number"
     | "password"
     | "email"
@@ -33,6 +34,7 @@ type TMyInp = {
   disabled?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   options?: { key: string; label: string }[];
+  className?: string;
 };
 
 const MyInp = ({
@@ -48,6 +50,7 @@ const MyInp = ({
   defaultValue,
   onChange,
   options = [],
+  className,
 }: TMyInp) => {
   const {
     register,
@@ -72,6 +75,7 @@ const MyInp = ({
           disabled={disabled}
           onChange={onChange}
           errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
+          className={className}
         />
       ) : type === "password" ? (
         <Input
@@ -87,6 +91,7 @@ const MyInp = ({
           disabled={disabled}
           onChange={onChange}
           type={isVisible ? "text" : "password"}
+          className={className}
           endContent={
             <button
               className="focus:outline-none"
@@ -113,6 +118,7 @@ const MyInp = ({
           placeholder={placeholder}
           isInvalid={!!errors[name]}
           disabled={disabled}
+          className={className}
           errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
         >
           {options.map((option) => (
@@ -133,6 +139,7 @@ const MyInp = ({
           onChange={onChange}
           isInvalid={!!errors[name]}
           errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
+          className={className}
         />
       )}
     </>
