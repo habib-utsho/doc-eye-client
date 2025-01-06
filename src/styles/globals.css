@@ -16,3 +16,14 @@
 .vertical-timeline-element-content {
   box-shadow: rgba(100, 100, 111, 0.3) 0px 7px 29px 0px !important;
 }
+
+/* Avatar inp in signup page  */
+.avatar-wrapper [data-slot="input-wrapper"] {
+  flex: 1;
+  padding: 0;
+}
+.avatar-wrapper [data-slot="input-wrapper"] input {
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+}

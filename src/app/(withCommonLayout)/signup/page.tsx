@@ -96,15 +96,15 @@ const SignupPage = () => {
 
   const reusableInp = (
     <div className="space-y-4">
-      <div>
+      <div className="avatar-wrapper w-[200px] h-[200px]">
         {previewUrl ? (
-          <div className="relative w-[300px] h-[300px] rounded overflow-hidden">
+          <div className="relative h-full w-full rounded-lg overflow-hidden border border-primary">
             <Image
-              alt="test"
+              alt="avatar"
               src={previewUrl}
               height={500}
               width={500}
-              className="object-cover"
+              className="object-cover border rounded-lg"
             />
             <span className="bg-white bg-opacity-40 border border-danger p-2 rounded inline-block absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 cursor-pointer">
               <DeleteIcon
@@ -118,48 +118,49 @@ const SignupPage = () => {
           </div>
         ) : (
           <div
-            className="w-[300px] h-[300px] border flex items-center justify-center rounded-lg cursor-pointer relative"
+            className="h-full w-full  border flex items-center justify-center rounded-lg cursor-pointer relative"
             style={{ backgroundImage: `url(${signinBG.src})` }}
           >
-            <MyInp
-              type="file"
-              name="file"
-              label="Profile Picture"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  const validImageTypes = [
-                    "image/jpg",
-                    "image/jpeg",
-                    "image/png",
-                    "image/gif",
-                  ];
-                  if (!validImageTypes.includes(file.type)) {
-                    alert(
-                      "Please select a valid image file (JPEG, JPG, PNG, or GIF)"
-                    );
-                    return;
-                  }
-
-                  // Set the selected file state
-                  setSelectedFile(file);
-
-                  // Read the file for preview
-                  const fileReader = new FileReader();
-                  fileReader.onload = () => {
-                    setPreviewUrl(fileReader.result as string);
-                  };
-                  fileReader.readAsDataURL(file);
-                } else {
-                  setSelectedFile(null);
-                  setPreviewUrl(null);
-                }
-              }}
-              className="opacity-0 absolute top-0 left-0 w-full h-full"
-            />
-
             <Button isIconOnly className="h-full w-full bg-opacity-50">
-              <FileUploadIcon />
+              <div className="flex flex-col gap-1 items-center justify-center">
+                <FileUploadIcon className="text-white size-6" />
+                <span className="text-white">Upload your avatar</span>
+              </div>
+              <MyInp
+                type="file"
+                name="file"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const validImageTypes = [
+                      "image/jpg",
+                      "image/jpeg",
+                      "image/png",
+                      "image/gif",
+                    ];
+                    if (!validImageTypes.includes(file.type)) {
+                      alert(
+                        "Please select a valid image file (JPEG, JPG, PNG, or GIF)"
+                      );
+                      return;
+                    }
+
+                    // Set the selected file state
+                    setSelectedFile(file);
+
+                    // Read the file for preview
+                    const fileReader = new FileReader();
+                    fileReader.onload = () => {
+                      setPreviewUrl(fileReader.result as string);
+                    };
+                    fileReader.readAsDataURL(file);
+                  } else {
+                    setSelectedFile(null);
+                    setPreviewUrl(null);
+                  }
+                }}
+                className="opacity-0 absolute top-0 left-0 bottom-0 w-full h-full"
+              />
             </Button>
           </div>
         )}

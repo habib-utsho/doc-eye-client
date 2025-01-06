@@ -27,7 +27,7 @@ type TMyInp = {
     | "warning"
     | "danger";
   radius?: "none" | "sm" | "md" | "lg" | "full";
-  label: ReactNode;
+  label?: ReactNode;
   placeholder?: string;
   value?: string;
   defaultValue?: string;
