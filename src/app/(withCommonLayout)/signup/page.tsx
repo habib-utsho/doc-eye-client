@@ -23,15 +23,16 @@ import {
   DeleteIcon,
   FileUploadIcon,
   PlusIcon,
-  UploadIcon,
 } from "@/src/components/ui/icons";
 import { Avatar } from "@nextui-org/avatar";
 import Image from "next/image";
+import { toast } from "sonner";
 
 // Need to change password
 const SignupPage = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"patient" | "doctor">("patient");
 
   const { mutate: handleRegisterUser, isPending } = useUserRegister();
 
@@ -39,13 +40,20 @@ const SignupPage = () => {
     useGetAllSpecialties();
 
   const onSubmit: SubmitHandler<TPatient> = async (payload: TPatient) => {
+    if (!previewUrl) {
+      toast.error("Please upload your avatar");
+    }
     const updatedValues = {
       ...payload,
       dateOfBirth: new Date(payload?.dateOfBirth),
     };
 
-    console.log(updatedValues);
+    console.log(
+      { ...updatedValues, experiences, profileImg: selectedFile },
+      "updatedValues, experiences"
+    );
 
+    return;
     handleRegisterUser(updatedValues);
   };
 
@@ -92,8 +100,6 @@ const SignupPage = () => {
     password: "1234@@aA",
   };
 
-  console.log(previewUrl, "previewUrl");
-
   const reusableInp = (
     <div className="space-y-4">
       <div className="avatar-wrapper w-[200px] h-[200px]">
@@ -104,7 +110,7 @@ const SignupPage = () => {
               src={previewUrl}
               height={500}
               width={500}
-              className="object-cover border rounded-lg"
+              className="object-cover border rounded-lg h-full w-full"
             />
             <span className="bg-white bg-opacity-40 border border-danger p-2 rounded inline-block absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 cursor-pointer">
               <DeleteIcon
@@ -311,40 +317,6 @@ const SignupPage = () => {
           <div>
             <h2 className={`${subtitle()}`}>Working Experiences</h2>
             <Divider className="w-[200px] mb-3" />
-            {/* <div className="space-y-4">
-              <div className="flex flex-col md:flex-row gap-4">
-                <MyInp
-                  type="text"
-                  name="workPlace"
-                  placeholder="e.g., Dhaka Medical College"
-                  label="Work Place"
-                />
-                <MyInp
-                  type="text"
-                  name="department"
-                  placeholder="e.g., Orthopaedics"
-                  label="Department"
-                />
-                <MyInp
-                  type="text"
-                  name="designation"
-                  placeholder="e.g., Assistant Professor"
-                  label="Designation"
-                />
-              </div>
-              <div className="flex flex-col md:flex-row gap-4">
-                <MyInp
-                  type="date"
-                  name="workingPeriodStart"
-                  label="Working Period Start"
-                />
-                <MyInp
-                  type="date"
-                  name="workingPeriodEnd"
-                  label="Working Period End"
-                />
-              </div>
-            </div> */}
 
             <div className="space-y-4">
               {experiences.map((experience, index) => (
@@ -481,7 +453,11 @@ const SignupPage = () => {
         <DEForm
           onSubmit={onSubmit}
           defaultValues={defaultValues}
-          resolver={zodResolver(authValidationSchema.signupValidationSchema)}
+          resolver={zodResolver(
+            activeTab === "doctor"
+              ? authValidationSchema.doctorSignupValidationSchema
+              : authValidationSchema.patientSignupValidationSchema
+          )}
         >
           <div className="shadow  my-5 md:my-32 rounded-md bg-background py-14 px-8">
             <div className="mb-8 space-y-1">
@@ -494,7 +470,14 @@ const SignupPage = () => {
             </div>
 
             <div className="space-y-4">
-              <Tabs aria-label="Registration" color={"secondary"} radius="full">
+              <Tabs
+                onSelectionChange={(tab) =>
+                  setActiveTab(tab as "patient" | "doctor")
+                }
+                aria-label="Registration Tabs"
+                color={"secondary"}
+                radius="full"
+              >
                 {tabs.map((tab) => (
                   <Tab key={tab.key} title={tab.title}>
                     {tab.content}

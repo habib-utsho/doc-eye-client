@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { doctorTitles } from "../constant/doctor.constant";
 
 const signinValidationSchema = z.object({
   email: z.string().trim().email({ message: "Please provide a valid email!" }),
@@ -6,7 +7,8 @@ const signinValidationSchema = z.object({
     .string()
     .min(6, { message: "Password must be at least 6 characters!" }),
 });
-const signupValidationSchema = z.object({
+
+const commonSignupValidationSchema = z.object({
   name: z.string().min(1, "Name is required."),
   password: z
     .string()
@@ -102,7 +104,40 @@ const signupValidationSchema = z.object({
   isDeleted: z.boolean().default(false), // Default value
 });
 
+const patientSignupValidationSchema = commonSignupValidationSchema;
+
+const doctorSignupValidationSchema = z.object({
+  ...commonSignupValidationSchema.shape,
+  doctorTitle: z
+    .string(z.enum(["Dr.", "Prof. Dr.", "Assoc. Prof. Dr.", "Asst. Prof. Dr."]))
+    .min(1, "Doctor title is required."),
+  doctorType: z
+    .string(z.enum(["Medical", "Dental", "Veterinary"]))
+    .min(1, "Doctor type is required."),
+  medicalSpecialty: z.string().min(1, "Medical Specialty is required."),
+  medicalDegree: z.string().min(1, "Medical Degree is required."),
+  totalExperienceYear: z.number().min(1, "Total Experience is required."),
+  currentWorkplace: z.string().min(1, "Current Workplace is required."),
+  consultationFee: z.number().min(1, "Consultation Fee is required."),
+  followupFee: z.number().min(1, "Follow Up Fee is required."),
+  nid: z.string().min(1, "NID is required."),
+  bmdc: z.string().min(1, "BMDC is required."),
+  experiences: z
+    .array(
+      z.object({
+        year: z.number().min(1, "Year is required."),
+        description: z.string().min(1, "Description is required."),
+        workingPeriodStart: z
+          .string()
+          .min(1, "Working Period Start is required."),
+        workingPeriodEnd: z.string().min(1, "Working Period End is required."),
+      })
+    )
+    .optional(),
+});
+
 export const authValidationSchema = {
   signinValidationSchema,
-  signupValidationSchema,
+  patientSignupValidationSchema,
+  doctorSignupValidationSchema,
 };
