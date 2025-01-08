@@ -2,9 +2,9 @@
 import { Input, Textarea } from "@nextui-org/input";
 import { Select, SelectItem } from "@nextui-org/select";
 import React, { ReactNode } from "react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "../icons";
-import { set } from "zod";
+
 type TMyInp = {
   name: string;
   type:
@@ -16,7 +16,6 @@ type TMyInp = {
     | "date"
     | "time"
     | "select"
-    | "textarea"
     | "textarea";
   size?: "sm" | "md" | "lg";
   color?:
@@ -32,7 +31,9 @@ type TMyInp = {
   value?: string;
   defaultValue?: string;
   disabled?: boolean;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | any>
+  ) => void;
   options?: { key: string; label: string }[];
   className?: string;
 };
@@ -45,7 +46,6 @@ const MyInp = ({
   radius = "md",
   size = "sm",
   color = "default",
-  value,
   disabled,
   defaultValue,
   onChange,
@@ -53,96 +53,134 @@ const MyInp = ({
   className,
 }: TMyInp) => {
   const {
-    register,
+    control,
     formState: { errors },
   } = useFormContext();
 
   const [isVisible, setIsVisible] = React.useState(false);
 
+  if (type === "file") {
+    return (
+      <Input
+        type="file"
+        onChange={onChange}
+        size={size}
+        radius={radius}
+        color={color}
+        label={label}
+        placeholder={placeholder}
+        isInvalid={!!errors[name]}
+        disabled={disabled}
+        errorMessage={errors[name]?.message as string}
+        className={className}
+      />
+    );
+  }
+
   return (
-    <>
-      {type === "textarea" ? (
-        <Textarea
-          type={type}
-          size={size}
-          {...register(name)}
-          defaultValue={defaultValue}
-          radius={radius}
-          color={color}
-          label={label}
-          placeholder={placeholder}
-          isInvalid={!!errors[name]}
-          disabled={disabled}
-          onChange={onChange}
-          errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
-          className={className}
-        />
-      ) : type === "password" ? (
-        <Input
-          size={size}
-          {...register(name)}
-          defaultValue={defaultValue}
-          radius={radius}
-          color={color}
-          label={label}
-          placeholder={placeholder}
-          isInvalid={!!errors[name]}
-          errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
-          disabled={disabled}
-          onChange={onChange}
-          type={isVisible ? "text" : "password"}
-          className={className}
-          endContent={
-            <button
-              className="focus:outline-none"
-              type="button"
-              onClick={() => setIsVisible(!isVisible)}
-              aria-label="toggle password visibility"
+    <Controller
+      name={name}
+      control={control}
+      defaultValue={defaultValue || ""}
+      render={({ field }) => {
+        const handleChange = (e: any) => {
+          field.onChange(e); // For other input types
+          if (onChange) onChange(e); // Call custom onChange
+        };
+
+        if (type === "textarea") {
+          return (
+            <Textarea
+              {...field}
+              onChange={handleChange}
+              size={size}
+              radius={radius}
+              color={color}
+              label={label}
+              placeholder={placeholder}
+              isInvalid={!!errors[name]}
+              disabled={disabled}
+              errorMessage={errors[name]?.message as string}
+              className={className}
+            />
+          );
+        }
+
+        if (type === "password") {
+          return (
+            <Input
+              {...field}
+              onChange={handleChange}
+              type={isVisible ? "text" : "password"}
+              size={size}
+              radius={radius}
+              color={color}
+              label={label}
+              placeholder={placeholder}
+              isInvalid={!!errors[name]}
+              disabled={disabled}
+              errorMessage={errors[name]?.message as string}
+              className={className}
+              endContent={
+                <button
+                  type="button"
+                  className="focus:outline-none"
+                  onClick={() => setIsVisible(!isVisible)}
+                  aria-label="toggle password visibility"
+                >
+                  {isVisible ? (
+                    <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  ) : (
+                    <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  )}
+                </button>
+              }
+            />
+          );
+        }
+
+        if (type === "select") {
+          return (
+            <Select
+              {...field}
+              onChange={handleChange}
+              size={size}
+              radius={radius}
+              color={color}
+              label={label}
+              placeholder={placeholder}
+              isInvalid={!!errors[name]}
+              disabled={disabled}
+              className={className}
+              errorMessage={errors[name]?.message as string}
             >
-              {isVisible ? (
-                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-              ) : (
-                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-              )}
-            </button>
-          }
-        />
-      ) : type === "select" ? (
-        <Select
-          size={size}
-          {...register(name)}
-          value={value}
-          radius={radius}
-          color={color}
-          label={label}
-          placeholder={placeholder}
-          isInvalid={!!errors[name]}
-          disabled={disabled}
-          className={className}
-          errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
-        >
-          {options.map((option) => (
-            <SelectItem key={option.key}>{option.label}</SelectItem>
-          ))}
-        </Select>
-      ) : (
-        <Input
-          type={type}
-          size={size}
-          {...register(name)}
-          defaultValue={defaultValue}
-          radius={radius}
-          color={color}
-          label={label}
-          disabled={disabled}
-          placeholder={placeholder}
-          onChange={onChange}
-          isInvalid={!!errors[name]}
-          errorMessage={errors[name] ? (errors[name]?.message as string) : ""}
-          className={className}
-        />
-      )}
-    </>
+              {options.map((option) => (
+                <SelectItem key={option.key} value={option.key}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </Select>
+          );
+        }
+
+        return (
+          <Input
+            {...field}
+            onChange={handleChange}
+            type={type}
+            size={size}
+            radius={radius}
+            color={color}
+            label={label}
+            placeholder={placeholder}
+            isInvalid={!!errors[name]}
+            disabled={disabled}
+            errorMessage={errors[name]?.message as string}
+            className={className}
+          />
+        );
+      }}
+    />
   );
 };
 

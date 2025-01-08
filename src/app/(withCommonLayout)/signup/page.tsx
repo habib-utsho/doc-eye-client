@@ -40,8 +40,10 @@ const SignupPage = () => {
     useGetAllSpecialties();
 
   const onSubmit: SubmitHandler<TPatient> = async (payload: TPatient) => {
+    const formData = new FormData();
     if (!previewUrl) {
       toast.error("Please upload your avatar");
+      return;
     }
     const updatedValues = {
       ...payload,
@@ -54,6 +56,9 @@ const SignupPage = () => {
     );
 
     return;
+    formData.append("file", selectedFile as Blob);
+    formData.append("data", JSON.stringify(updatedValues));
+
     handleRegisterUser(updatedValues);
   };
 
@@ -292,7 +297,7 @@ const SignupPage = () => {
             />
             <MyInp
               type="text"
-              name="followupFee"
+              name="text"
               placeholder="e.g., 600"
               label="Followup Fee (BDT)"
             />
@@ -452,7 +457,7 @@ const SignupPage = () => {
       <Container className="w-full xl:w-4/6 mx-auto">
         <DEForm
           onSubmit={onSubmit}
-          defaultValues={defaultValues}
+          // defaultValues={defaultValues}
           resolver={zodResolver(
             activeTab === "doctor"
               ? authValidationSchema.doctorSignupValidationSchema

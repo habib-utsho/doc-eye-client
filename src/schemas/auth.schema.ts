@@ -116,24 +116,29 @@ const doctorSignupValidationSchema = z.object({
     .min(1, "Doctor type is required."),
   medicalSpecialty: z.string().min(1, "Medical Specialty is required."),
   medicalDegree: z.string().min(1, "Medical Degree is required."),
-  totalExperienceYear: z.number().min(1, "Total Experience is required."),
+  totalExperienceYear: z.string().min(1, "Total Experience is required."),
   currentWorkplace: z.string().min(1, "Current Workplace is required."),
-  consultationFee: z.number().min(1, "Consultation Fee is required."),
-  followupFee: z.number().min(1, "Follow Up Fee is required."),
+  consultationFee: z.string().min(1, "Consultation Fee is required."),
+  followupFee: z.string().min(1, "Follow Up Fee is required."),
   nid: z.string().min(1, "NID is required."),
   bmdc: z.string().min(1, "BMDC is required."),
-  experiences: z
-    .array(
-      z.object({
-        year: z.number().min(1, "Year is required."),
-        description: z.string().min(1, "Description is required."),
-        workingPeriodStart: z
-          .string()
-          .min(1, "Working Period Start is required."),
-        workingPeriodEnd: z.string().min(1, "Working Period End is required."),
-      })
-    )
-    .optional(),
+  experiences: z.array(
+    z.object({
+      workPlace: z.string().min(1, "Workplace is required."),
+      department: z.string().min(1, "Department is required."),
+      designation: z.string().min(1, "Designation is required."),
+      workingPeriodStart: z
+        .string()
+        .min(1, "Working Period Start is required."),
+      workingPeriodEnd: z.string().min(1, "Working Period End is required."),
+    })
+  ),
+  availability: z.object({
+    dayStart: z.string().min(1, "Day Start is required."),
+    dayEnd: z.string().min(1, "Day End is required."),
+    timeStart: z.string().min(1, "Time Start is required."),
+    timeEnd: z.string().min(1, "Time End is required."),
+  }),
 });
 
 export const authValidationSchema = {

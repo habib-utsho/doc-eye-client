@@ -26,7 +26,11 @@ const DEForm = ({
     formConfig["resolver"] = resolver;
   }
   const methods = useForm(formConfig);
-  const handleSubmit = methods.handleSubmit;
+  const {
+    handleSubmit,
+    // formState: { errors },
+  } = methods;
+  // console.log(errors, "errors from hook form");
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
