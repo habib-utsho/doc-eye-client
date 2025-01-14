@@ -28,14 +28,11 @@ const DEForm = ({
   const methods = useForm(formConfig);
   const {
     handleSubmit,
-    // formState: { errors },
+    formState: { errors },
   } = methods;
-  // console.log(errors, "errors from hook form");
-  
 
+  console.log(errors, "errors from hook form");
 
-  
-  
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
