@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { doctorTitles } from "../constant/doctor.constant";
 
 const signinValidationSchema = z.object({
   email: z.string().trim().email({ message: "Please provide a valid email!" }),
@@ -114,15 +113,16 @@ const doctorSignupValidationSchema = z.object({
   doctorType: z
     .string(z.enum(["Medical", "Dental", "Veterinary"]))
     .min(1, "Doctor type is required."),
-  medicalSpecialty: z.string().min(1, "Medical Specialty is required."),
+  medicalSpecialty: z.array(z.string()).optional(),
   medicalDegree: z.string().min(1, "Medical Degree is required."),
-  totalExperienceYear: z.string().min(1, "Total Experience is required."),
+  totalExperienceYear: z.number().min(1, "Total Experience is required."),
   currentWorkplace: z.string().min(1, "Current Workplace is required."),
-  consultationFee: z.string().min(1, "Consultation Fee is required."),
-  followupFee: z.string().min(1, "Follow Up Fee is required."),
+  consultationFee: z.number().min(1, "Consultation Fee is required."),
+  followupFee: z.number().min(1, "Follow Up Fee is required."),
   nid: z.string().min(1, "NID is required."),
   bmdc: z.string().min(1, "BMDC is required."),
-  experiences: z.array(
+  bio: z.string().min(1, "Bio is required."),
+  workingExperiences: z.array(
     z.object({
       workPlace: z.string().min(1, "Workplace is required."),
       department: z.string().min(1, "Department is required."),

@@ -36,6 +36,7 @@ type TMyInp = {
   ) => void;
   options?: { key: string; label: string }[];
   className?: string;
+  selectionMode?: "single" | "multiple";
 };
 
 const MyInp = ({
@@ -51,6 +52,7 @@ const MyInp = ({
   onChange,
   options = [],
   className,
+  selectionMode = "single",
 }: TMyInp) => {
   const {
     control,
@@ -84,8 +86,13 @@ const MyInp = ({
       defaultValue={defaultValue || ""}
       render={({ field }) => {
         const handleChange = (e: any) => {
-          field.onChange(e); // For other input types
-          if (onChange) onChange(e); // Call custom onChange
+          field.onChange(e);
+          if (onChange) onChange(e);
+
+          if (type === "select" && selectionMode === "multiple") {
+            console.log(e?.target?.value?.split(","), "e");
+            field.onChange(e?.target?.value?.split(","));
+          }
         };
 
         if (type === "textarea") {
@@ -153,6 +160,7 @@ const MyInp = ({
               disabled={disabled}
               className={className}
               errorMessage={errors[name]?.message as string}
+              selectionMode={selectionMode}
             >
               {options.map((option) => (
                 <SelectItem key={option.key} value={option.key}>

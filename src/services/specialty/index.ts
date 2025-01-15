@@ -27,7 +27,13 @@ export const createSpecialty = async (payload: FormData) => {
     return response.data;
   } catch (e: any) {
     throw new Error(
-      e.response?.data?.message || e.message || "Failed to create specialty!"
+      `${
+        e?.response?.data?.errorSources?.[0]?.path &&
+        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      } ${e.response?.data?.errorSources?.[0]?.message}` ||
+        e?.response?.data ||
+        e.message ||
+        "Failed to register doctor!"
     );
   }
 };

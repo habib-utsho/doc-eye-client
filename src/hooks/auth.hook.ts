@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { TDecodedUser, TPatient, TSignin } from "../types/user";
 import {
   getCurrentUser,
+  registerDoctor,
   registerPatient,
   signinUser,
 } from "../services/authService";
@@ -35,7 +36,7 @@ export const useUserRegister = () => {
   const router = useRouter();
   return useMutation({
     mutationKey: ["registerPatient"],
-    mutationFn: async (payload: TPatient) => await registerPatient(payload),
+    mutationFn: async (payload: FormData) => await registerPatient(payload),
     onSuccess(data) {
       if (data?.success) {
         toast.success(data?.message || "User registered successfully!");
@@ -46,6 +47,27 @@ export const useUserRegister = () => {
     },
     onError(error) {
       toast.error(error?.message || "Failed to register user!");
+    },
+  });
+};
+export const useDoctorRegister = () => {
+  const router = useRouter();
+  return useMutation({
+    mutationKey: ["registerDoctor"],
+    mutationFn: async (payload: FormData) => await registerDoctor(payload),
+    onSuccess(data) {
+      if (data?.success) {
+        toast.success(
+          data?.message ||
+            "Doctor registered successfully. Wait for admin approval!"
+        );
+        router.push("/signin");
+      } else {
+        toast.error(data?.message || "Failed to register doctor!");
+      }
+    },
+    onError(error: any) {
+      toast.error(error?.message || "Failed to register doctor!");
     },
   });
 };

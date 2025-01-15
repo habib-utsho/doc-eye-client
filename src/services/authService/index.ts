@@ -5,9 +5,9 @@ import { TPatient, TSignin } from "@/src/types/user";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 
-const registerPatient = async (payload: TPatient) => {
-  const formData = new FormData();
-  formData.append("data", JSON.stringify(payload));
+const registerPatient = async (payload: FormData) => {
+  // const formData = new FormData();
+  // formData.append("data", JSON.stringify(payload));
 
   // Append image file if present
   //   if (fileList.length > 0 && fileList[0]?.originFileObj) {
@@ -15,12 +15,38 @@ const registerPatient = async (payload: TPatient) => {
   //     formData.append("file", fileList[0].originFileObj);
   //   }
   try {
-    const response = await axiosInstance.post(`/user/create-patient`, formData);
-    console.log(response, "response from register patient service");
+    const response = await axiosInstance.post(`/user/create-patient`, payload);
     return response.data;
   } catch (e: any) {
-    console.error(e.response?.data?.message || e.message, "error");
-    throw new Error(e.response?.data?.message || e.message);
+    throw new Error(
+      `${e?.response?.data?.errorSources?.[0]?.path}: ${e.response?.data?.errorSources?.[0]?.message}` ||
+        e?.response?.data ||
+        e.message
+    );
+  }
+};
+const registerDoctor = async (payload: FormData) => {
+  // const formData = new FormData();
+  // formData.append("data", JSON.stringify(payload));
+
+  // Append image file if present
+  //   if (fileList.length > 0 && fileList[0]?.originFileObj) {
+  //     console.log(fileList[0].originFileObj, "fileList[0].originFileObj");
+  //     formData.append("file", fileList[0].originFileObj);
+  //   }
+  try {
+    const response = await axiosInstance.post(`/user/create-doctor`, payload);
+    return response.data;
+  } catch (e: any) {
+    throw new Error(
+      `${
+        e?.response?.data?.errorSources?.[0]?.path &&
+        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      } ${e.response?.data?.errorSources?.[0]?.message}` ||
+        e?.response?.data ||
+        e.message ||
+        "Failed to register doctor!"
+    );
   }
 };
 
@@ -33,8 +59,15 @@ const signinUser = async (payload: TSignin) => {
     }
     return response.data;
   } catch (e: any) {
-    console.error(e.response?.data?.message || e.message, "error");
-    throw new Error(e.response?.data?.message || e.message);
+    throw new Error(
+      `${
+        e?.response?.data?.errorSources?.[0]?.path &&
+        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      } ${e.response?.data?.errorSources?.[0]?.message}` ||
+        e?.response?.data ||
+        e.message ||
+        "Failed to register doctor!"
+    );
   }
 };
 
@@ -57,4 +90,4 @@ const getCurrentUser = async () => {
   return decodedToken;
 };
 
-export { registerPatient, signinUser, getCurrentUser, signOut };
+export { registerPatient, registerDoctor, signinUser, getCurrentUser, signOut };

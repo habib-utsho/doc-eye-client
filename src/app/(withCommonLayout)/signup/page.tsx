@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { bloodGroups, districts, genders } from "@/src/constant/user.constant";
 import { authValidationSchema } from "@/src/schemas/auth.schema";
 import { TPatient } from "@/src/types/user";
-import { useUserRegister } from "@/src/hooks/auth.hook";
+import { useDoctorRegister, useUserRegister } from "@/src/hooks/auth.hook";
 import Container from "@/src/components/ui/Container";
 import DEForm from "@/src/components/ui/Form/DEForm";
 import { Tab, Tabs } from "@nextui-org/tabs";
@@ -34,36 +34,19 @@ const SignupPage = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"patient" | "doctor">("patient");
 
-  const { mutate: handleRegisterUser, isPending } = useUserRegister();
+  const { mutate: handleRegisterUser, isPending: isPendingUserRegister } =
+    useUserRegister();
+  const {
+    mutate: handleRegisterDoctor,
+    isPending: isPendingDoctorRegister,
+    error,
+  } = useDoctorRegister();
 
   const { data: specialties, isLoading: isLoadingSpecialties } =
     useGetAllSpecialties();
 
-  const onSubmit: SubmitHandler<TPatient> = async (payload: TPatient) => {
-    const formData = new FormData();
-    if (!previewUrl) {
-      toast.error("Please upload your avatar");
-      return;
-    }
-    const updatedValues = {
-      ...payload,
-      dateOfBirth: new Date(payload?.dateOfBirth),
-    };
-
-    console.log(
-      { ...updatedValues, experiences, profileImg: selectedFile },
-      "updatedValues, experiences"
-    );
-
-    return;
-    formData.append("file", selectedFile as Blob);
-    formData.append("data", JSON.stringify(updatedValues));
-
-    handleRegisterUser(updatedValues);
-  };
-
   // Working Experiences
-  const [experiences, setExperiences] = useState([
+  const [workingExperiences, setWorkingExperiences] = useState([
     {
       workPlace: "",
       department: "",
@@ -73,8 +56,8 @@ const SignupPage = () => {
     },
   ]);
   const onAddExperience = () => {
-    setExperiences([
-      ...experiences,
+    setWorkingExperiences([
+      ...workingExperiences,
       {
         workPlace: "",
         department: "",
@@ -85,24 +68,13 @@ const SignupPage = () => {
     ]);
   };
   const onRemoveExperience = (index: number) => {
-    setExperiences(experiences.filter((_, i) => i !== index));
+    setWorkingExperiences(workingExperiences.filter((_, i) => i !== index));
   };
   const onExperienceChange = (index: number, key: string, value: string) => {
-    const updatedExperiences = experiences.map((experience, i) => {
+    const updatedExperiences = workingExperiences.map((experience, i) => {
       return i === index ? { ...experience, [key]: value } : experience;
     });
-    setExperiences(updatedExperiences);
-  };
-
-  const defaultValues = {
-    name: "Habib Utsho",
-    email: "utsho926@gmail.com",
-    phone: "01706785160",
-    dateOfBirth: "2000-05-05",
-    gender: "Male",
-    district: "Dhaka",
-    bloodGroup: "AB-",
-    password: "1234@@aA",
+    setWorkingExperiences(updatedExperiences);
   };
 
   const reusableInp = (
@@ -115,7 +87,7 @@ const SignupPage = () => {
               src={previewUrl}
               height={500}
               width={500}
-              className="object-cover border rounded-lg h-full w-full"
+              className="border rounded-lg h-full w-full"
             />
             <span className="bg-white bg-opacity-40 border border-danger p-2 rounded inline-block absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 cursor-pointer">
               <DeleteIcon
@@ -148,6 +120,7 @@ const SignupPage = () => {
                       "image/jpeg",
                       "image/png",
                       "image/gif",
+                      "image/webp",
                     ];
                     if (!validImageTypes.includes(file.type)) {
                       alert(
@@ -260,6 +233,7 @@ const SignupPage = () => {
               type="select"
               name="medicalSpecialty"
               label="Medical Specialty"
+              selectionMode="multiple"
               disabled={isLoadingSpecialties || specialties?.data?.length === 0}
               options={specialties?.data?.map((specialty: TSpecialty) => ({
                 key: specialty._id,
@@ -274,11 +248,12 @@ const SignupPage = () => {
             />
           </div>
 
+          {/* Total exp and current workplace */}
           <div className="flex flex-col md:flex-row gap-4">
             <MyInp
-              type="text"
+              type="number"
               name="totalExperienceYear"
-              placeholder="e.g., 15 years"
+              placeholder="e.g., 15"
               label="Total Exp Year"
             />
             <MyInp
@@ -288,16 +263,17 @@ const SignupPage = () => {
               label="Current Workplace"
             />
           </div>
+          {/* consultationFee and follow up fee */}
           <div className="flex flex-col md:flex-row gap-4">
             <MyInp
-              type="text"
+              type="number"
               name="consultationFee"
               placeholder="e.g., 1000"
               label="Consultation Fee (BDT)"
             />
             <MyInp
-              type="text"
-              name="text"
+              type="number"
+              name="followupFee"
               placeholder="e.g., 600"
               label="Followup Fee (BDT)"
             />
@@ -318,13 +294,25 @@ const SignupPage = () => {
             />
           </div>
 
+          {/* Bio */}
+          <div>
+            <h2 className={`${subtitle()}`}>Bio</h2>
+            <Divider className="w-[200px] mb-3" />
+            <MyInp
+              type="textarea"
+              name="bio"
+              label="Bio"
+              placeholder="Write something about yourself"
+            />
+          </div>
+
           {/* Working experiences */}
           <div>
             <h2 className={`${subtitle()}`}>Working Experiences</h2>
             <Divider className="w-[200px] mb-3" />
 
             <div className="space-y-4">
-              {experiences.map((experience, index) => (
+              {workingExperiences.map((experience, index) => (
                 <div key={index} className="space-y-4 border p-4 rounded-md">
                   <div className="text-right">
                     <Button
@@ -341,7 +329,7 @@ const SignupPage = () => {
                   <div className="flex flex-col md:flex-row gap-4">
                     <MyInp
                       type="text"
-                      name={`experiences[${index}].workPlace`}
+                      name={`workingExperiences[${index}].workPlace`}
                       placeholder="e.g., Dhaka Medical College"
                       label="Work Place"
                       value={experience.workPlace}
@@ -351,7 +339,7 @@ const SignupPage = () => {
                     />
                     <MyInp
                       type="text"
-                      name={`experiences[${index}].department`}
+                      name={`workingExperiences[${index}].department`}
                       placeholder="e.g., Orthopaedics"
                       label="Department"
                       value={experience.department}
@@ -361,7 +349,7 @@ const SignupPage = () => {
                     />
                     <MyInp
                       type="text"
-                      name={`experiences[${index}].designation`}
+                      name={`workingExperiences[${index}].designation`}
                       placeholder="e.g., Assistant Professor"
                       label="Designation"
                       value={experience.designation}
@@ -373,7 +361,7 @@ const SignupPage = () => {
                   <div className="flex flex-col md:flex-row gap-4">
                     <MyInp
                       type="date"
-                      name={`experiences[${index}].workingPeriodStart`}
+                      name={`workingExperiences[${index}].workingPeriodStart`}
                       label="Working Period Start"
                       value={experience.workingPeriodStart}
                       onChange={(e) =>
@@ -386,7 +374,7 @@ const SignupPage = () => {
                     />
                     <MyInp
                       type="date"
-                      name={`experiences[${index}].workingPeriodEnd`}
+                      name={`workingExperiences[${index}].workingPeriodEnd`}
                       label="Working Period End"
                       value={experience.workingPeriodEnd}
                       onChange={(e) =>
@@ -421,7 +409,7 @@ const SignupPage = () => {
               <div className="flex flex-col md:flex-row gap-4">
                 <MyInp
                   type="select"
-                  name="dayStart"
+                  name="availability.dayStart"
                   options={days?.map((day) => ({
                     key: day,
                     label: day,
@@ -430,7 +418,7 @@ const SignupPage = () => {
                 />
                 <MyInp
                   type="select"
-                  name="dayEnd"
+                  name="availability.dayEnd"
                   options={days?.map((day) => ({
                     key: day,
                     label: day,
@@ -439,8 +427,16 @@ const SignupPage = () => {
                 />
               </div>
               <div className="flex flex-col md:flex-row gap-4">
-                <MyInp type="time" name="timeStart" label="Time Start" />
-                <MyInp type="time" name="timeEnd" label="Time End" />
+                <MyInp
+                  type="time"
+                  name="availability.timeStart"
+                  label="Time Start"
+                />
+                <MyInp
+                  type="time"
+                  name="availability.timeEnd"
+                  label="Time End"
+                />
               </div>
             </div>
           </div>
@@ -448,6 +444,63 @@ const SignupPage = () => {
       ),
     },
   ];
+
+  const defaultValues = {
+    name: "Habib Utsho",
+    email: "utsho926@gmail.com",
+    phone: "01706785160",
+    dateOfBirth: "2000-05-05",
+    // gender: "Male",
+    district: "Dhaka",
+    bloodGroup: "AB-",
+    password: "1234@@aA",
+    bio: "I am a doctor",
+    // doctorTitle: "Dr.",
+    // doctorType: "Medical",
+    totalExperienceYear: 12,
+    currentWorkplace: "Dhaka Medical College",
+    consultationFee: 1000,
+    followupFee: 600,
+    nid: "663543434423",
+    bmdc: "55754",
+    medicalDegree: "BCS(Health), MBBS",
+    // availability: {
+    //   dayStart: "Saturday",
+    //   dayEnd: "Thursday",
+    //   timeStart: "09:00",
+    //   timeEnd: "17:00",
+    // },
+  };
+
+  const onSubmit: SubmitHandler<TPatient> = async (payload: TPatient) => {
+    const formData = new FormData();
+    if (!previewUrl) {
+      toast.error("Please upload your avatar");
+      return;
+    }
+    const updatedValues = {
+      ...payload,
+      dateOfBirth: new Date(payload?.dateOfBirth),
+    };
+
+    console.log(
+      {
+        ...updatedValues,
+        profileImg: selectedFile,
+      },
+      "updatedValues, experiences"
+    );
+
+    // return;
+    formData.append("file", selectedFile as Blob);
+    formData.append("data", JSON.stringify(updatedValues));
+
+    if (activeTab === "doctor") {
+      handleRegisterDoctor(formData);
+    } else {
+      handleRegisterUser(formData);
+    }
+  };
 
   return (
     <div
@@ -457,7 +510,7 @@ const SignupPage = () => {
       <Container className="w-full xl:w-4/6 mx-auto">
         <DEForm
           onSubmit={onSubmit}
-          // defaultValues={defaultValues}
+          defaultValues={defaultValues}
           resolver={zodResolver(
             activeTab === "doctor"
               ? authValidationSchema.doctorSignupValidationSchema
@@ -491,7 +544,7 @@ const SignupPage = () => {
               </Tabs>
 
               <Button
-                isLoading={isPending}
+                isLoading={isPendingUserRegister || isPendingDoctorRegister}
                 type="submit"
                 color="primary"
                 className="text-white"

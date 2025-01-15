@@ -23,6 +23,7 @@
     "@nextui-org/kbd": "2.2.3",
     "@nextui-org/link": "2.2.3",
     "@nextui-org/listbox": "2.3.3",
+    "@nextui-org/modal": "^2.2.7",
     "@nextui-org/navbar": "2.2.3",
     "@nextui-org/select": "2.4.3",
     "@nextui-org/skeleton": "2.2.3",

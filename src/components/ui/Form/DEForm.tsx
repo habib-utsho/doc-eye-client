@@ -31,7 +31,7 @@ const DEForm = ({
     formState: { errors },
   } = methods;
 
-  console.log(errors, "errors from hook form");
+  console.log(errors, "errors from DEForm");
 
   return (
     <FormProvider {...methods}>
