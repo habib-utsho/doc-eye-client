@@ -81,10 +81,12 @@ const getCurrentUser = async () => {
   let decodedToken = null;
   if (accessToken) {
     decodedToken = await jwtDecode(accessToken);
+
     return {
       _id: decodedToken?._id,
       email: decodedToken?.email,
       role: decodedToken?.role,
+      profileImg: decodedToken?.profileImg,
     };
   }
   return decodedToken;

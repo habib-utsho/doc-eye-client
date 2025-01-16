@@ -36,6 +36,8 @@ const NavbarProfileDropdown = () => {
     }
   };
 
+  console.log(user, "user");
+
   return (
     <>
       {isLoading ? (
@@ -46,7 +48,7 @@ const NavbarProfileDropdown = () => {
             <Avatar
               isBordered
               color="primary"
-              src="https://i.pravatar.cc/150?u=a04258a2462d826712d"
+              src={user.profileImg || "https://i.pravatar.cc/150?u=a04258a2462d826712d"}
               className="cursor-pointer"
             />
           </DropdownTrigger>
