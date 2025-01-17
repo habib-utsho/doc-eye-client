@@ -1,9 +1,9 @@
 import { CheckIcon } from "@/src/components/ui/icons";
 import Container from "@/src/components/ui/Container";
-import { Button } from "@nextui-org/button";
-import { Card, CardBody, CardHeader } from "@nextui-org/card";
-import { Divider } from "@nextui-org/divider";
-import { Tooltip } from "@nextui-org/tooltip";
+import { Button } from "@heroui/button";
+import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Divider } from "@heroui/divider";
+import { Tooltip } from "@heroui/tooltip";
 import React from "react";
 
 const HealthPlansPage = () => {

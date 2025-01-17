@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import signinBG from "@/src/assets/img/Sign/signinBG.jpg";
 import Link from "next/link";
 import MyInp from "@/src/components/ui/Form/MyInp";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { bloodGroups, districts, genders } from "@/src/constant/user.constant";
@@ -12,11 +12,11 @@ import { TPatient } from "@/src/types/user";
 import { useDoctorRegister, useUserRegister } from "@/src/hooks/auth.hook";
 import Container from "@/src/components/ui/Container";
 import DEForm from "@/src/components/ui/Form/DEForm";
-import { Tab, Tabs } from "@nextui-org/tabs";
+import { Tab, Tabs } from "@heroui/tabs";
 import { doctorTitles, doctorTypes } from "@/src/constant/doctor.constant";
 import { useGetAllSpecialties } from "@/src/hooks/specialty.hook";
 import { TSpecialty } from "@/src/types/specialty";
-import { Divider } from "@nextui-org/divider";
+import { Divider } from "@heroui/divider";
 import { subtitle, title } from "@/src/components/primitives";
 import { days } from "@/src/constant/index.constant";
 import {
@@ -24,7 +24,7 @@ import {
   FileUploadIcon,
   PlusIcon,
 } from "@/src/components/ui/icons";
-import { Avatar } from "@nextui-org/avatar";
+import { Avatar } from "@heroui/avatar";
 import Image from "next/image";
 import { toast } from "sonner";
 

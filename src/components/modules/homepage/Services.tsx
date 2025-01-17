@@ -8,7 +8,7 @@ import servicesBG from "@/src/assets/img/Homepage/Services/servicesBG.svg";
 import tharmoMeter from "@/src/assets/img/Homepage/Services/tharmo-meter.png";
 import Image from "next/image";
 import CommonSectionTitle from "../../ui/CommonSectionTitle";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import Container from "../../ui/Container";
 import { subtitle } from "../../primitives";
 import MyMotion from "../../ui/MyMotion";

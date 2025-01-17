@@ -104,6 +104,7 @@ export type TDecodedUser = {
   _id: string;
   email: string;
   role: TUserRole;
+  name: string;
   profileImg?: string;
 };
 

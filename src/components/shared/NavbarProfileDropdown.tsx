@@ -1,19 +1,19 @@
 "use client";
 import { siteConfig } from "@/src/config/site";
-import { Avatar } from "@nextui-org/avatar";
-import { Button } from "@nextui-org/button";
+import { Avatar } from "@heroui/avatar";
+import { Button } from "@heroui/button";
 import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-} from "@nextui-org/dropdown";
+} from "@heroui/dropdown";
 import React from "react";
 import { HeartFilledIcon } from "../ui/icons";
-import { Link } from "@nextui-org/link";
+import { Link } from "@heroui/link";
 import { signOut } from "@/src/services/authService";
 import useUserData from "@/src/hooks/user.hook";
-import { Skeleton } from "@nextui-org/skeleton";
+import { Skeleton } from "@heroui/skeleton";
 import { protectedRoutes } from "@/src/constant";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -36,8 +36,6 @@ const NavbarProfileDropdown = () => {
     }
   };
 
-  console.log(user, "user");
-
   return (
     <>
       {isLoading ? (
@@ -48,12 +46,19 @@ const NavbarProfileDropdown = () => {
             <Avatar
               isBordered
               color="primary"
-              src={user.profileImg || "https://i.pravatar.cc/150?u=a04258a2462d826712d"}
+              src={
+                user.profileImg ||
+                "https://i.pravatar.cc/150?u=a04258a2462d826712d"
+              }
               className="cursor-pointer"
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Static Actions">
-            <DropdownItem key="dashboard" href={`/dashboard/${user?.role}`}>
+            <DropdownItem
+              key="dashboard"
+              href={`/dashboard/${user?.role}`}
+              onClick={() => router.push(`/dashboard/${user?.role}`)}
+            >
               Dashboard
             </DropdownItem>
             <DropdownItem key="profile" href="/dashboard/profile">

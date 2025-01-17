@@ -6,13 +6,10 @@ import {
   NavbarBrand,
   NavbarItem,
   NavbarMenuItem,
-} from "@nextui-org/navbar";
-import { Link } from "@nextui-org/link";
-import { link as linkStyles } from "@nextui-org/theme";
+} from "@heroui/navbar";
+import { Link } from "@heroui/link";
 import NextLink from "next/link";
-import clsx from "clsx";
 import logo from "@/src/assets/img/logo.png";
-
 import { siteConfig } from "@/src/config/site";
 import { ThemeSwitch } from "@/src/components/theme-switch";
 import {
@@ -25,7 +22,11 @@ import NavbarProfileDropdown from "./NavbarProfileDropdown";
 
 export const DashboardNavbar = () => {
   return (
-    <NextUINavbar maxWidth="full" position="sticky">
+    <NextUINavbar
+      maxWidth="full"
+      position="sticky"
+      className="bg-gray-100 dark:bg-gray-700"
+    >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">

@@ -8,7 +8,7 @@ import {
 } from "react-icons/fa6";
 import CommonSectionTitle from "../../ui/CommonSectionTitle";
 import Container from "../../ui/Container";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { subtitle } from "../../primitives";
 
 const WhyChooseUs = () => {

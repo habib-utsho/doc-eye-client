@@ -1,9 +1,11 @@
 import SidebarLoading from "@/src/app/(withDashboardLayout)/dashboard/_components/SidebarLoading";
-import { GithubIcon, SignOutIcon } from "@/src/components/ui/icons";
+import { SignOutIcon } from "@/src/components/ui/icons";
+import logo from "@/src/assets/img/logo.png";
 import useUserData from "@/src/hooks/user.hook";
-import { Button } from "@nextui-org/button";
-import Link from "next/link";
+import { Button } from "@heroui/button";
 import React from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 // Dashboard routes
 type TSidebarRoute = {
@@ -56,8 +58,9 @@ const Sidebar = () => {
 
   return (
     <div className="h-screen bg-gray-100 dark:bg-gray-700 rounded-r-md w-[200px] sticky top-0 left-0 pb-12">
-      <Link href={"/"} className="text-lg text-center pt-4 pb-2 block">
-        Doc Eye
+      <Link className="flex items-center justify-center gap-1 pt-3" href="/">
+        <Image src={logo} height={40} width={40} alt="logo" />
+        <p className="font-bold text-inherit">DocEye</p>
       </Link>
 
       <ul className="rounded mt-4 mb-2 px-2">

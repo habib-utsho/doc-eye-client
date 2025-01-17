@@ -8,7 +8,7 @@ import { ArrowRightIcon, PhoneIcon } from "../../ui/icons";
 import Container from "../../ui/Container";
 import MyMotion from "../../ui/MyMotion";
 import { subtitle, title } from "../../primitives";
-import { Divider } from "@nextui-org/divider";
+import { Divider } from "@heroui/divider";
 
 const AboutUs = () => {
   return (

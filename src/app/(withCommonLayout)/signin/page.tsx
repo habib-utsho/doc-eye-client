@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { GithubIcon } from "@/src/components/ui/icons";
 import MyInp from "@/src/components/ui/Form/MyInp";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authValidationSchema } from "@/src/schemas/auth.schema";

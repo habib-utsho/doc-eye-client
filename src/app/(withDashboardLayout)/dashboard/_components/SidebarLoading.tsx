@@ -1,5 +1,5 @@
-import { Link } from "@nextui-org/link";
-import { Skeleton } from "@nextui-org/skeleton";
+import { Link } from "@heroui/link";
+import { Skeleton } from "@heroui/skeleton";
 import React from "react";
 
 const SidebarLoading = () => {

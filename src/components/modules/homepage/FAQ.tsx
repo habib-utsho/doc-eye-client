@@ -3,7 +3,7 @@ import React from "react";
 import FAQbg from "@/src/assets/img/Homepage/FAQ/FAQ-doctor-portal.png";
 import FAQbg_dark from "@/src/assets/img/Homepage/FAQ/FAQ-doctor-portal_dark.png";
 import CommonSectionTitle from "../../ui/CommonSectionTitle";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import FAQuestions from "../faq/FAQuestions";
 import Container from "../../ui/Container";
 import Link from "next/link";

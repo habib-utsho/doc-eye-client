@@ -1,6 +1,6 @@
 "use client";
-import { Input, Textarea } from "@nextui-org/input";
-import { Select, SelectItem } from "@nextui-org/select";
+import { Input, Textarea } from "@heroui/input";
+import { Select, SelectItem } from "@heroui/select";
 import React, { ReactNode } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "../icons";
