@@ -14,7 +14,7 @@ const SidebarLoading = () => {
             return (
               <li
                 key={elem}
-                className="bg-gray-200 hover:bg-primary hover:text-white transition-all duration-500 text-black  border-y border-gray-50 text-sm "
+                className="bg-gray-200 hover:bg-primary hover:text-white transition-all duration-500 text-black border-y border-gray-50 text-sm "
               >
                 <Skeleton className={"block p-5 px-3 rounded-md"} />
               </li>
