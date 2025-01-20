@@ -17,13 +17,15 @@ import { Button } from "@heroui/button";
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Sidebar as ReactProSidebar,
   Menu,
   MenuItem,
   SubMenu,
 } from "react-pro-sidebar";
+import { signOut } from "@/src/services/authService";
+import { protectedRoutes } from "@/src/constant";
 
 // Dashboard routes
 type TSidebarRoute = {
@@ -158,7 +160,8 @@ const patientRoutes: TSidebarRoute[] = [
 ];
 
 const Sidebar = () => {
-  const { isLoading, user } = useUserData();
+  const { isLoading, user, setUser } = useUserData();
+  const router = useRouter();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -191,6 +194,20 @@ const Sidebar = () => {
         </MenuItem>
       );
     });
+  };
+
+  const handleSignOut = async () => {
+    signOut();
+    setUser(null);
+
+    const isMatchProtectedRoute = protectedRoutes?.some((route) => {
+      const partial = route?.split("/")?.[1];
+      return pathname.match(partial);
+    });
+
+    if (isMatchProtectedRoute) {
+      router.push(`/signin?redirect=${pathname}`);
+    }
   };
 
   return (
@@ -229,7 +246,7 @@ const Sidebar = () => {
           </div>
           <span
             onClick={() => setCollapsed(!collapsed)}
-            className="text-gray-500 hover:text-gray-800 cursor-pointer text-sm"
+            className="bg-primary text-white rounded-l-md  cursor-pointer text-sm absolute right-0 top-[35px]"
           >
             {collapsed ? <MenuIcon /> : <XMarkIcon />}
           </span>
@@ -241,10 +258,12 @@ const Sidebar = () => {
         {/* Sign Out Button */}
         <MenuItem className="mt-auto">
           <Button
-            startContent={<SignOutIcon className="size-5" />}
             className="text-red-500 w-full"
+            // onPress={handleSignOut}
+            startContent={<SignOutIcon className="size-5" />}
+            isIconOnly={collapsed ? true : false}
           >
-            Signout
+            {collapsed ? "" : "Signout"}
           </Button>
         </MenuItem>
       </Menu>

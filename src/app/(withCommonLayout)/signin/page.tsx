@@ -13,6 +13,15 @@ import { TSignin } from "@/src/types/user";
 import { useUserSignin } from "@/src/hooks/auth.hook";
 import Container from "@/src/components/ui/Container";
 import DEForm from "@/src/components/ui/Form/DEForm";
+import {
+  getKeyValue,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from "@heroui/table";
 
 // Need to change password
 const SigninPage = () => {
@@ -31,10 +40,46 @@ const SigninPage = () => {
     handleSignin(payload);
   };
 
-  const defaultValues = {
+  let defaultValues = {
     email: "utsho926@gmail.com",
     password: "1234@@aA",
   };
+
+  const rows = [
+    {
+      key: "1",
+      email: "utsho926@gmail.com ",
+      password: "1234@@aA",
+      role: "Patient",
+    },
+    {
+      key: "2",
+      email: "rasel@example.com",
+      password: "1234@@aA",
+      role: "Doctor",
+    },
+    {
+      key: "3",
+      email: "john.doe@example.com",
+      password: "1234@@aA",
+      role: "Admin",
+    },
+  ];
+
+  const columns = [
+    {
+      key: "email",
+      label: "Email",
+    },
+    {
+      key: "password",
+      label: "Password",
+    },
+    {
+      key: "role",
+      label: "Role",
+    },
+  ];
 
   return (
     <div
@@ -49,6 +94,7 @@ const SigninPage = () => {
         >
           <div className="shadow block xl:flex flex-row my-5 md:my-32">
             <div className="w-full xl:w-3/6 bg-background px-8 py-14 rounded xl:rounded-none xl:rounded-l">
+              {/* signin left */}
               <div className="mb-8 space-y-1">
                 <h2 className="text-primary font-semibold">
                   Hello and welcome{" "}
@@ -96,6 +142,36 @@ const SigninPage = () => {
                   </p>
                 </div>
               </div>
+
+              <Table
+                className="mt-5"
+                defaultSelectedKeys={["1"]}
+                selectionMode="single"
+                color="primary"
+                onSelectionChange={(e) => {
+                  console.log(e, "f");
+                }}
+              >
+                <TableHeader columns={columns}>
+                  {(column) => (
+                    <TableColumn key={column.key}>{column.label}</TableColumn>
+                  )}
+                </TableHeader>
+                <TableBody
+                  items={rows}
+                  onClick={(e) => {
+                    console.log(e.target, "f");
+                  }}
+                >
+                  {(item) => (
+                    <TableRow key={item.key}>
+                      {(columnKey) => (
+                        <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+                      )}
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
             </div>
 
             {/* signin right */}
