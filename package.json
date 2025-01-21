@@ -25,6 +25,7 @@
       "@heroui/listbox": "2.3.9",
       "@heroui/modal": "2.2.7",
       "@heroui/navbar": "2.2.8",
+      "@heroui/pagination": "^2.2.9",
       "@heroui/select": "2.4.9",
       "@heroui/skeleton": "2.2.5",
       "@heroui/snippet": "2.2.10",

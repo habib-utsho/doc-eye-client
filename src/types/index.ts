@@ -4,7 +4,6 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-
 export type TMeta = {
   total: number;
   limit: number;
@@ -16,4 +15,10 @@ export type TResponse<T> = {
   message: string;
   data: T;
   meta?: TMeta;
+};
+
+export type TFilterQuery = {
+  name: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value: any;
 };

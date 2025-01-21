@@ -34,7 +34,7 @@ const DEForm = ({
 
   useEffect(() => {
     if (defaultValues) {
-      reset(defaultValues); // Dynamically reset the form values
+      reset(defaultValues);
     }
   }, [defaultValues, reset]);
 

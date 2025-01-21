@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { createSpecialty, getSpecialties } from "../services/specialty";
+import { TFilterQuery } from "../types";
 
 export const useCreateSpecialty = () => {
   const router = useRouter();
@@ -22,9 +23,9 @@ export const useCreateSpecialty = () => {
   });
 };
 
-export const useGetAllSpecialties = () => {
+export const useGetAllSpecialties = (query: TFilterQuery[] | undefined) => {
   return useQuery({
     queryKey: ["specialties"],
-    queryFn: async () => await getSpecialties(),
+    queryFn: async () => await getSpecialties(query),
   });
 };

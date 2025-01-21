@@ -671,6 +671,22 @@
     "@react-stately/toggle" "3.8.0"
     "@react-stately/utils" "3.10.5"
 
+"@heroui/pagination@^2.2.9":
+  version "2.2.9"
+  resolved "https://registry.npmjs.org/@heroui/pagination/-/pagination-2.2.9.tgz#6b7ecb1164a178bcd27dfded734a0f4c7e94aa5a"
+  integrity sha512-WorO/6AKtTeppEzaAmVtMAKW0DQLAeSYlah+8D0OyY0byO5fX1XtikysjoeV1rHwQImm8S4xn8Xbl6TQoS9oaw==
+  dependencies:
+    "@heroui/react-utils" "2.1.4"
+    "@heroui/shared-icons" "2.1.2"
+    "@heroui/shared-utils" "2.1.3"
+    "@heroui/use-intersection-observer" "2.2.3"
+    "@heroui/use-pagination" "2.2.4"
+    "@react-aria/focus" "3.19.0"
+    "@react-aria/i18n" "3.12.4"
+    "@react-aria/interactions" "3.22.5"
+    "@react-aria/utils" "3.26.0"
+    scroll-into-view-if-needed "3.0.10"
+
 "@heroui/popover@2.3.9":
   version "2.3.9"
   resolved "https://registry.npmjs.org/@heroui/popover/-/popover-2.3.9.tgz#361a418ff48738cc7e5883230f619cc284bf9056"
@@ -1086,6 +1102,16 @@
     "@heroui/react-utils" "2.1.3"
     "@heroui/use-safe-layout-effect" "2.1.1"
 
+"@heroui/use-intersection-observer@2.2.3":
+  version "2.2.3"
+  resolved "https://registry.npmjs.org/@heroui/use-intersection-observer/-/use-intersection-observer-2.2.3.tgz#f5c5ed67e7284e8a48e11c4b625ea0af3d302b52"
+  integrity sha512-mz/YdOfOqWQwWht4qmdkGNIJA2sWka0F4HI9THes6USxE02JLM0KDNKzgM3CiFA/8dhDr+rCn9gOhq9QxGw9eg==
+  dependencies:
+    "@react-aria/interactions" "3.22.5"
+    "@react-aria/ssr" "3.9.7"
+    "@react-aria/utils" "3.26.0"
+    "@react-types/shared" "3.26.0"
+
 "@heroui/use-is-mobile@2.2.2":
   version "2.2.2"
   resolved "https://registry.npmjs.org/@heroui/use-is-mobile/-/use-is-mobile-2.2.2.tgz#65549b988ad4279715a663ad1e7a592982f0e38c"
@@ -1102,6 +1128,14 @@
   version "2.1.1"
   resolved "https://registry.npmjs.org/@heroui/use-measure/-/use-measure-2.1.1.tgz#5870fe872fa73b838012b417de5720fb0a5e8520"
   integrity sha512-hHfIjdREQ2coE3M7T+bBtx4pX5qYrrCv7katCw8tlHkv90wShEeUcF9pun2Om7a4fW0hdMM/Ll+gkJ5dw+FV9g==
+
+"@heroui/use-pagination@2.2.4":
+  version "2.2.4"
+  resolved "https://registry.npmjs.org/@heroui/use-pagination/-/use-pagination-2.2.4.tgz#f0fff0e1ba22ddd47f5481adca42a4469a2626b6"
+  integrity sha512-CXhtm7IT9hquPZYw0Tawq9QvKaMTdszHKzspwXuok3NnuqkVC+oxH0iILl97HzaJf/Z5DJPq3aaXvz1bcVnmOg==
+  dependencies:
+    "@heroui/shared-utils" "2.1.3"
+    "@react-aria/i18n" "3.12.4"
 
 "@heroui/use-safe-layout-effect@2.1.1":
   version "2.1.1"

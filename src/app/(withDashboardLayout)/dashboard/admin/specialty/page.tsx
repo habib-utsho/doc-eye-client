@@ -3,18 +3,40 @@ import { FileUploadIcon } from "@/src/components/ui/icons";
 import Container from "@/src/components/ui/Container";
 import DEForm from "@/src/components/ui/Form/DEForm";
 import MyInp from "@/src/components/ui/Form/MyInp";
-import { useCreateSpecialty } from "@/src/hooks/specialty.hook";
+import {
+  useCreateSpecialty,
+  useGetAllSpecialties,
+} from "@/src/hooks/specialty.hook";
 import { specialtyValidationSchema } from "@/src/schemas/specialty.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@heroui/button";
 import { Image } from "@heroui/image";
-import React from "react";
+import React, { useState } from "react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
+import {
+  getKeyValue,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from "@heroui/table";
+import { TSpecialty } from "@/src/types/specialty";
+import { Pagination } from "@heroui/pagination";
+import { Spinner } from "@heroui/spinner";
 
 const SpecialtyPage = () => {
   const [file, setFile] = React.useState<File | null>(null);
   const [preview, setPreview] = React.useState<string | null>(null);
+  const [pagination, setPagination] = useState({ page: 1, limit: 10 });
+
+  const { data: specialties, isLoading: isLoadingSpecialties } =
+    useGetAllSpecialties([
+      { name: "page", value: pagination.page },
+      { name: "limit", value: pagination.limit },
+    ]);
 
   const {
     mutate: createSpecialty,
@@ -51,9 +73,82 @@ const SpecialtyPage = () => {
     createSpecialty(formData);
   };
 
+  console.log({ specialties, isLoadingSpecialties });
+  const rows = specialties?.data?.map((specialty: TSpecialty, ind: number) => {
+    return {
+      key: ind,
+      name: specialty.name,
+      icon: (
+        <Image
+          src={specialty.icon}
+          alt={specialty.name}
+          width={50}
+          height={50}
+        />
+      ),
+      description: specialty.description,
+    };
+  });
+
+  const columns = [
+    {
+      key: "name",
+      label: "Name",
+    },
+    {
+      key: "icon",
+      label: "Icon",
+    },
+    {
+      key: "description",
+      label: "Description",
+    },
+  ];
+
   return (
-    <div className="min-h-screen  flex items-center justify-center my-28 md:my-0">
-      <Container className="w-full xl:w-3/6 mx-auto">
+    <div className="min-h-screen flex items-center justify-center my-28 md:my-0">
+      <div className="w-full px-4">
+        {/* Specialties */}
+        <Table
+          className="mt-5"
+          color="primary"
+          aria-label="Example static collection table"
+          bottomContent={
+            specialties?.meta?.page > 0 ? (
+              <div className="flex w-full justify-center">
+                <Pagination
+                  isCompact
+                  showControls
+                  showShadow
+                  color="primary"
+                  page={pagination.page}
+                  total={specialties?.meta?.totalPage}
+                  onChange={(page) => setPagination({ ...pagination, page })}
+                />
+              </div>
+            ) : null
+          }
+        >
+          <TableHeader columns={columns}>
+            {(column) => (
+              <TableColumn key={column.key}>{column.label}</TableColumn>
+            )}
+          </TableHeader>
+          <TableBody
+            isLoading={isLoadingSpecialties}
+            items={rows || []}
+            loadingContent={<Spinner />}
+          >
+            {(item: TSpecialty) => (
+              <TableRow key={item.name} className="cursor-pointer">
+                {(columnKey) => (
+                  <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+
         <DEForm
           onSubmit={onSubmit}
           resolver={zodResolver(
@@ -116,7 +211,7 @@ const SpecialtyPage = () => {
             </div>
           </div>
         </DEForm>
-      </Container>
+      </div>
     </div>
   );
 };

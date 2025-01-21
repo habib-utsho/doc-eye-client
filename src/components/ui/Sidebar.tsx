@@ -209,6 +209,7 @@ const Sidebar = () => {
       router.push(`/signin?redirect=${pathname}`);
     }
   };
+  // console.log();
 
   return (
     <ReactProSidebar
@@ -220,13 +221,15 @@ const Sidebar = () => {
       backgroundColor="#f5f5f5"
       breakPoint="md"
       transitionDuration={300}
-      // rootStyles={{
-      //   position: "fixed",
-      //   height: "100vh",
-      //   top: 0,
-      //   left: 0,
-      //   zIndex: 1000,
-      // }}
+      className="h-screen bg-gray-100 rounded-r-md w-[200px] sticky top-0 left-0"
+      rootStyles={{
+        position: "sticky",
+        height: "100vh",
+        width: "200px",
+        top: 0,
+        left: 0,
+        zIndex: 1000,
+      }}
     >
       <Menu
         menuItemStyles={{
@@ -259,7 +262,7 @@ const Sidebar = () => {
         <MenuItem className="mt-auto">
           <Button
             className="text-red-500 w-full"
-            // onPress={handleSignOut}
+            onPress={handleSignOut}
             startContent={<SignOutIcon className="size-5" />}
             isIconOnly={collapsed ? true : false}
           >

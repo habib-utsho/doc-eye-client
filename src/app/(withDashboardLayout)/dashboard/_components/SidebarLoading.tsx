@@ -4,7 +4,7 @@ import React from "react";
 
 const SidebarLoading = () => {
   return (
-    <div className="h-screen bg-gray-100 rounded-r-md w-[200px] fixed top-0 left-0">
+    <div className="h-screen bg-gray-100 rounded-r-md w-[200px] sticky top-0 left-0">
       <Link href={"/"} className="text-lg text-center pt-4 pb-2 block">
         Doc Eye
       </Link>

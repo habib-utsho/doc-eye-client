@@ -81,7 +81,6 @@ const SigninPage = () => {
     },
   ];
 
-  // console.log(defaultValues, "defaultValues");
 
   return (
     <div
