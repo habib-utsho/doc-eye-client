@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import signinBG from "@/src/assets/img/Sign/signinBG.jpg";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -40,10 +40,10 @@ const SigninPage = () => {
     handleSignin(payload);
   };
 
-  let defaultValues = {
+  const [defaultValues, setDefaultValues] = useState<TSignin>({
     email: "utsho926@gmail.com",
     password: "1234@@aA",
-  };
+  });
 
   const rows = [
     {
@@ -80,6 +80,8 @@ const SigninPage = () => {
       label: "Role",
     },
   ];
+
+  // console.log(defaultValues, "defaultValues");
 
   return (
     <div
@@ -148,23 +150,25 @@ const SigninPage = () => {
                 defaultSelectedKeys={["1"]}
                 selectionMode="single"
                 color="primary"
-                onSelectionChange={(e) => {
-                  console.log(e, "f");
-                }}
+                aria-label="Example static collection table"
               >
                 <TableHeader columns={columns}>
                   {(column) => (
                     <TableColumn key={column.key}>{column.label}</TableColumn>
                   )}
                 </TableHeader>
-                <TableBody
-                  items={rows}
-                  onClick={(e) => {
-                    console.log(e.target, "f");
-                  }}
-                >
+                <TableBody items={rows}>
                   {(item) => (
-                    <TableRow key={item.key}>
+                    <TableRow
+                      key={item.key}
+                      onClick={() => {
+                        setDefaultValues({
+                          email: item?.email,
+                          password: item?.password,
+                        });
+                      }}
+                      className="cursor-pointer"
+                    >
                       {(columnKey) => (
                         <TableCell>{getKeyValue(item, columnKey)}</TableCell>
                       )}

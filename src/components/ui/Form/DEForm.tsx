@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 type TFormConfig = {
@@ -28,10 +28,15 @@ const DEForm = ({
   const methods = useForm(formConfig);
   const {
     handleSubmit,
+    reset,
     formState: { errors },
   } = methods;
 
-  console.log(errors, "errors from DEForm");
+  useEffect(() => {
+    if (defaultValues) {
+      reset(defaultValues); // Dynamically reset the form values
+    }
+  }, [defaultValues, reset]);
 
   return (
     <FormProvider {...methods}>
