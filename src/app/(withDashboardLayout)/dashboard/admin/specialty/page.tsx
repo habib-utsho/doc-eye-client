@@ -127,6 +127,7 @@ const SpecialtyPage = () => {
                 />
               </div>
             ) : null
+            
           }
         >
           <TableHeader columns={columns}>
