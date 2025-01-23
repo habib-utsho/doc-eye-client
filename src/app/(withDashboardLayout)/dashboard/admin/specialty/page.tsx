@@ -1,5 +1,9 @@
 "use client";
-import { FileUploadIcon } from "@/src/components/ui/icons";
+import {
+  DeleteIcon,
+  FileUploadIcon,
+  SearchIcon,
+} from "@/src/components/ui/icons";
 import Container from "@/src/components/ui/Container";
 import DEForm from "@/src/components/ui/Form/DEForm";
 import MyInp from "@/src/components/ui/Form/MyInp";
@@ -26,6 +30,18 @@ import {
 import { TSpecialty } from "@/src/types/specialty";
 import { Pagination } from "@heroui/pagination";
 import { Spinner } from "@heroui/spinner";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@heroui/dropdown";
+import { Input } from "@heroui/input";
+import {
+  EditOutlined,
+  FilterOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 
 const SpecialtyPage = () => {
   const [file, setFile] = React.useState<File | null>(null);
@@ -36,6 +52,7 @@ const SpecialtyPage = () => {
     useGetAllSpecialties([
       { name: "page", value: pagination.page },
       { name: "limit", value: pagination.limit },
+      { name: "isDeleted", value: false },
     ]);
 
   const {
@@ -77,7 +94,9 @@ const SpecialtyPage = () => {
   const rows = specialties?.data?.map((specialty: TSpecialty, ind: number) => {
     return {
       key: ind,
+      ind: ind + 1,
       name: specialty.name,
+      isDeleted: specialty.isDeleted,
       icon: (
         <Image
           src={specialty.icon}
@@ -87,10 +106,30 @@ const SpecialtyPage = () => {
         />
       ),
       description: specialty.description,
+      actions: (
+        <div className="flex items-center gap-1">
+          <Button
+            color="primary"
+            className="text-primary bg-opacity-20 hover:scale-[1.07]"
+            isIconOnly
+            startContent={<EditOutlined />}
+          />
+          <Button
+            color="danger"
+            className="text-danger bg-opacity-20 hover:scale-[1.07]"
+            isIconOnly
+            startContent={<DeleteIcon />}
+          />
+        </div>
+      ),
     };
   });
 
   const columns = [
+    {
+      key: "ind",
+      label: "No.",
+    },
     {
       key: "name",
       label: "Name",
@@ -103,11 +142,48 @@ const SpecialtyPage = () => {
       key: "description",
       label: "Description",
     },
+    {
+      key: "actions",
+      label: "Actions",
+    },
   ];
 
   return (
     <div className="min-h-screen flex items-center justify-center my-28 md:my-0">
-      <div className="w-full px-4">
+      <div className="w-full p-4">
+        <div className="flex justify-between items-center mb-8 gap-4">
+          <div className="flex items-center gap-2">
+            <Input
+              name="search"
+              startContent={<SearchIcon />}
+              placeholder="Search specialty..."
+            />
+            <Dropdown>
+              <DropdownTrigger>
+                <Button variant="bordered">
+                  Filter <FilterOutlined />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Static Actions">
+                <DropdownItem key="new">New file</DropdownItem>
+                <DropdownItem key="copy">Copy link</DropdownItem>
+                <DropdownItem key="edit">Edit file</DropdownItem>
+                <DropdownItem
+                  key="delete"
+                  className="text-danger"
+                  color="danger"
+                >
+                  Delete file
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
+
+          <Button color="primary" className="text-white">
+            Add Specialty
+          </Button>
+        </div>
+
         {/* Specialties */}
         <Table
           className="mt-5"
@@ -127,7 +203,6 @@ const SpecialtyPage = () => {
                 />
               </div>
             ) : null
-            
           }
         >
           <TableHeader columns={columns}>
@@ -141,7 +216,12 @@ const SpecialtyPage = () => {
             loadingContent={<Spinner />}
           >
             {(item: TSpecialty) => (
-              <TableRow key={item.name} className="cursor-pointer">
+              <TableRow
+                key={item.name}
+                className={`${
+                  item.isDeleted ? "bg-red-50 pointer-events-none" : ""
+                }`}
+              >
                 {(columnKey) => (
                   <TableCell>{getKeyValue(item, columnKey)}</TableCell>
                 )}

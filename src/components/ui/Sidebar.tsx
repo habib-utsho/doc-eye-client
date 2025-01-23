@@ -243,10 +243,10 @@ const Sidebar = () => {
       >
         {/* Sidebar Header */}
         <div className="flex items-center justify-between p-4">
-          <div className="flex items-center gap-2">
+          <Link href={"/"} className="flex items-center gap-2 cursor-pointer">
             <Image src={logo} height={40} width={40} alt="logo" />
             {!collapsed && <p className="font-bold text-inherit">DocEye</p>}
-          </div>
+          </Link>
           <span
             onClick={() => setCollapsed(!collapsed)}
             className="bg-primary text-white rounded-l-md  cursor-pointer text-sm absolute right-0 top-[35px]"

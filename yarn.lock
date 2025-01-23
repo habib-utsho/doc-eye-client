@@ -333,6 +333,20 @@
     "@react-types/overlays" "3.8.11"
     "@react-types/shared" "3.26.0"
 
+"@heroui/aria-utils@2.2.8":
+  version "2.2.8"
+  resolved "https://registry.npmjs.org/@heroui/aria-utils/-/aria-utils-2.2.8.tgz#6847b0f3c42f24f3d14c0a4281fd86ed99313235"
+  integrity sha512-+1kF96fSbA+PtP/UGxtcpBc8Vuc5KJwO0sndGCu41oijVMZ2RZ4wV6exwoT478U+nH8p8DbpXJHkzOhd6Zlagg==
+  dependencies:
+    "@heroui/react-rsc-utils" "2.1.2"
+    "@heroui/shared-utils" "2.1.3"
+    "@heroui/system" "2.4.7"
+    "@react-aria/utils" "3.26.0"
+    "@react-stately/collections" "3.12.0"
+    "@react-stately/overlays" "3.6.12"
+    "@react-types/overlays" "3.8.11"
+    "@react-types/shared" "3.26.0"
+
 "@heroui/avatar@2.2.6":
   version "2.2.6"
   resolved "https://registry.npmjs.org/@heroui/avatar/-/avatar-2.2.6.tgz#d048abf575ed1b45e112f08dec7a7e86495376d0"
@@ -344,6 +358,23 @@
     "@react-aria/focus" "3.19.0"
     "@react-aria/interactions" "3.22.5"
     "@react-aria/utils" "3.26.0"
+
+"@heroui/button@2.2.10":
+  version "2.2.10"
+  resolved "https://registry.npmjs.org/@heroui/button/-/button-2.2.10.tgz#e829bde9521d1394ce196838fe43b54087809e56"
+  integrity sha512-SsW7t1Ay6SKQtUuwy0RXKmHR43RLHUd0ef9efJrcLAhm7HT6vkwAPQxYV2IMbXJMNDSezjbY+rcUFk3VOE0qqg==
+  dependencies:
+    "@heroui/react-utils" "2.1.4"
+    "@heroui/ripple" "2.2.8"
+    "@heroui/shared-utils" "2.1.3"
+    "@heroui/spinner" "2.2.7"
+    "@heroui/use-aria-button" "2.2.5"
+    "@react-aria/button" "3.11.0"
+    "@react-aria/focus" "3.19.0"
+    "@react-aria/interactions" "3.22.5"
+    "@react-aria/utils" "3.26.0"
+    "@react-types/button" "3.10.1"
+    "@react-types/shared" "3.26.0"
 
 "@heroui/button@2.2.9":
   version "2.2.9"
@@ -483,21 +514,36 @@
     "@heroui/system-rsc" "2.3.5"
     "@react-types/shared" "3.26.0"
 
+"@heroui/divider@2.2.6":
+  version "2.2.6"
+  resolved "https://registry.npmjs.org/@heroui/divider/-/divider-2.2.6.tgz#ab62ff3b8f83817a3f1a3e5ce9274bac5abc82fc"
+  integrity sha512-C9ShXhGstjkFvaympTrqdUg1k+CZ/e3o5IV+x2RaWw3nvEEdnDLeY/j6Uk6r683Bs/R6valzRNlAPocUpRtM5g==
+  dependencies:
+    "@heroui/react-rsc-utils" "2.1.2"
+    "@heroui/shared-utils" "2.1.3"
+    "@heroui/system-rsc" "2.3.6"
+    "@react-types/shared" "3.26.0"
+
 "@heroui/dom-animation@2.1.1":
   version "2.1.1"
   resolved "https://registry.npmjs.org/@heroui/dom-animation/-/dom-animation-2.1.1.tgz#3ad15cee7f218571136eeda98056fa435e357cb5"
   integrity sha512-7+sZXkJrM3FHvcxc5Ul2vwUDsSpFP3qAifJYfc7ZcinsYLtKEtBH1ElBwmZt5XCM8DvZThR2RTYB3/j+MTyWvg==
 
-"@heroui/dropdown@2.3.9":
-  version "2.3.9"
-  resolved "https://registry.npmjs.org/@heroui/dropdown/-/dropdown-2.3.9.tgz#98677e5f015e5c19d6744cd84e30381ccb305b90"
-  integrity sha512-pHQzAk6YsspqiF9aMroc2+XQg72SY0i2e7GbWpfoW4dposBCGoVAOcL4SVyMxs1wYbeByRURufTvlIZqU6ba1g==
+"@heroui/dom-animation@2.1.2":
+  version "2.1.2"
+  resolved "https://registry.npmjs.org/@heroui/dom-animation/-/dom-animation-2.1.2.tgz#e04609ae1585096e187967701af098fae13f7eee"
+  integrity sha512-DX5zGe60gjKIk1sYMPGgR4shOsfpL/1xH0EN18o0SyBiJuGtrii2nXW+0sbsapsW6KzqVYMmXzfVhWkAWR190Q==
+
+"@heroui/dropdown@^2.3.10":
+  version "2.3.10"
+  resolved "https://registry.npmjs.org/@heroui/dropdown/-/dropdown-2.3.10.tgz#e73fd6216dfdc548a1a8b5cc03d142e30dea5ea9"
+  integrity sha512-T2W5RjInzjU2yiksiYc19Wt0QNU5GUtoiYvT3lrYtRUdOTeWgQ19/Q3zLSxDXaZkf5fYFC0KqaJ52cvJApmNPw==
   dependencies:
-    "@heroui/aria-utils" "2.2.7"
-    "@heroui/menu" "2.2.9"
-    "@heroui/popover" "2.3.9"
-    "@heroui/react-utils" "2.1.3"
-    "@heroui/shared-utils" "2.1.2"
+    "@heroui/aria-utils" "2.2.8"
+    "@heroui/menu" "2.2.10"
+    "@heroui/popover" "2.3.10"
+    "@heroui/react-utils" "2.1.4"
+    "@heroui/shared-utils" "2.1.3"
     "@react-aria/focus" "3.19.0"
     "@react-aria/menu" "3.16.0"
     "@react-aria/utils" "3.26.0"
@@ -540,6 +586,15 @@
     "@heroui/shared-utils" "2.1.2"
     "@heroui/system" "2.4.6"
     "@heroui/use-measure" "2.1.1"
+
+"@heroui/framer-utils@2.1.7":
+  version "2.1.7"
+  resolved "https://registry.npmjs.org/@heroui/framer-utils/-/framer-utils-2.1.7.tgz#baf7f898986ead3d79fcc11d20ae8e94e6f4096a"
+  integrity sha512-srTMsTO96fnaxbUNhzCpt7zbic+fndWpcSFEl2acxLkUI8bR5zFxqbOSolW53KctJfuvO//KgVz9b0JCjqeUPA==
+  dependencies:
+    "@heroui/shared-utils" "2.1.3"
+    "@heroui/system" "2.4.7"
+    "@heroui/use-measure" "2.1.2"
 
 "@heroui/image@2.2.5":
   version "2.2.5"
@@ -612,16 +667,16 @@
     "@react-types/shared" "3.26.0"
     "@tanstack/react-virtual" "3.11.2"
 
-"@heroui/menu@2.2.9":
-  version "2.2.9"
-  resolved "https://registry.npmjs.org/@heroui/menu/-/menu-2.2.9.tgz#68bd74422cfcef42355a68965f9de05440542db2"
-  integrity sha512-OYplfK4otgIWwecPuZ84kyVf8aroyYCaF2u9rIbvCzy1VQi1+mTtuMjF2mqIRzFn/fXj6H3QWD95BC4A515eXw==
+"@heroui/menu@2.2.10":
+  version "2.2.10"
+  resolved "https://registry.npmjs.org/@heroui/menu/-/menu-2.2.10.tgz#857b0d2fd3d0e6c897371587d7b2e0f276a6326d"
+  integrity sha512-gfiD/E56Xxn1UshnuyBcM+MxJcLUDcSGL1sxoMC5IbNVOdKhdoK4d9eBEEfgTgV+qer83KrMG+yFyBiOjA7nXw==
   dependencies:
-    "@heroui/aria-utils" "2.2.7"
-    "@heroui/divider" "2.2.5"
-    "@heroui/react-utils" "2.1.3"
-    "@heroui/shared-utils" "2.1.2"
-    "@heroui/use-is-mobile" "2.2.2"
+    "@heroui/aria-utils" "2.2.8"
+    "@heroui/divider" "2.2.6"
+    "@heroui/react-utils" "2.1.4"
+    "@heroui/shared-utils" "2.1.3"
+    "@heroui/use-is-mobile" "2.2.3"
     "@react-aria/focus" "3.19.0"
     "@react-aria/interactions" "3.22.5"
     "@react-aria/menu" "3.16.0"
@@ -687,6 +742,28 @@
     "@react-aria/utils" "3.26.0"
     scroll-into-view-if-needed "3.0.10"
 
+"@heroui/popover@2.3.10":
+  version "2.3.10"
+  resolved "https://registry.npmjs.org/@heroui/popover/-/popover-2.3.10.tgz#2fcd3661402048081bf189f749295743d8f9dac4"
+  integrity sha512-qswvCUxkHGWbXuBQYDl5yCeqyzAgYXTXsPzc95KPVy+QoVFFQaHvvRkgjqK1rfJOZcH6cJpyO45eT3tJi3M/IQ==
+  dependencies:
+    "@heroui/aria-utils" "2.2.8"
+    "@heroui/button" "2.2.10"
+    "@heroui/dom-animation" "2.1.2"
+    "@heroui/framer-utils" "2.1.7"
+    "@heroui/react-utils" "2.1.4"
+    "@heroui/shared-utils" "2.1.3"
+    "@heroui/use-aria-button" "2.2.5"
+    "@heroui/use-safe-layout-effect" "2.1.2"
+    "@react-aria/dialog" "3.5.20"
+    "@react-aria/focus" "3.19.0"
+    "@react-aria/interactions" "3.22.5"
+    "@react-aria/overlays" "3.24.0"
+    "@react-aria/utils" "3.26.0"
+    "@react-stately/overlays" "3.6.12"
+    "@react-types/button" "3.10.1"
+    "@react-types/overlays" "3.8.11"
+
 "@heroui/popover@2.3.9":
   version "2.3.9"
   resolved "https://registry.npmjs.org/@heroui/popover/-/popover-2.3.9.tgz#361a418ff48738cc7e5883230f619cc284bf9056"
@@ -743,6 +820,15 @@
     "@heroui/dom-animation" "2.1.1"
     "@heroui/react-utils" "2.1.3"
     "@heroui/shared-utils" "2.1.2"
+
+"@heroui/ripple@2.2.8":
+  version "2.2.8"
+  resolved "https://registry.npmjs.org/@heroui/ripple/-/ripple-2.2.8.tgz#0c6d959305c420afe43030354c402b29ce185701"
+  integrity sha512-KtOUtetFvKfQn3Lg20LO/Vxzyu7Apj44TcbIOYUhe/EZtZSkqfxQL7A+SwzCiXB9ZVat94UkMgV/wpG3CvetGA==
+  dependencies:
+    "@heroui/dom-animation" "2.1.2"
+    "@heroui/react-utils" "2.1.4"
+    "@heroui/shared-utils" "2.1.3"
 
 "@heroui/scroll-shadow@2.3.5":
   version "2.3.5"
@@ -837,6 +923,15 @@
     "@heroui/react-utils" "2.1.3"
     "@heroui/shared-utils" "2.1.2"
     "@heroui/system-rsc" "2.3.5"
+
+"@heroui/spinner@2.2.7":
+  version "2.2.7"
+  resolved "https://registry.npmjs.org/@heroui/spinner/-/spinner-2.2.7.tgz#a803a7f7fe0ae2c59f1aacb81fdacc41e404b857"
+  integrity sha512-mMah9randdSFwyEtte6Ov1rkInGJZNBKfsruhDc0bOmMmFH8RNWJLuOyIMsaaKBXZQDwvRNH+3YTezAWAqKnpg==
+  dependencies:
+    "@heroui/react-utils" "2.1.4"
+    "@heroui/shared-utils" "2.1.3"
+    "@heroui/system-rsc" "2.3.6"
 
 "@heroui/switch@2.2.8":
   version "2.2.8"
@@ -1010,6 +1105,18 @@
     "@react-types/button" "3.10.1"
     "@react-types/shared" "3.26.0"
 
+"@heroui/use-aria-button@2.2.5":
+  version "2.2.5"
+  resolved "https://registry.npmjs.org/@heroui/use-aria-button/-/use-aria-button-2.2.5.tgz#376639de9e93779839020f5abc076895019580ad"
+  integrity sha512-3dbtK6Q9QWuRTzry+XQ/awa4PVhmhLNcasermWrJ4PwYOQwJFzB+bslFqrjhxTYu45x5fGe54iCsT3Xx3UY80g==
+  dependencies:
+    "@heroui/shared-utils" "2.1.3"
+    "@react-aria/focus" "3.19.0"
+    "@react-aria/interactions" "3.22.5"
+    "@react-aria/utils" "3.26.0"
+    "@react-types/button" "3.10.1"
+    "@react-types/shared" "3.26.0"
+
 "@heroui/use-aria-link@2.2.5":
   version "2.2.5"
   resolved "https://registry.npmjs.org/@heroui/use-aria-link/-/use-aria-link-2.2.5.tgz#bd1df31bfb104543a5489abd324fb843dc95f31f"
@@ -1119,6 +1226,13 @@
   dependencies:
     "@react-aria/ssr" "3.9.7"
 
+"@heroui/use-is-mobile@2.2.3":
+  version "2.2.3"
+  resolved "https://registry.npmjs.org/@heroui/use-is-mobile/-/use-is-mobile-2.2.3.tgz#3079e56fda9dc60472840e7ad25c2c9e9f152e9b"
+  integrity sha512-O0zV+w2FTjJJP7qCBW5A3qkjvjQwMBkesD3ZOvpn71PR6GDDDFpLt0cr2hkaUd6qpb9rmeEUeJoVSch2QFNPrg==
+  dependencies:
+    "@react-aria/ssr" "3.9.7"
+
 "@heroui/use-is-mounted@2.1.1":
   version "2.1.1"
   resolved "https://registry.npmjs.org/@heroui/use-is-mounted/-/use-is-mounted-2.1.1.tgz#9977f331989c9da7e3c61f320794918d834365b7"
@@ -1128,6 +1242,11 @@
   version "2.1.1"
   resolved "https://registry.npmjs.org/@heroui/use-measure/-/use-measure-2.1.1.tgz#5870fe872fa73b838012b417de5720fb0a5e8520"
   integrity sha512-hHfIjdREQ2coE3M7T+bBtx4pX5qYrrCv7katCw8tlHkv90wShEeUcF9pun2Om7a4fW0hdMM/Ll+gkJ5dw+FV9g==
+
+"@heroui/use-measure@2.1.2":
+  version "2.1.2"
+  resolved "https://registry.npmjs.org/@heroui/use-measure/-/use-measure-2.1.2.tgz#90940a4dfa92fce2df0a5f6d63135f6bcf6858b4"
+  integrity sha512-cHvicTYcgOEeC++GmxogZU1iRVidU09PefQAfQNqCS92XKxebDjDv6eD+ZXN6HHbImJgtTg3utsnZSPFC1ooBg==
 
 "@heroui/use-pagination@2.2.4":
   version "2.2.4"
