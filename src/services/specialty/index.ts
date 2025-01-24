@@ -41,7 +41,34 @@ export const createSpecialty = async (payload: FormData) => {
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
         e?.response?.data ||
         e.message ||
-        "Failed to register doctor!"
+        "Failed to create specialty!"
+    );
+  }
+};
+export const updateSpecialty = async ({
+  id,
+  payload,
+}: {
+  id: string;
+  payload: FormData;
+}) => {
+  try {
+    const response = await axiosInstance.patch(`/specialty/${id}`, payload, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    revalidateTag("specialty");
+    return response.data;
+  } catch (e: any) {
+    throw new Error(
+      `${
+        e?.response?.data?.errorSources?.[0]?.path &&
+        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      } ${e.response?.data?.errorSources?.[0]?.message}` ||
+        e?.response?.data ||
+        e.message ||
+        "Failed to update specialty!"
     );
   }
 };

@@ -17,16 +17,11 @@ import { doctorTitles, doctorTypes } from "@/src/constant/doctor.constant";
 import { useGetAllSpecialties } from "@/src/hooks/specialty.hook";
 import { TSpecialty } from "@/src/types/specialty";
 import { Divider } from "@heroui/divider";
-import { subtitle, title } from "@/src/components/primitives";
+import { subtitle } from "@/src/components/primitives";
 import { days } from "@/src/constant/index.constant";
-import {
-  DeleteIcon,
-  FileUploadIcon,
-  PlusIcon,
-} from "@/src/components/ui/icons";
-import { Avatar } from "@heroui/avatar";
-import Image from "next/image";
+import { DeleteIcon, PlusIcon } from "@/src/components/ui/icons";
 import { toast } from "sonner";
+import MyUpload from "@/src/components/ui/Form/MyUpload";
 
 // Need to change password
 const SignupPage = () => {
@@ -43,7 +38,7 @@ const SignupPage = () => {
   } = useDoctorRegister();
 
   const { data: specialties, isLoading: isLoadingSpecialties } =
-    useGetAllSpecialties();
+    useGetAllSpecialties([{ name: "limit", value: 5000 }]);
 
   // Working Experiences
   const [workingExperiences, setWorkingExperiences] = useState([
@@ -79,76 +74,13 @@ const SignupPage = () => {
 
   const reusableInp = (
     <div className="space-y-4">
-      <div className="avatar-wrapper w-[200px] h-[200px]">
-        {previewUrl ? (
-          <div className="relative h-full w-full rounded-lg overflow-hidden border border-primary">
-            <Image
-              alt="avatar"
-              src={previewUrl}
-              height={500}
-              width={500}
-              className="border rounded-lg h-full w-full"
-            />
-            <span className="bg-white bg-opacity-40 border border-danger p-2 rounded inline-block absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 cursor-pointer">
-              <DeleteIcon
-                className=" text-danger scale-150"
-                onClick={() => {
-                  setSelectedFile(null);
-                  setPreviewUrl(null);
-                }}
-              />
-            </span>
-          </div>
-        ) : (
-          <div
-            className="h-full w-full  border flex items-center justify-center rounded-lg cursor-pointer relative"
-            style={{ backgroundImage: `url(${signinBG.src})` }}
-          >
-            <Button isIconOnly className="h-full w-full bg-opacity-50">
-              <div className="flex flex-col gap-1 items-center justify-center">
-                <FileUploadIcon className="text-white size-6" />
-                <span className="text-white">Upload your avatar</span>
-              </div>
-              <MyInp
-                type="file"
-                name="file"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    const validImageTypes = [
-                      "image/jpg",
-                      "image/jpeg",
-                      "image/png",
-                      "image/gif",
-                      "image/webp",
-                    ];
-                    if (!validImageTypes.includes(file.type)) {
-                      alert(
-                        "Please select a valid image file (JPEG, JPG, PNG, or GIF)"
-                      );
-                      return;
-                    }
-
-                    // Set the selected file state
-                    setSelectedFile(file);
-
-                    // Read the file for preview
-                    const fileReader = new FileReader();
-                    fileReader.onload = () => {
-                      setPreviewUrl(fileReader.result as string);
-                    };
-                    fileReader.readAsDataURL(file);
-                  } else {
-                    setSelectedFile(null);
-                    setPreviewUrl(null);
-                  }
-                }}
-                className="opacity-0 absolute top-0 left-0 bottom-0 w-full h-full"
-              />
-            </Button>
-          </div>
-        )}
-      </div>
+      <MyUpload
+        setSelectedFile={setSelectedFile}
+        previewUrl={previewUrl}
+        setPreviewUrl={setPreviewUrl}
+        height={200}
+        width={200}
+      />
 
       <div className="flex flex-col md:flex-row gap-4">
         <MyInp type="text" name="name" label="Name" />
