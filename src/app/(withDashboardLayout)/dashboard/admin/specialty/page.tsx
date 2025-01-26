@@ -1,9 +1,12 @@
 "use client";
 import { DeleteIcon, SearchIcon } from "@/src/components/ui/icons";
-import { useGetAllSpecialties } from "@/src/hooks/specialty.hook";
+import {
+  useDeleteSpecialty,
+  useGetAllSpecialties,
+} from "@/src/hooks/specialty.hook";
 import { Button } from "@heroui/button";
 import { Image } from "@heroui/image";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
   getKeyValue,
   Table,
@@ -19,6 +22,8 @@ import { Spinner } from "@heroui/spinner";
 import { Input } from "@heroui/input";
 import useDebounce from "@/src/hooks/useDebounce";
 import SpecialtyModal from "../_components/modal/SpecialtyModal";
+import { toast } from "sonner";
+import DeleteSpecialtyModal from "../_components/modal/DeleteSpecialtyModal";
 
 const SpecialtyPage = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
@@ -29,11 +34,16 @@ const SpecialtyPage = () => {
     useGetAllSpecialties([
       { name: "page", value: pagination.page },
       { name: "limit", value: pagination.limit },
-      { name: "isDeleted", value: false },
       ...(debounceSearch
         ? [{ name: "searchTerm", value: debounceSearch }]
         : []),
     ]);
+
+  const {
+    mutate: deleteSpecialtyMutate,
+    isPending: isLoadingDeleteSpecialty,
+    isSuccess: isSuccessDeleteSpecialty,
+  } = useDeleteSpecialty();
 
   const rows = specialties?.data?.map((specialty: TSpecialty, ind: number) => {
     return {
@@ -53,11 +63,19 @@ const SpecialtyPage = () => {
       actions: (
         <div className="flex items-center gap-1">
           <SpecialtyModal updatedSpecialty={specialty} />
-          <Button
+          {/* <Button
             color="danger"
             className="text-danger bg-opacity-20 hover:scale-[1.07]"
             isIconOnly
             startContent={<DeleteIcon />}
+            isLoading={isLoadingDeleteSpecialty}
+            onPress={() => deleteSpecialty(specialty._id)}
+          /> */}
+          <DeleteSpecialtyModal
+            id={specialty?._id}
+            handler={deleteSpecialtyMutate}
+            isLoading={isLoadingDeleteSpecialty}
+            isSuccess={isSuccessDeleteSpecialty}
           />
         </div>
       ),
@@ -140,7 +158,9 @@ const SpecialtyPage = () => {
               <TableRow
                 key={item.name}
                 className={`${
-                  item.isDeleted ? "bg-red-50 pointer-events-none" : ""
+                  item.isDeleted
+                    ? "bg-red-50 pointer-events-none blur-[.6px]"
+                    : ""
                 }`}
               >
                 {(columnKey) => (

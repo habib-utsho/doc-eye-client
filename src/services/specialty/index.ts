@@ -72,3 +72,20 @@ export const updateSpecialty = async ({
     );
   }
 };
+export const deleteSpecialty = async (id: string) => {
+  try {
+    const response = await axiosInstance.delete(`/specialty/${id}`);
+    revalidateTag("specialty");
+    return response.data;
+  } catch (e: any) {
+    throw new Error(
+      `${
+        e?.response?.data?.errorSources?.[0]?.path &&
+        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      } ${e.response?.data?.errorSources?.[0]?.message}` ||
+        e?.response?.data ||
+        e.message ||
+        "Failed to update specialty!"
+    );
+  }
+};

@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import {
   createSpecialty,
+  deleteSpecialty,
   getSpecialties,
   updateSpecialty,
 } from "../services/specialty";
@@ -38,6 +39,22 @@ export const useUpdateSpecialty = () => {
     },
     onError(error) {
       toast.error(error?.message || "Failed to update specialty!");
+    },
+  });
+};
+export const useDeleteSpecialty = () => {
+  return useMutation({
+    mutationKey: ["specialty"],
+    mutationFn: async (id: string) => await deleteSpecialty(id),
+    async onSuccess(data) {
+      if (data?.success) {
+        toast.success(data?.message || "Specialty deleted successfully!");
+      } else {
+        toast.error(data?.message || "Failed to delete specialty!");
+      }
+    },
+    onError(error) {
+      toast.error(error?.message || "Failed to delete specialty!");
     },
   });
 };
