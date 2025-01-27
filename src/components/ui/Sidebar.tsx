@@ -1,5 +1,10 @@
 import SidebarLoading from "@/src/app/(withDashboardLayout)/dashboard/_components/SidebarLoading";
-import { MenuIcon, SignOutIcon, XMarkIcon } from "@/src/components/ui/icons";
+import {
+  MenuIcon,
+  SignOutIcon,
+  UsersIcon,
+  XMarkIcon,
+} from "@/src/components/ui/icons";
 import {
   DashboardOutlined,
   UserOutlined,
@@ -24,7 +29,7 @@ import {
   MenuItem,
   SubMenu,
 } from "react-pro-sidebar";
-import { signOut } from "@/src/services/authService";
+import { signOut } from "@/src/services/auth";
 import { protectedRoutes } from "@/src/constant";
 
 // Dashboard routes
@@ -46,6 +51,27 @@ const adminRoutes: TSidebarRoute[] = [
     name: "Manage Users",
     path: "/dashboard/admin/manage-users",
     icon: <UserOutlined />,
+  },
+  {
+    name: "Manage Users",
+    icon: <UsersIcon />,
+    children: [
+      {
+        name: "Patient",
+        path: "/dashboard/admin/patients",
+        icon: <UserOutlined />,
+      },
+      {
+        name: "Doctor",
+        path: "/dashboard/admin/doctors",
+        icon: <UserOutlined />,
+      },
+      {
+        name: "Admin",
+        path: "/dashboard/admin/admins",
+        icon: <UserOutlined />,
+      },
+    ],
   },
   {
     name: "Appointments",

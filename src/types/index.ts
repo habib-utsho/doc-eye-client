@@ -14,11 +14,20 @@ export type TResponse<T> = {
   success: boolean;
   message: string;
   data: T;
-  meta?: TMeta;
+  meta: TMeta;
 };
 
 export type TFilterQuery = {
   name: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any;
+};
+
+// For table
+export type Trow = {
+  [key: string]: string | JSX.Element;
+};
+export type TColumn = {
+  key: string;
+  label: string;
 };

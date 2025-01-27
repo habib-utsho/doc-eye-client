@@ -11,7 +11,7 @@ import {
 import React from "react";
 import { HeartFilledIcon } from "../ui/icons";
 import { Link } from "@heroui/link";
-import { signOut } from "@/src/services/authService";
+import { signOut } from "@/src/services/auth";
 import useUserData from "@/src/hooks/user.hook";
 import { Skeleton } from "@heroui/skeleton";
 import { protectedRoutes } from "@/src/constant";

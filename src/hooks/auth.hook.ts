@@ -5,7 +5,7 @@ import {
   registerDoctor,
   registerPatient,
   signinUser,
-} from "../services/authService";
+} from "../services/auth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import useUserData from "./user.hook";

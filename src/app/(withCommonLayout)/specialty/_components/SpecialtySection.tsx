@@ -7,7 +7,10 @@ import Link from "next/link";
 import React from "react";
 
 const SpecialtySection = async () => {
-  const specialty = await getSpecialties();
+  const specialty = await getSpecialties([
+    { name: "limit", value: 500000 },
+    { name: "isDeleted", value: false },
+  ]);
 
   return (
     <>

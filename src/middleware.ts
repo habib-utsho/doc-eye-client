@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import path from "path";
-import { getCurrentUser } from "./services/authService";
+import { getCurrentUser } from "./services/auth";
 import { TDecodedUser } from "./types/user";
 
 // This function can be marked `async` if using `await` inside

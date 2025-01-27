@@ -1,12 +1,11 @@
 "use client";
-import { DeleteIcon, SearchIcon } from "@/src/components/ui/icons";
+import { SearchIcon } from "@/src/components/ui/icons";
 import {
   useDeleteSpecialty,
   useGetAllSpecialties,
 } from "@/src/hooks/specialty.hook";
-import { Button } from "@heroui/button";
 import { Image } from "@heroui/image";
-import React, { use, useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   getKeyValue,
   Table,
@@ -21,9 +20,8 @@ import { Pagination } from "@heroui/pagination";
 import { Spinner } from "@heroui/spinner";
 import { Input } from "@heroui/input";
 import useDebounce from "@/src/hooks/useDebounce";
-import SpecialtyModal from "../_components/modal/SpecialtyModal";
-import { toast } from "sonner";
-import DeleteSpecialtyModal from "../_components/modal/DeleteSpecialtyModal";
+import SpecialtyModal from "./_components/modal/SpecialtyModal";
+import DeleteSpecialtyModal from "./_components/modal/DeleteSpecialtyModal";
 
 const SpecialtyPage = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
@@ -63,14 +61,6 @@ const SpecialtyPage = () => {
       actions: (
         <div className="flex items-center gap-1">
           <SpecialtyModal updatedSpecialty={specialty} />
-          {/* <Button
-            color="danger"
-            className="text-danger bg-opacity-20 hover:scale-[1.07]"
-            isIconOnly
-            startContent={<DeleteIcon />}
-            isLoading={isLoadingDeleteSpecialty}
-            onPress={() => deleteSpecialty(specialty._id)}
-          /> */}
           <DeleteSpecialtyModal
             id={specialty?._id}
             handler={deleteSpecialtyMutate}
@@ -151,6 +141,11 @@ const SpecialtyPage = () => {
           </TableHeader>
           <TableBody
             isLoading={isLoadingSpecialties}
+            emptyContent={
+              <h2 className="text-primary font-bold text-2xl">
+                No specialties found!
+              </h2>
+            }
             items={rows || []}
             loadingContent={<Spinner />}
           >

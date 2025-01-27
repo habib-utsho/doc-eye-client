@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, ReactNode, useEffect, useState } from "react";
 import { TDecodedUser } from "../types/user";
-import { getCurrentUser } from "../services/authService";
+import { getCurrentUser } from "../services/auth";
 
 type TUserProvider = {
   user: TDecodedUser | null;
