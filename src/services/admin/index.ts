@@ -1,10 +1,15 @@
 "use server";
 
 import { TFilterQuery } from "@/src/types";
+import { cookies } from "next/headers";
 
 export const getAllAdmin = async (query: TFilterQuery[] | undefined) => {
+  const accessToken = cookies().get("DEaccessToken")?.value;
   try {
-    const fetchOption = {
+    const fetchOption: RequestInit = {
+      headers: {
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      },
       next: {
         tags: ["admin"],
         revalidate: 60,
@@ -16,7 +21,13 @@ export const getAllAdmin = async (query: TFilterQuery[] | undefined) => {
         params.append(elem.name, elem.value);
       });
     }
-    const res = await fetch(`/admin?${params.toString()}`, fetchOption);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/admin?${params.toString()}`,
+      fetchOption
+    );
+    if (!res.ok) {
+      throw new Error("Failed to get all admins!");
+    }
     return res.json();
   } catch (e: any) {
     throw new Error(

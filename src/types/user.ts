@@ -91,6 +91,21 @@ export type TPatient = {
   allergies?: string;
   isDeleted: boolean;
 };
+export type TAdmin = {
+  _id: string;
+  user: TUser;
+  name: string;
+  email: string;
+  phone: string;
+  gender: string;
+  profileImg: string;
+  dateOfBirth: string;
+  district: string;
+  isDeleted: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
 export type TUser = {
   id: string;
   email: string;

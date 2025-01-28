@@ -11,7 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from "@heroui/table";
-// import React from "react";
 
 const DETable = ({
   data,
@@ -20,6 +19,7 @@ const DETable = ({
   isLoading,
   pagination,
   setPagination,
+  notFoundMessage,
 }: {
   data: TResponse<any>;
   pagination: { limit: number; page: number };
@@ -27,6 +27,7 @@ const DETable = ({
   columns: TColumn[];
   isLoading: boolean;
   setPagination: (pagination: { limit: number; page: number }) => void;
+  notFoundMessage: string;
 }) => {
   return (
     <Table
@@ -56,7 +57,7 @@ const DETable = ({
         isLoading={isLoading}
         emptyContent={
           <h2 className="text-primary font-bold text-2xl">
-            No specialties found!
+            {notFoundMessage || "No data found"}
           </h2>
         }
         items={rows || []}

@@ -275,7 +275,7 @@ const Sidebar = () => {
           </Link>
           <span
             onClick={() => setCollapsed(!collapsed)}
-            className="bg-primary text-white rounded-l-md  cursor-pointer text-sm absolute right-0 top-[35px]"
+            className="bg-primary text-white rounded-l  cursor-pointer text-[12px] absolute right-0 top-[35px]"
           >
             {collapsed ? <MenuIcon /> : <XMarkIcon />}
           </span>
