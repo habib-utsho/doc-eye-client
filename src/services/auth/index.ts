@@ -3,8 +3,23 @@
 import axiosInstance from "@/src/lib/axiosInstance";
 import { TPatient, TSignin } from "@/src/types/user";
 import { jwtDecode } from "jwt-decode";
+import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
+const registerAdmin = async (payload: FormData) => {
+  try {
+    const response = await axiosInstance.post(`/user/create-admin`, payload);
+    revalidateTag("admin");
+    return response.data;
+  } catch (e: any) {
+    throw new Error(
+      `${e?.response?.data?.errorSources?.[0]?.path}: ${e.response?.data?.errorSources?.[0]?.message}` ||
+        e?.response?.data ||
+        e.message ||
+        "Failed to register admin!"
+    );
+  }
+};
 const registerPatient = async (payload: FormData) => {
   // const formData = new FormData();
   // formData.append("data", JSON.stringify(payload));
@@ -16,12 +31,14 @@ const registerPatient = async (payload: FormData) => {
   //   }
   try {
     const response = await axiosInstance.post(`/user/create-patient`, payload);
+    revalidateTag("patient");
     return response.data;
   } catch (e: any) {
     throw new Error(
       `${e?.response?.data?.errorSources?.[0]?.path}: ${e.response?.data?.errorSources?.[0]?.message}` ||
         e?.response?.data ||
-        e.message
+        e.message ||
+        "Failed to register patient!"
     );
   }
 };
@@ -36,6 +53,7 @@ const registerDoctor = async (payload: FormData) => {
   //   }
   try {
     const response = await axiosInstance.post(`/user/create-doctor`, payload);
+    revalidateTag("doctor");
     return response.data;
   } catch (e: any) {
     throw new Error(
@@ -93,4 +111,11 @@ const getCurrentUser = async () => {
   return decodedToken;
 };
 
-export { registerPatient, registerDoctor, signinUser, getCurrentUser, signOut };
+export {
+  registerAdmin,
+  registerPatient,
+  registerDoctor,
+  signinUser,
+  getCurrentUser,
+  signOut,
+};

@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { TDecodedUser, TPatient, TSignin } from "../types/user";
 import {
   getCurrentUser,
+  registerAdmin,
   registerDoctor,
   registerPatient,
   signinUser,
@@ -73,6 +74,24 @@ export const useDoctorRegister = () => {
     },
     onError(error: any) {
       toast.error(error?.message || "Failed to register doctor!");
+    },
+  });
+};
+export const useAdminRegister = () => {
+  const router = useRouter();
+  return useMutation({
+    mutationKey: ["registerAdmin"],
+    mutationFn: async (payload: FormData) => await registerAdmin(payload),
+    onSuccess(data) {
+      if (data?.success) {
+        toast.success(data?.message || "Admin registered successfully!");
+        router.push("/signin");
+      } else {
+        toast.error(data?.message || "Failed to register admin!");
+      }
+    },
+    onError(error: any) {
+      toast.error(error?.message || "Failed to register admin!");
     },
   });
 };

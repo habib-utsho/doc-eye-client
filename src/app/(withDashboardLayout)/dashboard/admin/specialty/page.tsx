@@ -75,7 +75,7 @@ const SpecialtyPage = () => {
   const columns = [
     {
       key: "ind",
-      label: "No.",
+      label: "Sl",
     },
     {
       key: "name",
@@ -96,76 +96,74 @@ const SpecialtyPage = () => {
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center my-28 md:my-0">
-      <div className="w-full p-4">
-        <div className="flex justify-between items-center mb-8 gap-4">
-          <div className="flex items-center gap-2">
-            <Input
-              name="search"
-              startContent={<SearchIcon />}
-              placeholder="Search specialty..."
-              onChange={(e) => setSearchTerm(e.target.value)}
-              isClearable
-              onClear={() => setSearchTerm("")}
-            />
-          </div>
-
-          <SpecialtyModal />
+    <div className="w-full p-4">
+      <div className="flex justify-between items-center mb-8 gap-4">
+        <div className="flex items-center gap-2">
+          <Input
+            name="search"
+            startContent={<SearchIcon />}
+            placeholder="Search specialty..."
+            onChange={(e) => setSearchTerm(e.target.value)}
+            isClearable
+            onClear={() => setSearchTerm("")}
+          />
         </div>
 
-        {/* Specialties */}
-        <Table
-          className="mt-5"
-          color="primary"
-          aria-label="Example static collection table"
-          bottomContent={
-            specialties?.meta?.page > 0 ? (
-              <div className="flex w-full justify-center">
-                <Pagination
-                  isCompact
-                  showControls
-                  showShadow
-                  color="primary"
-                  page={pagination.page}
-                  total={specialties?.meta?.totalPage}
-                  onChange={(page) => setPagination({ ...pagination, page })}
-                />
-              </div>
-            ) : null
-          }
-        >
-          <TableHeader columns={columns}>
-            {(column) => (
-              <TableColumn key={column.key}>{column.label}</TableColumn>
-            )}
-          </TableHeader>
-          <TableBody
-            isLoading={isLoadingSpecialties}
-            emptyContent={
-              <h2 className="text-primary font-bold text-2xl">
-                No specialties found!
-              </h2>
-            }
-            items={rows || []}
-            loadingContent={<Spinner />}
-          >
-            {(item: TSpecialty) => (
-              <TableRow
-                key={item.name}
-                className={`${
-                  item.isDeleted
-                    ? "bg-red-50 pointer-events-none blur-[.6px]"
-                    : ""
-                }`}
-              >
-                {(columnKey) => (
-                  <TableCell>{getKeyValue(item, columnKey)}</TableCell>
-                )}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+        <SpecialtyModal />
       </div>
+
+      {/* Specialties */}
+      <Table
+        className="mt-5"
+        color="primary"
+        aria-label="Example static collection table"
+        bottomContent={
+          specialties?.meta?.page > 0 ? (
+            <div className="flex w-full justify-center">
+              <Pagination
+                isCompact
+                showControls
+                showShadow
+                color="primary"
+                page={pagination.page}
+                total={specialties?.meta?.totalPage}
+                onChange={(page) => setPagination({ ...pagination, page })}
+              />
+            </div>
+          ) : null
+        }
+      >
+        <TableHeader columns={columns}>
+          {(column) => (
+            <TableColumn key={column.key}>{column.label}</TableColumn>
+          )}
+        </TableHeader>
+        <TableBody
+          isLoading={isLoadingSpecialties}
+          emptyContent={
+            <h2 className="text-primary font-bold text-2xl">
+              No specialties found!
+            </h2>
+          }
+          items={rows || []}
+          loadingContent={<Spinner />}
+        >
+          {(item: TSpecialty) => (
+            <TableRow
+              key={item.name}
+              className={`${
+                item.isDeleted
+                  ? "bg-red-50 pointer-events-none blur-[.6px]"
+                  : ""
+              }`}
+            >
+              {(columnKey) => (
+                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
 };

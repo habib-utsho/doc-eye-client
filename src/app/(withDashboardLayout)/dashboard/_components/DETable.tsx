@@ -29,6 +29,8 @@ const DETable = ({
   setPagination: (pagination: { limit: number; page: number }) => void;
   notFoundMessage: string;
 }) => {
+  console.log(rows, "rows in DE table");
+
   return (
     <Table
       className="my-5"
