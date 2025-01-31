@@ -30,6 +30,7 @@ const DETable = ({
   notFoundMessage: string;
 }) => {
   console.log(rows, "rows in DE table");
+  
 
   return (
     <Table
