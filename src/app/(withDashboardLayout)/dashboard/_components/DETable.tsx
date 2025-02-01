@@ -1,4 +1,6 @@
 "use client";
+import useUserData from "@/src/hooks/user.hook";
+import { getCurrentUser } from "@/src/services/auth";
 import { TColumn, TResponse, Trow } from "@/src/types";
 import { Pagination } from "@heroui/pagination";
 import { Spinner } from "@heroui/spinner";
@@ -29,8 +31,8 @@ const DETable = ({
   setPagination: (pagination: { limit: number; page: number }) => void;
   notFoundMessage: string;
 }) => {
+  const { isLoading: isLoadingUser, user } = useUserData();
   console.log(rows, "rows in DE table");
-  
 
   return (
     <Table
@@ -57,7 +59,7 @@ const DETable = ({
         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
       <TableBody
-        isLoading={isLoading}
+        isLoading={isLoading || isLoadingUser}
         emptyContent={
           <h2 className="text-primary font-bold text-2xl">
             {notFoundMessage || "No data found"}
@@ -70,7 +72,9 @@ const DETable = ({
           <TableRow
             key={item.name}
             className={`${
-              item.isDeleted ? "bg-red-50 pointer-events-none blur-[.6px]" : ""
+              item.isDeleted || user?._id === item?.user?._id
+                ? "bg-red-50 pointer-events-none blur-[.5px]"
+                : ""
             }`}
           >
             {(columnKey) => (

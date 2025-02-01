@@ -163,8 +163,8 @@ const SignupPage = () => {
           <div className="flex flex-col md:flex-row gap-4">
             <MyInp
               type="select"
-              name="medicalSpecialty"
-              label="Medical Specialty"
+              name="medicalSpecialties"
+              label="Medical Specialties"
               selectionMode="multiple"
               disabled={isLoadingSpecialties || specialties?.data?.length === 0}
               options={specialties?.data?.map((specialty: TSpecialty) => ({

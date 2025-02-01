@@ -1,3 +1,5 @@
+import { TSpecialty } from "./specialty";
+
 export type TDistrict =
   | "Dhaka"
   | "Faridpur"
@@ -75,6 +77,30 @@ export type TBloodGroup =
 export type TGender = "Male" | "Female" | "Other";
 export type TUserRole = "admin" | "doctor" | "patient";
 
+export type TUser = {
+  _id: string;
+  email: string;
+  password: string;
+  needsPasswordChange: boolean;
+  role: TUserRole;
+  status: "active" | "inactive";
+  isDeleted: boolean;
+};
+export type TDecodedUser = {
+  _id: string;
+  email: string;
+  role: TUserRole;
+  name: string;
+  profileImg?: string;
+};
+
+export type TSignin = {
+  email: string;
+  password: string;
+};
+
+// admin, doctor, patient
+
 export type TPatient = {
   _id: string;
   user: string;
@@ -106,24 +132,50 @@ export type TAdmin = {
   updatedAt?: string;
 };
 
-export type TUser = {
-  _id: string;
-  email: string;
-  password: string;
-  needsPasswordChange: boolean;
-  role: TUserRole;
-  status: "active" | "inactive";
-  isDeleted: boolean;
-};
-export type TDecodedUser = {
-  _id: string;
-  email: string;
-  role: TUserRole;
-  name: string;
-  profileImg?: string;
+export type TAvailability = {
+  dayStart: string;
+  dayEnd: string;
+  timeStart: string;
+  timeEnd: string;
 };
 
-export type TSignin = {
+export type TWorkingExperience = {
+  workPlace: string;
+  department: string;
+  designation: string;
+  workingPeriodStart: string;
+  workingPeriodEnd: string;
+  _id?: string;
+};
+
+export type TDoctor = {
+  availability: TAvailability;
+  _id: string;
+  user: TUser;
+  name: string;
   email: string;
-  password: string;
+  phone: string;
+  gender: string;
+  bloodGroup: string;
+  profileImg: string;
+  bio: string;
+  doctorTitle: string;
+  doctorType: string;
+  medicalSpecialties: TSpecialty[];
+  totalExperienceYear: number;
+  medicalDegree: string;
+  consultationFee: number;
+  followupFee: number;
+  workingExperiences: TWorkingExperience[];
+  dateOfBirth: string;
+  currentWorkplace: string;
+  district: string;
+  nid: string;
+  bmdc: string;
+  patientAttended: number;
+  doctorCode: string;
+  status: string;
+  isDeleted: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 };

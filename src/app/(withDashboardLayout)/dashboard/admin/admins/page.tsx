@@ -47,8 +47,10 @@ const AdminsPage = () => {
   } = useToggleUserStatus();
 
   const rows = admins?.data?.map((admin: TAdmin, ind: number) => ({
+    _id: admin?._id,
+    user: admin?.user,
     sl: ind + 1,
-    user: (
+    userInfo: (
       <div className="flex items-center gap-1">
         <Image
           src={admin?.profileImg}
@@ -74,7 +76,7 @@ const AdminsPage = () => {
       <Switch
         onChange={() => handleStatusChange(admin?.user)}
         disabled={isLoadingToggleUserStatus}
-        defaultSelected={admin?.user?.status === "active"}
+        isSelected={admin?.user?.status === "active"}
       />
     ),
     actions: (
@@ -95,7 +97,7 @@ const AdminsPage = () => {
       label: "SL",
     },
     {
-      key: "user",
+      key: "userInfo",
       label: "User",
     },
     {
@@ -133,13 +135,9 @@ const AdminsPage = () => {
   ];
 
   const handleStatusChange = (user: TUser) => {
-    // console.log(admin);
-    console.log(user?._id, "admin._id");
     toggleUserStatus(user?._id);
-    // toast.success("Status changed successfully");
   };
 
-  console.log(admins, "admins");
   useEffect(() => {
     if (isSuccessToggleUserStatus) {
       refetchAdmins();
@@ -148,7 +146,7 @@ const AdminsPage = () => {
 
   return (
     <div className="w-full p-4">
-      <div className="flex justify-between items-center mb-8 gap-4">
+      <div className="flex justify-between items-center mb-4 xl:mb-6 gap-4">
         <div className="flex items-center gap-2">
           <Input
             name="search"
