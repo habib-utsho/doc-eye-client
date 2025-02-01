@@ -107,7 +107,7 @@ export type TAdmin = {
 };
 
 export type TUser = {
-  id: string;
+  _id: string;
   email: string;
   password: string;
   needsPasswordChange: boolean;

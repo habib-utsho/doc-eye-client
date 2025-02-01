@@ -21,14 +21,6 @@ const registerAdmin = async (payload: FormData) => {
   }
 };
 const registerPatient = async (payload: FormData) => {
-  // const formData = new FormData();
-  // formData.append("data", JSON.stringify(payload));
-
-  // Append image file if present
-  //   if (fileList.length > 0 && fileList[0]?.originFileObj) {
-  //     console.log(fileList[0].originFileObj, "fileList[0].originFileObj");
-  //     formData.append("file", fileList[0].originFileObj);
-  //   }
   try {
     const response = await axiosInstance.post(`/user/create-patient`, payload);
     revalidateTag("patient");
@@ -89,6 +81,25 @@ const signinUser = async (payload: TSignin) => {
   }
 };
 
+const toggleUserStatus = async (id: string) => {
+  console.log(id, "id from toggle user server action");
+  try {
+    const response = await axiosInstance.patch(`/user/toggle-status/${id}`);
+    console.log(response, "after toggle user status");
+    return response.data;
+  } catch (e: any) {
+    throw new Error(
+      `${
+        e?.response?.data?.errorSources?.[0]?.path &&
+        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      } ${e.response?.data?.errorSources?.[0]?.message}` ||
+        e?.response?.data ||
+        e.message ||
+        "Failed to toggle user status!"
+    );
+  }
+};
+
 const signOut = () => {
   cookies().delete("DEaccessToken");
   cookies().delete("DErefreshToken");
@@ -116,6 +127,7 @@ export {
   registerPatient,
   registerDoctor,
   signinUser,
+  toggleUserStatus,
   getCurrentUser,
   signOut,
 };

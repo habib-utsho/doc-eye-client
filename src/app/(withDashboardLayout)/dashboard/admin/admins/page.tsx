@@ -1,22 +1,27 @@
 "use client";
 import { useDeleteAdminById, useGetAllAdmin } from "@/src/hooks/admin.hook";
 import useDebounce from "@/src/hooks/useDebounce";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DETable from "../../_components/DETable";
 import Image from "next/image";
-import { TAdmin } from "@/src/types/user";
+import { TAdmin, TUser } from "@/src/types/user";
 import moment from "moment";
 import { Switch } from "@heroui/switch";
 import { toast } from "sonner";
 import { Input } from "@heroui/input";
 import { SearchIcon } from "@/src/components/ui/icons";
 import DeleteModal from "../../_components/DeleteModal";
+import { useToggleUserStatus } from "@/src/hooks/auth.hook";
 
 const AdminsPage = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
-  const { data: admins, isLoading: isLoadingAdmins } = useGetAllAdmin([
+  const {
+    data: admins,
+    isLoading: isLoadingAdmins,
+    refetch: refetchAdmins,
+  } = useGetAllAdmin([
     {
       name: "searchTerm",
       value: debounceSearch,
@@ -35,6 +40,11 @@ const AdminsPage = () => {
     isPending: isLoadingDeleteAdmin,
     isSuccess: isSuccessDeleteAdmin,
   } = useDeleteAdminById();
+  const {
+    mutate: toggleUserStatus,
+    isPending: isLoadingToggleUserStatus,
+    isSuccess: isSuccessToggleUserStatus,
+  } = useToggleUserStatus();
 
   const rows = admins?.data?.map((admin: TAdmin, ind: number) => ({
     sl: ind + 1,
@@ -62,13 +72,13 @@ const AdminsPage = () => {
     createdAt: admin?.createdAt || "N/A",
     status: (
       <Switch
-        onChange={() => handleStatusChange(admin)}
+        onChange={() => handleStatusChange(admin?.user)}
+        disabled={isLoadingToggleUserStatus}
         defaultSelected={admin?.user?.status === "active"}
       />
     ),
     actions: (
       <div className="flex items-center gap-1">
-        {/* <SpecialtyModal updatedSpecialty={specialty} /> */}
         <DeleteModal
           id={admin?._id}
           handler={deleteAdminMutate}
@@ -122,10 +132,19 @@ const AdminsPage = () => {
     },
   ];
 
-  const handleStatusChange = (admin: TAdmin) => {
-    console.log(admin);
-    toast.success("Status changed successfully");
+  const handleStatusChange = (user: TUser) => {
+    // console.log(admin);
+    console.log(user?._id, "admin._id");
+    toggleUserStatus(user?._id);
+    // toast.success("Status changed successfully");
   };
+
+  console.log(admins, "admins");
+  useEffect(() => {
+    if (isSuccessToggleUserStatus) {
+      refetchAdmins();
+    }
+  }, [isSuccessToggleUserStatus]);
 
   return (
     <div className="w-full p-4">

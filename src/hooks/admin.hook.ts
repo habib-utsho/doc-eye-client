@@ -5,7 +5,6 @@ import {
   getAllAdmin,
   updateAdminById,
 } from "../services/admin";
-import { registerAdmin } from "../services/auth";
 import { toast } from "sonner";
 
 export const useGetAllAdmin = (query: TFilterQuery[] | undefined) =>

@@ -6,6 +6,7 @@ import {
   registerDoctor,
   registerPatient,
   signinUser,
+  toggleUserStatus,
 } from "../services/auth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -92,6 +93,22 @@ export const useAdminRegister = () => {
     },
     onError(error: any) {
       toast.error(error?.message || "Failed to register admin!");
+    },
+  });
+};
+export const useToggleUserStatus = () => {
+  return useMutation({
+    mutationKey: ["toggleUserStatus"],
+    mutationFn: async (id: string) => await toggleUserStatus(id),
+    onSuccess(data) {
+      if (data?.success) {
+        toast.success(data?.message || `User is toggled successfully!`);
+      } else {
+        toast.error(data?.message || "Failed to toggled user!");
+      }
+    },
+    onError(error: any) {
+      toast.error(error?.message || "Failed to toggled user!");
     },
   });
 };
