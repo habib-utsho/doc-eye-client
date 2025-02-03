@@ -72,6 +72,7 @@ const AdminsPage = () => {
     dateOfBirth: moment(admin?.dateOfBirth).format("DD-MMM-YYYY"),
     district: admin?.district,
     createdAt: admin?.createdAt || "N/A",
+    isDeleted: admin?.isDeleted,
     status: (
       <Switch
         onChange={() => handleStatusChange(admin?.user)}
@@ -157,8 +158,6 @@ const AdminsPage = () => {
             onClear={() => setSearchTerm("")}
           />
         </div>
-
-        {/* <SpecialtyModal /> */}
       </div>
 
       <DETable

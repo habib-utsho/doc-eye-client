@@ -13,10 +13,11 @@ export const useGetAllDoctors = (query: TFilterQuery[] | undefined) =>
     queryFn: () => getAllDoctors(query),
   });
 
-export const useUpdateDoctorById = (id: string, payload: FormData) =>
+export const useUpdateDoctorById = () =>
   useMutation({
     mutationKey: ["doctor"],
-    mutationFn: () => updateDoctorById(id, payload),
+    mutationFn: ({ id, payload }: { id: string; payload: FormData }) =>
+      updateDoctorById(id, payload),
     onSuccess(data) {
       if (data?.success) {
         toast.success(data?.message || "Doctor updated successfully!");

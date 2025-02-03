@@ -38,7 +38,7 @@ const DETable = ({
     <Table
       className="my-5"
       color="primary"
-      aria-label="Example static collection table"
+      aria-label="DE table"
       bottomContent={
         data?.meta?.page!! > 0 ? (
           <div className="flex w-full justify-center">
@@ -59,7 +59,7 @@ const DETable = ({
         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
       <TableBody
-        isLoading={isLoading || isLoadingUser}
+        isLoading={isLoadingUser || isLoading}
         emptyContent={
           <h2 className="text-primary font-bold text-2xl">
             {notFoundMessage || "No data found"}

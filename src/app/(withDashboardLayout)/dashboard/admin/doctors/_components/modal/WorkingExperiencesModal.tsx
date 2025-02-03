@@ -43,40 +43,50 @@ const WorkingExperiencesModal = ({
                 Working Experiences
               </ModalHeader>
               <ModalBody>
-                <Table aria-label="Working Experiences" fullWidth={true}>
-                  <TableHeader>
-                    <TableColumn>#</TableColumn>
-                    <TableColumn>Department</TableColumn>
-                    <TableColumn>Designation</TableColumn>
-                    <TableColumn>Workplace</TableColumn>
-                    <TableColumn>Period</TableColumn>
-                  </TableHeader>
-                  <TableBody>
-                    {workingExperiences.map((workingExperience, ind) => (
-                      <TableRow key={workingExperience._id}>
-                        <TableCell>{ind + 1}</TableCell>
-                        <TableCell>{workingExperience.department}</TableCell>
-                        <TableCell>{workingExperience.designation}</TableCell>
-                        <TableCell>{workingExperience.workPlace}</TableCell>
-                        <TableCell>
-                          {moment(workingExperience.workingPeriodStart).format(
-                            "DD-MMM-YYYY"
-                          )}{" "}
-                          -{" "}
-                          {moment(workingExperience.workingPeriodEnd).format(
-                            "DD-MMM-YYYY"
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                <WorkingExperiencesTable
+                  workingExperiences={workingExperiences}
+                />
               </ModalBody>
             </>
           )}
         </ModalContent>
       </Modal>
     </>
+  );
+};
+
+export const WorkingExperiencesTable = ({
+  workingExperiences,
+}: {
+  workingExperiences: TWorkingExperience[];
+}) => {
+  return (
+    <Table aria-label="Working Experiences" fullWidth={true}>
+      <TableHeader>
+        <TableColumn>#</TableColumn>
+        <TableColumn>Department</TableColumn>
+        <TableColumn>Designation</TableColumn>
+        <TableColumn>Workplace</TableColumn>
+        <TableColumn>Period</TableColumn>
+      </TableHeader>
+      <TableBody>
+        {workingExperiences.map((workingExperience, ind) => (
+          <TableRow key={workingExperience._id}>
+            <TableCell>{ind + 1}</TableCell>
+            <TableCell>{workingExperience.department}</TableCell>
+            <TableCell>{workingExperience.designation}</TableCell>
+            <TableCell>{workingExperience.workPlace}</TableCell>
+            <TableCell>
+              {moment(workingExperience.workingPeriodStart).format(
+                "DD-MMM-YYYY"
+              )}{" "}
+              -{" "}
+              {moment(workingExperience.workingPeriodEnd).format("DD-MMM-YYYY")}
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 };
 

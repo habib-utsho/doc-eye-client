@@ -8,7 +8,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
     <>
       <div className="flex justify-between relative">
         <Sidebar />
-        <main className="flex-1">
+        <main className="flex-1 overflow-x-auto">
           <DashboardNavbar />
           {children}
         </main>

@@ -6,6 +6,7 @@ import {
   updateAdminById,
 } from "../services/admin";
 import { toast } from "sonner";
+import { TAdmin } from "../types/user";
 
 export const useGetAllAdmin = (query: TFilterQuery[] | undefined) =>
   useQuery({
@@ -13,10 +14,11 @@ export const useGetAllAdmin = (query: TFilterQuery[] | undefined) =>
     queryFn: () => getAllAdmin(query),
   });
 
-export const useUpdateAdminById = (id: string, payload: FormData) =>
+export const useUpdateAdminById = () =>
   useMutation({
     mutationKey: ["admin"],
-    mutationFn: () => updateAdminById(id, payload),
+    mutationFn: ({ id, payload }: { id: string; payload: FormData }) =>
+      updateAdminById(id, payload),
     onSuccess(data) {
       if (data?.success) {
         toast.success(data?.message || "Admin updated successfully!");

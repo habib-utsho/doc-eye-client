@@ -1,18 +1,31 @@
 "use client";
-import { useDeleteDoctorById, useGetAllDoctors } from "@/src/hooks/doctor.hook";
+import {
+  useDeleteDoctorById,
+  useGetAllDoctors,
+  useUpdateDoctorById,
+} from "@/src/hooks/doctor.hook";
 import useDebounce from "@/src/hooks/useDebounce";
 import React, { useEffect, useState } from "react";
 import DETable from "../../_components/DETable";
 import Image from "next/image";
-import { TDoctor, TUser } from "@/src/types/user";
+import { TAdmin, TDoctor, TUser } from "@/src/types/user";
 import moment from "moment";
 import { Switch } from "@heroui/switch";
 import { Input } from "@heroui/input";
-import { SearchIcon } from "@/src/components/ui/icons";
+import {
+  CheckIcon,
+  PhoneIcon,
+  SearchIcon,
+  XMarkIcon,
+} from "@/src/components/ui/icons";
 import DeleteModal from "../../_components/DeleteModal";
 import { useToggleUserStatus } from "@/src/hooks/auth.hook";
 import { TSpecialty } from "@/src/types/specialty";
 import WorkingExperiencesModal from "./_components/modal/WorkingExperiencesModal";
+import { MailOutlined, PhoneOutlined, RightOutlined } from "@ant-design/icons";
+import DoctorDetailsModal from "./_components/modal/DoctorDetailsModal";
+import { Button } from "@heroui/button";
+import { toast } from "sonner";
 
 const DoctorsPage = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
@@ -42,6 +55,11 @@ const DoctorsPage = () => {
     isSuccess: isSuccessDeleteDoctor,
   } = useDeleteDoctorById();
   const {
+    mutate: updateDoctorMutate,
+    isPending: isLoadingUpdateDoctor,
+    isSuccess: isSuccessUpdateDoctor,
+  } = useUpdateDoctorById();
+  const {
     mutate: toggleUserStatus,
     isPending: isLoadingToggleUserStatus,
     isSuccess: isSuccessToggleUserStatus,
@@ -52,7 +70,8 @@ const DoctorsPage = () => {
     user: doctor?.user,
     sl: ind + 1,
     userInfo: (
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1 min-w-[335px]">
+        {/* <figure className="relative"> */}
         <Image
           src={doctor?.profileImg}
           width={50}
@@ -60,15 +79,25 @@ const DoctorsPage = () => {
           alt={doctor?.name}
           className="rounded-full"
         />
-        <div>{doctor?.name}</div>
+        {/* </figure> */}
+        <div>
+          <p>{doctor?.name}</p>
+          <p className="text-slate-700 flex items-center gap-1">
+            <MailOutlined />
+            {doctor?.email}
+          </p>
+          <p className="text-slate-700 flex items-center gap-1">
+            <PhoneOutlined /> {doctor?.phone}
+          </p>
+        </div>
       </div>
     ),
     name: doctor?.name,
-    email: doctor?.email,
-    phone: doctor?.phone,
     gender: doctor?.gender,
     doctorType: doctor?.doctorType,
     medicalDegree: doctor?.medicalDegree,
+    doctorCode: doctor?.doctorCode,
+    bmdc: doctor?.bmdc,
     medicalSpecialties: doctor?.medicalSpecialties
       ?.map((specialty: TSpecialty) => specialty?.name)
       .join(", "),
@@ -85,6 +114,7 @@ const DoctorsPage = () => {
     followupFee: `${doctor?.followupFee} BDT`,
     currentWorkplace: doctor?.currentWorkplace,
     district: doctor?.district,
+    isDeleted: doctor?.isDeleted,
     workingExperiences: (
       <WorkingExperiencesModal
         workingExperiences={doctor?.workingExperiences}
@@ -98,8 +128,42 @@ const DoctorsPage = () => {
         isSelected={doctor?.user?.status === "active"}
       />
     ),
+    approval: (
+      <div>
+        {doctor.status === "pending" ? (
+          <div className="flex items-center gap-1">
+            <Button
+              onPress={() => handleDoctorApproval(doctor, "reject")}
+              isIconOnly
+              startContent={<XMarkIcon />}
+              isLoading={isLoadingUpdateDoctor}
+              color="danger"
+            />
+            <Button
+              onPress={() => handleDoctorApproval(doctor, "approve")}
+              isIconOnly
+              startContent={<CheckIcon />}
+              isLoading={isLoadingUpdateDoctor}
+              color="success"
+            />
+          </div>
+        ) : (
+          <Button
+            disabled
+            isIconOnly
+            startContent={
+              doctor.status === "approve" ? <CheckIcon /> : <XMarkIcon />
+            }
+            isLoading={isLoadingUpdateDoctor}
+            color={`${doctor.status === "approve" ? "success" : "danger"}`}
+            className="opacity-30"
+          />
+        )}
+      </div>
+    ),
     actions: (
       <div className="flex items-center gap-1">
+        <DoctorDetailsModal doctor={doctor} />
         <DeleteModal
           id={doctor?._id}
           handler={deleteDoctorMutate}
@@ -113,36 +177,41 @@ const DoctorsPage = () => {
   const columns = [
     { key: "sl", label: "SL" },
     { key: "userInfo", label: "Doctor" },
-    { key: "email", label: "Email" },
-    { key: "phone", label: "Phone" },
     { key: "gender", label: "Gender" },
-    { key: "dateOfBirth", label: "Date of Birth" },
-    { key: "medicalDegree", label: "Degree" },
-    { key: "medicalSpecialties", label: "Specialties" },
     { key: "doctorType", label: "Type" },
-    { key: "consultationFee", label: "Consultation Fee" },
-    { key: "followupFee", label: "Followup Fee" },
+    { key: "bmdc", label: "BMDC" },
+    { key: "doctorCode", label: "Dr Code" },
     { key: "currentWorkplace", label: "Current Workplace" },
     { key: "workingExperiences", label: "Experiences" },
     { key: "district", label: "District" },
     { key: "status", label: "Status" },
+    { key: "approval", label: "Approval" },
     { key: "actions", label: "Actions" },
   ];
-
-  console.log({ doctors });
 
   const handleStatusChange = (user: TUser) => {
     toggleUserStatus(user?._id);
   };
+  const handleDoctorApproval = (doctor: TDoctor, status: string) => {
+    const formData = new FormData();
+    formData.append("data", JSON.stringify({ status }));
+    console.log(formData.getAll("data"));
+    toast.success(`${doctor?._id}  Doctor ${status} successfully!`);
+    updateDoctorMutate({ id: doctor?._id, payload: formData });
+  };
 
   useEffect(() => {
-    if (isSuccessToggleUserStatus) {
+    if (
+      isSuccessDeleteDoctor ||
+      isSuccessToggleUserStatus ||
+      isSuccessUpdateDoctor
+    ) {
       refetchDoctors();
     }
-  }, [isSuccessToggleUserStatus]);
+  }, [isSuccessToggleUserStatus, isSuccessDeleteDoctor, isSuccessUpdateDoctor]);
 
   return (
-    <div className="w-full p-4">
+    <div className="p-4">
       <div className="flex justify-between items-center mb-4 xl:mb-6 gap-4">
         <div className="flex items-center gap-2">
           <Input
