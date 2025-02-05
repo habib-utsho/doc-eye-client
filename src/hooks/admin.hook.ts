@@ -6,7 +6,6 @@ import {
   updateAdminById,
 } from "../services/admin";
 import { toast } from "sonner";
-import { TAdmin } from "../types/user";
 
 export const useGetAllAdmin = (query: TFilterQuery[] | undefined) =>
   useQuery({

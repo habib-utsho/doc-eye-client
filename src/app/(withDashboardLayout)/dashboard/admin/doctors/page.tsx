@@ -195,8 +195,6 @@ const DoctorsPage = () => {
   const handleDoctorApproval = (doctor: TDoctor, status: string) => {
     const formData = new FormData();
     formData.append("data", JSON.stringify({ status }));
-    console.log(formData.getAll("data"));
-    toast.success(`${doctor?._id}  Doctor ${status} successfully!`);
     updateDoctorMutate({ id: doctor?._id, payload: formData });
   };
 
