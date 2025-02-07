@@ -32,7 +32,6 @@ const DETable = ({
   notFoundMessage: string;
 }) => {
   const { isLoading: isLoadingUser, user } = useUserData();
-  console.log(rows, "rows in DE table");
 
   return (
     <Table

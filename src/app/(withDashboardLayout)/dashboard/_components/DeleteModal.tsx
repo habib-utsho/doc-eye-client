@@ -27,7 +27,7 @@ const DeleteModal = ({
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && isOpen) {
       onOpenChange();
     }
   }, [isSuccess]);

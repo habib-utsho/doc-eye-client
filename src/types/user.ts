@@ -103,11 +103,11 @@ export type TSignin = {
 
 export type TPatient = {
   _id: string;
-  user: string;
+  user: TUser;
   name: string;
   email: string;
   phone: string;
-  profileImg?: string;
+  profileImg: string;
   gender: TGender;
   district: TDistrict;
   dateOfBirth: Date;

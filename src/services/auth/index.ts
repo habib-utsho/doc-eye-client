@@ -82,10 +82,8 @@ const signinUser = async (payload: TSignin) => {
 };
 
 const toggleUserStatus = async (id: string) => {
-  console.log(id, "id from toggle user server action");
   try {
     const response = await axiosInstance.patch(`/user/toggle-status/${id}`);
-    console.log(response, "after toggle user status");
     return response.data;
   } catch (e: any) {
     throw new Error(
