@@ -79,7 +79,6 @@ export const updatePatientById = async (
 };
 
 export const deletePatientById = async (id: string | undefined) => {
-  console.log(id, `${process.env.NEXT_PUBLIC_BASE_URL}/patient/${id}`, "id");
   const accessToken = cookies().get("DEaccessToken")?.value;
   try {
     const fetchOption: RequestInit = {
@@ -92,7 +91,6 @@ export const deletePatientById = async (id: string | undefined) => {
       `${process.env.NEXT_PUBLIC_BASE_URL}/patient/${id}`,
       fetchOption
     );
-    console.log(res, "res after delete");
     if (!res.ok) {
       throw new Error("Failed to delete a patient!");
     }

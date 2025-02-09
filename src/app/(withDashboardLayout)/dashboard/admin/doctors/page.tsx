@@ -74,10 +74,10 @@ const DoctorsPage = () => {
         {/* <figure className="relative"> */}
         <Image
           src={doctor?.profileImg}
-          width={50}
-          height={50}
+          width={60}
+          height={60}
           alt={doctor?.name}
-          className="rounded-full"
+          className="rounded-full h-[60px] w-[60px]"
         />
         {/* </figure> */}
         <div>

@@ -54,10 +54,10 @@ const AdminsPage = () => {
       <div className="flex items-center gap-1">
         <Image
           src={admin?.profileImg}
-          width={50}
-          height={50}
+          width={60}
+          height={60}
           alt={admin?.name}
-          className="rounded-full"
+          className="rounded-full h-[60px] w-[60px]"
         />
         <div>{admin?.name}</div>
       </div>

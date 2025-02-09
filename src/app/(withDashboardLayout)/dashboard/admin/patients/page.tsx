@@ -16,6 +16,7 @@ import DeleteModal from "../../_components/DeleteModal";
 import { useToggleUserStatus } from "@/src/hooks/auth.hook";
 import PatientDetailsModal from "./_components/modal/PatientDetailsModal";
 import { SearchIcon } from "@/src/components/ui/icons";
+import { useRouter } from "next/navigation";
 
 const PatientsPage = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
@@ -47,7 +48,6 @@ const PatientsPage = () => {
   const {
     mutate: toggleUserStatus,
     isPending: isLoadingToggleUserStatus,
-    isSuccess: isSuccessToggleUserStatus,
   } = useToggleUserStatus();
 
   const rows = patients?.data?.map((patient: TPatient, ind: number) => ({
@@ -58,10 +58,10 @@ const PatientsPage = () => {
       <div className="flex items-center gap-1 min-w-[335px]">
         <Image
           src={patient?.profileImg}
-          width={50}
-          height={50}
+          width={60}
+          height={60}
           alt={patient?.name}
-          className="rounded-full"
+          className="rounded-full bg-red-500 h-[60px] w-[60px]"
         />
         <div>
           <p>{patient?.name}</p>
@@ -83,7 +83,7 @@ const PatientsPage = () => {
     status: (
       <Switch
         onChange={() => handleStatusChange(patient?.user)}
-        disabled={isLoadingToggleUserStatus}
+        disabled={isLoadingToggleUserStatus || isLoadingPatients}
         isSelected={patient?.user?.status === "active"}
       />
     ),
@@ -112,15 +112,18 @@ const PatientsPage = () => {
   ];
 
   const handleStatusChange = (user: TUser) => {
-    toggleUserStatus(user?._id);
+    toggleUserStatus(user?._id, {
+      onSuccess: () => {
+        refetchPatients();
+      },
+    });
   };
 
   useEffect(() => {
-    if (isSuccessDeletePatient || isSuccessToggleUserStatus) {
+    if (isSuccessDeletePatient) {
       refetchPatients();
     }
-  }, [isSuccessToggleUserStatus, isSuccessDeletePatient]);
-  console.log(patients, "patients");
+  }, [isSuccessDeletePatient]);
 
   return (
     <div className="p-4">

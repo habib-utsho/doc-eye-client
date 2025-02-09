@@ -84,6 +84,7 @@ const signinUser = async (payload: TSignin) => {
 const toggleUserStatus = async (id: string) => {
   try {
     const response = await axiosInstance.patch(`/user/toggle-status/${id}`);
+    revalidateTag(response?.data?.data?.role || "user");
     return response.data;
   } catch (e: any) {
     throw new Error(
