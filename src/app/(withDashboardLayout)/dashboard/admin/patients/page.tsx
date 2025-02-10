@@ -16,7 +16,6 @@ import DeleteModal from "../../_components/DeleteModal";
 import { useToggleUserStatus } from "@/src/hooks/auth.hook";
 import PatientDetailsModal from "./_components/modal/PatientDetailsModal";
 import { SearchIcon } from "@/src/components/ui/icons";
-import { useRouter } from "next/navigation";
 
 const PatientsPage = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
@@ -45,10 +44,8 @@ const PatientsPage = () => {
     isPending: isLoadingDeletePatient,
     isSuccess: isSuccessDeletePatient,
   } = useDeletePatientById();
-  const {
-    mutate: toggleUserStatus,
-    isPending: isLoadingToggleUserStatus,
-  } = useToggleUserStatus();
+  const { mutate: toggleUserStatus, isPending: isLoadingToggleUserStatus } =
+    useToggleUserStatus();
 
   const rows = patients?.data?.map((patient: TPatient, ind: number) => ({
     _id: patient?._id,
