@@ -31,6 +31,7 @@ export const getAllDoctors = async (query: TFilterQuery[] | undefined) => {
     }
     return res.json();
   } catch (e: any) {
+    console.log(e.message, "from server action");
     throw new Error(
       `${
         e?.response?.data?.errorSources?.[0]?.path &&
