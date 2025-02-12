@@ -17,7 +17,7 @@ const SpecialtyPage = async ({ params }: { params: { slug: string } }) => {
   console.log(doctors, "doctors");
 
   return (
-    <div className="py-5">
+    <div className="py-8">
       <Container className="grid grid-cols-12 gap-4">
         <div className="col-span-3 bg-slate-100 dark:bg-slate-900 p-4 rounded-md space-y-3 md:space-y-4">
           <div className="flex items-center justify-between gap-2 flex-wrap">

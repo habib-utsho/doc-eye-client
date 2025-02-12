@@ -1046,17 +1046,17 @@
     "@react-types/grid" "3.2.10"
     "@react-types/table" "3.10.3"
 
-"@heroui/tabs@2.2.7":
-  version "2.2.7"
-  resolved "https://registry.npmjs.org/@heroui/tabs/-/tabs-2.2.7.tgz#70c57c56b91ad2594b56598b2a6f3aa7c1d434ad"
-  integrity sha512-hdSAEU4sD4yKIoUJZ6QwEJrGLjQWl+x2YlQgJLk0+SCt/gapJXxswyFpKAsi95Agqb5OhTnjF5iwenWxm/YxeQ==
+"@heroui/tabs@^2.2.8":
+  version "2.2.8"
+  resolved "https://registry.npmjs.org/@heroui/tabs/-/tabs-2.2.8.tgz#54d8511f38c6ccd4926a68ffe167c73b3a77b116"
+  integrity sha512-3cKwXiUeZNOa4wBalJOBdlOSa0IFFRY4FHR5wOsTiq1UDr2D1sSVEAtqPc5ye3Ly31OUWVe2Pl6opFY+LaEEbQ==
   dependencies:
-    "@heroui/aria-utils" "2.2.7"
-    "@heroui/framer-utils" "2.1.6"
-    "@heroui/react-utils" "2.1.3"
-    "@heroui/shared-utils" "2.1.2"
-    "@heroui/use-is-mounted" "2.1.1"
-    "@heroui/use-update-effect" "2.1.1"
+    "@heroui/aria-utils" "2.2.8"
+    "@heroui/framer-utils" "2.1.7"
+    "@heroui/react-utils" "2.1.4"
+    "@heroui/shared-utils" "2.1.3"
+    "@heroui/use-is-mounted" "2.1.2"
+    "@heroui/use-update-effect" "2.1.2"
     "@react-aria/focus" "3.19.0"
     "@react-aria/interactions" "3.22.5"
     "@react-aria/tabs" "3.9.8"
@@ -1278,10 +1278,10 @@
   dependencies:
     "@react-aria/ssr" "3.9.7"
 
-"@heroui/use-is-mounted@2.1.1":
-  version "2.1.1"
-  resolved "https://registry.npmjs.org/@heroui/use-is-mounted/-/use-is-mounted-2.1.1.tgz#9977f331989c9da7e3c61f320794918d834365b7"
-  integrity sha512-Z5nXvxVjePXE2JgMLcMGjabfma+py/r+qGB9MKbT2V2zyrGZ/8R7c/MQJflGW7w/bFGgqjI55OG3UfNhScHu1w==
+"@heroui/use-is-mounted@2.1.2":
+  version "2.1.2"
+  resolved "https://registry.npmjs.org/@heroui/use-is-mounted/-/use-is-mounted-2.1.2.tgz#902a345a9f5a0e078c784fffc56b48f4fd1d825a"
+  integrity sha512-yS4ZdTiAcW5KxZg1z5Tzd50zJ9lis1xL7G2CsaWu28rgZs4kQylGCBDuFfeD+cG4JmtktDq9GhtG/V2XL2DwSQ==
 
 "@heroui/use-measure@2.1.1":
   version "2.1.1"
@@ -1316,10 +1316,10 @@
   resolved "https://registry.npmjs.org/@heroui/use-scroll-position/-/use-scroll-position-2.1.1.tgz#2826f3fbfa283ddc8d0924ce7b2ebed044963fd9"
   integrity sha512-OqQeqrIwpfnANKilbUBvLPp16v1igIokJX5cOCs25aFHBDovrz351ghYMP+sPgzTdA1suVqmQHF+bkGa5bqEQw==
 
-"@heroui/use-update-effect@2.1.1":
-  version "2.1.1"
-  resolved "https://registry.npmjs.org/@heroui/use-update-effect/-/use-update-effect-2.1.1.tgz#59884ae145cbe94dde6fe9cf844d1a4f4bdae2ce"
-  integrity sha512-1JI0iFz7zunF85/DS2bG/bSAZXWq31QnGZ59EER4Hu49Ohti0YvDWi8gjSyw9n7lFf8z6VRP7IW8j+PKZWN6dg==
+"@heroui/use-update-effect@2.1.2":
+  version "2.1.2"
+  resolved "https://registry.npmjs.org/@heroui/use-update-effect/-/use-update-effect-2.1.2.tgz#a59ec77fa60a76afaf574941931b7d65ab7cc982"
+  integrity sha512-83OgHOYfToynF8xP14bbM60zw26iHGkziFOiUIsFA+ZRpLLcIcRZFY9lC+SxIRYEkBe3GIuwwEM6Fez3Xa8u1g==
 
 "@hookform/resolvers@^3.9.0":
   version "3.9.1"

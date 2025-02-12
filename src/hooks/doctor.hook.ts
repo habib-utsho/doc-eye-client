@@ -3,6 +3,8 @@ import { TFilterQuery } from "../types";
 import {
   deleteDoctorById,
   getAllDoctors,
+  getDoctorByDoctorCode,
+  getDoctorById,
   updateDoctorById,
 } from "../services/doctor";
 import { toast } from "sonner";
@@ -11,6 +13,16 @@ export const useGetAllDoctors = (query: TFilterQuery[] | undefined) =>
   useQuery({
     queryKey: ["doctor", query],
     queryFn: () => getAllDoctors(query),
+  });
+export const useGetDoctorById = (id: string | undefined) =>
+  useQuery({
+    queryKey: ["doctor", id],
+    queryFn: () => getDoctorById(id),
+  });
+export const useGetDoctorByDoctorCode = (id: string | undefined) =>
+  useQuery({
+    queryKey: ["doctor", id],
+    queryFn: () => getDoctorByDoctorCode(id),
   });
 
 export const useUpdateDoctorById = () =>

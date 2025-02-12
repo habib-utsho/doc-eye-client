@@ -22,6 +22,10 @@ export default {
       animation: {
         spin360: "spin360 0.5s linear",
       },
+      boxShadow: {
+        sm: "rgba(100, 100, 111, 0.1) 0px 0px 10px 0px",
+        DEFAULT: "rgba(100, 100, 111, 0.2) 0px 0px 10px 0px",
+      },
     },
   },
   darkMode: "class",

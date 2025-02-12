@@ -43,6 +43,70 @@ export const getAllDoctors = async (query: TFilterQuery[] | undefined) => {
     );
   }
 };
+export const getDoctorById = async (id: string | undefined) => {
+  const accessToken = cookies().get("DEaccessToken")?.value;
+  try {
+    const fetchOption: RequestInit = {
+      headers: {
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      },
+      next: {
+        tags: ["doctor"],
+        revalidate: 60,
+      },
+    };
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/doctor/${id}`,
+      fetchOption
+    );
+    if (!res.ok) {
+      throw new Error("Failed to get doctor!");
+    }
+    return res.json();
+  } catch (e: any) {
+    throw new Error(
+      `${
+        e?.response?.data?.errorSources?.[0]?.path &&
+        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      } ${e.response?.data?.errorSources?.[0]?.message}` ||
+        e?.response?.data ||
+        e.message ||
+        "Failed to get doctor!"
+    );
+  }
+};
+export const getDoctorByDoctorCode = async (id: string | undefined) => {
+  const accessToken = cookies().get("DEaccessToken")?.value;
+  try {
+    const fetchOption: RequestInit = {
+      headers: {
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      },
+      next: {
+        tags: ["doctor"],
+        revalidate: 60,
+      },
+    };
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/doctor/doctor-code/${id}`,
+      fetchOption
+    );
+    if (!res.ok) {
+      throw new Error("Failed to get doctor!");
+    }
+    return res.json();
+  } catch (e: any) {
+    throw new Error(
+      `${
+        e?.response?.data?.errorSources?.[0]?.path &&
+        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      } ${e.response?.data?.errorSources?.[0]?.message}` ||
+        e?.response?.data ||
+        e.message ||
+        "Failed to get doctor!"
+    );
+  }
+};
 
 export const updateDoctorById = async (
   id: string | undefined,
