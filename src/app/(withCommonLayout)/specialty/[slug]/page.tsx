@@ -32,6 +32,7 @@ const SpecialtyPage = async ({ params }: { params: { slug: string } }) => {
 
           <Slider />
           <CheckboxGroup
+            label="Availability"
             defaultValue={[
               "online_now",
               "available_today",
