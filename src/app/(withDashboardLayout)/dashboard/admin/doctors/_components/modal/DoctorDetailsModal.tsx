@@ -1,6 +1,6 @@
 import { EyeFilledIcon, UsersIcon } from "@/src/components/ui/icons";
 import { TDoctor } from "@/src/types/user";
-import { SecurityScanOutlined } from "@ant-design/icons";
+import { ClockCircleOutlined, SecurityScanOutlined } from "@ant-design/icons";
 import { Button } from "@heroui/button";
 import {
   Modal,
@@ -11,7 +11,7 @@ import {
 } from "@heroui/modal";
 import moment from "moment";
 import Image from "next/image";
-import React from "react";
+import React, { ReactNode } from "react";
 import { WorkingExperiencesTable } from "./WorkingExperiencesModal";
 
 const DoctorDetailsModal = ({ doctor }: { doctor: TDoctor }) => {
@@ -42,11 +42,19 @@ const DoctorDetailsModal = ({ doctor }: { doctor: TDoctor }) => {
                 <div className="flex flex-col gap-4">
                   {/* Profile Section */}
                   <div className="flex gap-4 items-center">
-                    <img
-                      src={doctor.profileImg}
-                      alt={doctor.name}
-                      className="w-24 h-24 rounded-full"
-                    />
+                    <div>
+                      {doctor.profileImg ? (
+                        <Image
+                          src={doctor.profileImg}
+                          alt={doctor.name}
+                          height={60}
+                          width={60}
+                          className="w-[60px] h-[60px] rounded-full"
+                        />
+                      ) : (
+                        <div className="rounded-full h-[60px] w-[60px] bg-primary-500 bg-opacity-20 mr-2" />
+                      )}
+                    </div>
                     <div>
                       <h2 className="text-xl font-bold">
                         {doctor.doctorTitle} {doctor.name}
@@ -98,7 +106,25 @@ const DoctorDetailsModal = ({ doctor }: { doctor: TDoctor }) => {
                       <InfoItem label="BMDC" value={`${doctor.bmdc}`} />
                       <InfoItem
                         label="Current Workplace"
-                        value={`${doctor.currentWorkplace}`}
+                        value={
+                          <div>
+                            <p className="font-semibold">
+                              <span>{doctor?.currentWorkplace?.workPlace}</span>{" "}
+                              - {doctor?.currentWorkplace?.department}
+                            </p>
+                            <p>
+                              {doctor?.currentWorkplace?.designation},{" "}
+                              <ClockCircleOutlined className="mr-1" />
+                              {moment(
+                                doctor?.currentWorkplace?.workingPeriodStart
+                              ).format("YYYY")}{" "}
+                              - <ClockCircleOutlined className="mr-1" />
+                              {moment(
+                                doctor?.currentWorkplace?.workingPeriodEnd
+                              ).format("YYYY")}
+                            </p>
+                          </div>
+                        }
                       />
                       <InfoItem
                         label="Consultation Fee"
@@ -179,7 +205,13 @@ const DoctorDetailsModal = ({ doctor }: { doctor: TDoctor }) => {
   );
 };
 
-const InfoItem = ({ label, value }: { label: string; value: string }) => (
+const InfoItem = ({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | ReactNode;
+}) => (
   <div className="flex flex-col bg-gray-100 p-3 rounded-md">
     <span className="text-gray-500 text-sm">{label}</span>
     <span className="text-gray-800 font-medium">{value}</span>

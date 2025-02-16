@@ -390,7 +390,7 @@ const SignupPage = () => {
     // doctorTitle: "Dr.",
     // doctorType: "Medical",
     totalExperienceYear: 12,
-    currentWorkplace: "Dhaka Medical College",
+    // currentWorkplace: "Dhaka Medical College",
     consultationFee: 1000,
     followupFee: 600,
     nid: "663543434423",

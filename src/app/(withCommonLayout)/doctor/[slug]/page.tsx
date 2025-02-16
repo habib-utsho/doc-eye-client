@@ -18,12 +18,16 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
         <Container>
           <div className="grid grid-cols-12 ">
             <div className="flex items-center gap-4 col-span-8">
-              <Image
-                src={doctor?.profileImg}
-                alt={doctor?.name}
-                width={200}
-                height={200}
-              />
+              {doctor?.profileImg ? (
+                <Image
+                  src={doctor?.profileImg}
+                  alt={doctor?.name}
+                  width={200}
+                  height={200}
+                />
+              ) : (
+                <div className="rounded-lg w-14 h-16 bg-primary-500 bg-opacity-20 mr-2" />
+              )}
               <div>
                 <h1 className="font-semibold text-lg">
                   {doctor?.doctorTitle} {doctor?.name}
@@ -40,7 +44,8 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
                 <div className="">
                   <p className="text-[12px] text-gray-500">Working in</p>
                   <p className="text-sm text-gray-500 font-semibold">
-                    {doctor?.currentWorkplace}
+                    {doctor?.currentWorkplace?.workPlace} -{" "}
+                    {doctor?.currentWorkplace?.department}
                   </p>
                 </div>
                 <p className="text-sm text-gray-500">

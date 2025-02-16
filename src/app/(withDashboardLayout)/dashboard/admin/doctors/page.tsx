@@ -22,7 +22,12 @@ import DeleteModal from "../../_components/DeleteModal";
 import { useToggleUserStatus } from "@/src/hooks/auth.hook";
 import { TSpecialty } from "@/src/types/specialty";
 import WorkingExperiencesModal from "./_components/modal/WorkingExperiencesModal";
-import { MailOutlined, PhoneOutlined, RightOutlined } from "@ant-design/icons";
+import {
+  ClockCircleOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  RightOutlined,
+} from "@ant-design/icons";
 import DoctorDetailsModal from "./_components/modal/DoctorDetailsModal";
 import { Button } from "@heroui/button";
 import { toast } from "sonner";
@@ -71,15 +76,17 @@ const DoctorsPage = () => {
     sl: ind + 1,
     userInfo: (
       <div className="flex items-center gap-1 min-w-[335px]">
-        {/* <figure className="relative"> */}
-        <Image
-          src={doctor?.profileImg}
-          width={60}
-          height={60}
-          alt={doctor?.name}
-          className="rounded-full h-[60px] w-[60px]"
-        />
-        {/* </figure> */}
+        {doctor?.profileImg ? (
+          <Image
+            src={doctor?.profileImg}
+            width={60}
+            height={60}
+            alt={doctor?.name}
+            className="rounded-full h-[60px] w-[60px] mr-2"
+          />
+        ) : (
+          <div className="rounded-full h-[60px] w-[60px] bg-primary-500 bg-opacity-20 mr-2" />
+        )}
         <div>
           <p>{doctor?.name}</p>
           <p className="text-slate-700 flex items-center gap-1">
@@ -112,7 +119,23 @@ const DoctorsPage = () => {
     dateOfBirth: moment(doctor?.dateOfBirth).format("DD-MMM-YYYY"),
     consultationFee: `${doctor?.consultationFee} BDT`,
     followupFee: `${doctor?.followupFee} BDT`,
-    currentWorkplace: doctor?.currentWorkplace,
+    currentWorkplace: (
+      <div>
+        <p className="font-semibold">
+          <span>{doctor?.currentWorkplace?.workPlace}</span> -{" "}
+          {doctor?.currentWorkplace?.department}
+        </p>
+        <p>
+          {doctor?.currentWorkplace?.designation},{" "}
+          <ClockCircleOutlined className="mr-1" />
+          {moment(doctor?.currentWorkplace?.workingPeriodStart).format(
+            "YYYY"
+          )}{" "}
+          - <ClockCircleOutlined className="mr-1" />
+          {moment(doctor?.currentWorkplace?.workingPeriodEnd).format("YYYY")}
+        </p>
+      </div>
+    ),
     district: doctor?.district,
     isDeleted: doctor?.isDeleted,
     workingExperiences: (

@@ -168,7 +168,7 @@ export type TDoctor = {
   followupFee: number;
   workingExperiences: TWorkingExperience[];
   dateOfBirth: string;
-  currentWorkplace: string;
+  currentWorkplace: TWorkingExperience;
   district: string;
   nid: string;
   bmdc: string;

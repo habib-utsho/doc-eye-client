@@ -42,6 +42,41 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
             </div>
           }
         >
+          <Card className="!shadow hover:!shadow-sm mb-4 bg-primary-500 bg-opacity-10">
+            <CardHeader className="pb-0 font-semibold text-lg md:text-xl">
+              {doctor.currentWorkplace?.workPlace}
+            </CardHeader>
+            <CardBody>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                <div>
+                  <p className="text-gray-500 text-sm">Department</p>
+                  <p className="text-font-semibold">
+                    {doctor.currentWorkplace?.department}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-sm">Designation</p>
+                  <p className="text-font-semibold">
+                    {doctor.currentWorkplace?.designation}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-sm">Working Period</p>
+                  <p className="text-font-semibold">
+                    {moment(doctor.currentWorkplace?.workingPeriodStart).format(
+                      "Do MMM, YYYY"
+                    )}{" "}
+                    -{" "}
+                    {doctor.currentWorkplace?.workingPeriodEnd
+                      ? moment(
+                          doctor.currentWorkplace?.workingPeriodEnd
+                        ).format("Do MMM, YYYY")
+                      : "Running"}
+                  </p>
+                </div>
+              </div>
+            </CardBody>
+          </Card>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {doctor?.workingExperiences?.map(
               (experience: TWorkingExperience) => {
