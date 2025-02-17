@@ -53,7 +53,7 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
                 </p>
               </div>
             </div>
-            <div className="col-span-4 flex flex-col items-end justify-center gap-1">
+            <div className="col-span-4 flex flex-col items-end  justify-center gap-1">
               <p className="text-sm text-gray-500">
                 <span className="font-bold text-lg text-primary-500">
                   ৳{doctor?.consultationFee}
