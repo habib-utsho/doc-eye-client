@@ -127,6 +127,7 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
             </div>
           }
         >
+          
           <Card className="!shadow hover:!shadow-sm mb-4 md:mb-6 bg-primary-500 bg-opacity-10 w-full !flex-1">
             <CardHeader className="pb-0 font-semibold text-lg md:text-xl">
               {doctor.currentWorkplace?.workPlace}
