@@ -66,9 +66,6 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
                 </span>{" "}
                 /per followup
               </p>
-              <p className="text-sm text-gray-500">
-                {doctor.patientAttended} patients attended
-              </p>
               <Button
                 color="primary"
                 className="text-white"
