@@ -60,6 +60,7 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
                 </span>{" "}
                 /per consultation
               </p>
+              
               <p className="text-sm text-gray-500">
                 <span className="font-bold text-lg text-primary-500">
                   ৳{doctor?.followupFee}
