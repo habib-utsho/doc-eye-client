@@ -6,12 +6,16 @@ import { Button } from "@heroui/button";
 import Image from "next/image";
 import React from "react";
 import DoctorTabs from "./_components/DoctorTabs";
+import moment from "moment";
+import isDoctorAvailable from "@/src/utils/isDoctorAvailable";
 
 const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
-  console.log(params.slug, "slug");
+  // console.log(params.slug, "slug");
   const doctorRes = await getDoctorByDoctorCode(params.slug);
   const doctor = doctorRes?.data as TDoctor;
-  console.log(doctor, "doctor");
+  // console.log(doctor, "doctor");
+  const isDoctorAvailableP = isDoctorAvailable(doctor);
+  console.log(isDoctorAvailableP, "isDoctorAvailableP");
   return (
     <div className="py-8 space-y-4 md:space-y-8">
       <div className="bg-gradient-to-r from-white to-gray-100 dark:from-black dark:to-gray-900 py-4">
@@ -60,7 +64,7 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
                 </span>{" "}
                 /per consultation
               </p>
-              
+
               <p className="text-sm text-gray-500">
                 <span className="font-bold text-lg text-primary-500">
                   ৳{doctor?.followupFee}
