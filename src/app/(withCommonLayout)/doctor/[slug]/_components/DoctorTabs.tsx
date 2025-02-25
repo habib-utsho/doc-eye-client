@@ -2,6 +2,7 @@
 import { MessageIcon } from "@/src/components/ui/icons";
 import MyMotion from "@/src/components/ui/MyMotion";
 import { TDoctor, TWorkingExperience } from "@/src/types/user";
+import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
 import { camelCaseToSpace } from "@/src/utils/camelCaseToSpace";
 import {
   InfoCircleOutlined,
@@ -17,7 +18,7 @@ import moment from "moment";
 import React from "react";
 
 const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
-  console.log(doctor, "doctor");
+  // console.log(doctor, "doctor");
   return (
     <MyMotion y={50}>
       <Tabs aria-label="Options">
@@ -42,7 +43,7 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
                   Availability
                 </CardHeader>
                 <CardBody>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <div className="">
                     <div>
                       <p className="text-gray-500 text-sm">
                         <VideoCameraOutlined /> Consultation time
@@ -53,7 +54,11 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
                           {doctor.availability?.dayStart} -{" "}
                           {doctor.availability?.dayEnd}{" "}
                         </span>
-                        {`(${doctor.availability?.timeStart} - ${doctor.availability?.timeEnd})`}
+                        {`(${convertTo12HourTime(
+                          doctor.availability?.timeStart
+                        )} - ${convertTo12HourTime(
+                          doctor.availability?.timeEnd
+                        )})`}
                       </div>
                     </div>
                   </div>
@@ -127,7 +132,6 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
             </div>
           }
         >
-          
           <Card className="!shadow hover:!shadow-sm mb-4 md:mb-6 bg-primary-500 bg-opacity-10 w-full !flex-1">
             <CardHeader className="pb-0 font-semibold text-lg md:text-xl">
               {doctor.currentWorkplace?.workPlace}

@@ -1,13 +1,14 @@
 import Container from "@/src/components/ui/Container";
 import { getDoctorByDoctorCode } from "@/src/services/doctor";
 import { TDoctor } from "@/src/types/user";
-import { CalendarOutlined } from "@ant-design/icons";
+import { CalendarOutlined, VideoCameraOutlined } from "@ant-design/icons";
 import { Button } from "@heroui/button";
 import Image from "next/image";
 import React from "react";
 import DoctorTabs from "./_components/DoctorTabs";
 import moment from "moment";
 import isDoctorAvailable from "@/src/utils/isDoctorAvailable";
+import { Badge } from "@heroui/badge";
 
 const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
   // console.log(params.slug, "slug");
@@ -23,12 +24,25 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
           <div className="grid grid-cols-12 ">
             <div className="flex items-center gap-4 col-span-8">
               {doctor?.profileImg ? (
-                <Image
-                  src={doctor?.profileImg}
-                  alt={doctor?.name}
-                  width={200}
-                  height={200}
-                />
+                <div className="relative">
+                  <Image
+                    src={doctor?.profileImg}
+                    alt={doctor?.name}
+                    width={200}
+                    height={200}
+                    className="border-2 rounded-md"
+                  />
+                  <span className="flex justify-center items-center ">
+                    <Badge
+                      color={isDoctorAvailableP ? "success" : "primary"}
+                      className="text-white"
+                      content={isDoctorAvailableP ? "Online" : "Appointment"}
+                      size="sm"
+                    >
+                      {" "}
+                    </Badge>
+                  </span>
+                </div>
               ) : (
                 <div className="rounded-lg w-14 h-16 bg-primary-500 bg-opacity-20 mr-2" />
               )}
@@ -72,12 +86,18 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
                 /per followup
               </p>
               <Button
-                color="primary"
-                className="text-white"
+                color={isDoctorAvailableP ? "success" : "primary"}
+                className="text-white animate-pulse"
                 size="lg"
-                startContent={<CalendarOutlined />}
+                startContent={
+                  isDoctorAvailableP ? (
+                    <VideoCameraOutlined />
+                  ) : (
+                    <CalendarOutlined />
+                  )
+                }
               >
-                Book now
+                {isDoctorAvailableP ? "Book now" : "Appointment"}
               </Button>
             </div>
           </div>
