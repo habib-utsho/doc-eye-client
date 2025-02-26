@@ -1,14 +1,12 @@
 import Container from "@/src/components/ui/Container";
 import { getDoctorByDoctorCode } from "@/src/services/doctor";
 import { TDoctor } from "@/src/types/user";
-import { CalendarOutlined, VideoCameraOutlined } from "@ant-design/icons";
-import { Button } from "@heroui/button";
 import Image from "next/image";
 import React from "react";
 import DoctorTabs from "./_components/DoctorTabs";
-import moment from "moment";
 import isDoctorAvailable from "@/src/utils/isDoctorAvailable";
 import { Badge } from "@heroui/badge";
+import BookingButton from "./_components/BookingButton";
 
 const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
   // console.log(params.slug, "slug");
@@ -85,20 +83,10 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
                 </span>{" "}
                 /per followup
               </p>
-              <Button
-                color={isDoctorAvailableP ? "success" : "primary"}
-                className="text-white animate-pulse"
-                size="lg"
-                startContent={
-                  isDoctorAvailableP ? (
-                    <VideoCameraOutlined />
-                  ) : (
-                    <CalendarOutlined />
-                  )
-                }
-              >
-                {isDoctorAvailableP ? "Book now" : "Appointment"}
-              </Button>
+              <BookingButton
+                isDoctorAvailableP={!!isDoctorAvailableP}
+                params={params}
+              />
             </div>
           </div>
         </Container>

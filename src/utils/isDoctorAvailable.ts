@@ -17,10 +17,10 @@ const isDoctorAvailable = (doctor: TDoctor) => {
       ? currentDay >= startDay && currentDay <= endDay
       : currentDay >= startDay || currentDay <= endDay;
   const isWithinTime = currentTime >= startTime && currentTime <= endTime;
-  console.log(
-    { startTime, endTime, currentTime, isWithinDays, isWithinTime },
-    "utils"
-  );
+  // console.log(
+  //   { startTime, endTime, currentTime, isWithinDays, isWithinTime },
+  //   "utils"
+  // );
   return isWithinDays && isWithinTime;
 };
 
