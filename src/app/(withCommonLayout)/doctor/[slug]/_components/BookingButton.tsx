@@ -14,7 +14,8 @@ const BookingButton = ({
   const router = useRouter();
   const queryParams = useSearchParams();
   const myParams = useParams();
-  console.log({ queryParams, myParams }, "Booking Button");
+  // console.log({ queryParams, myParams }, "Booking Button");
+
   return (
     <Button
       color={isDoctorAvailableP ? "success" : "primary"}

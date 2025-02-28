@@ -15,7 +15,6 @@ import logo from "@/src/assets/img/logo.png";
 
 import { siteConfig } from "@/src/config/site";
 import { ThemeSwitch } from "@/src/components/theme-switch";
-import { GithubIcon } from "@/src/components/ui/icons";
 import Image from "next/image";
 import NavbarProfileDropdown from "./NavbarProfileDropdown";
 // import NavbarProfileDropdown from "./NavbarProfileDropdown";

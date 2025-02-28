@@ -1,10 +1,5 @@
 import SidebarLoading from "@/src/app/(withDashboardLayout)/dashboard/_components/SidebarLoading";
-import {
-  MenuIcon,
-  SignOutIcon,
-  UsersIcon,
-  XMarkIcon,
-} from "@/src/components/ui/icons";
+import { MenuIcon, SignOutIcon, XMarkIcon } from "@/src/components/ui/icons";
 import {
   DashboardOutlined,
   UserOutlined,
@@ -22,15 +17,13 @@ import { Button } from "@heroui/button";
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Sidebar as ReactProSidebar,
   Menu,
   MenuItem,
   SubMenu,
 } from "react-pro-sidebar";
-import { signOut } from "@/src/services/auth";
-import { protectedRoutes } from "@/src/constant";
 
 // Dashboard routes
 type TSidebarRoute = {
@@ -49,24 +42,8 @@ const adminRoutes: TSidebarRoute[] = [
   },
   {
     name: "Manage Users",
-    icon: <UsersIcon />,
-    children: [
-      {
-        name: "Patient",
-        path: "/dashboard/admin/patients",
-        icon: <UserOutlined />,
-      },
-      {
-        name: "Doctor",
-        path: "/dashboard/admin/doctors",
-        icon: <UserOutlined />,
-      },
-      {
-        name: "Admin",
-        path: "/dashboard/admin/admins",
-        icon: <UserOutlined />,
-      },
-    ],
+    path: "/dashboard/admin/manage-users",
+    icon: <UserOutlined />,
   },
   {
     name: "Appointments",
@@ -181,8 +158,7 @@ const patientRoutes: TSidebarRoute[] = [
 ];
 
 const Sidebar = () => {
-  const { isLoading, user, setUser } = useUserData();
-  const router = useRouter();
+  const { isLoading, user } = useUserData();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -217,21 +193,6 @@ const Sidebar = () => {
     });
   };
 
-  const handleSignOut = async () => {
-    signOut();
-    setUser(null);
-
-    const isMatchProtectedRoute = protectedRoutes?.some((route) => {
-      const partial = route?.split("/")?.[1];
-      return pathname.match(partial);
-    });
-
-    if (isMatchProtectedRoute) {
-      router.push(`/signin?redirect=${pathname}`);
-    }
-  };
-  // console.log();
-
   return (
     <ReactProSidebar
       collapsed={collapsed}
@@ -242,15 +203,13 @@ const Sidebar = () => {
       backgroundColor="#f5f5f5"
       breakPoint="md"
       transitionDuration={300}
-      className="h-screen bg-gray-100 rounded-r-md w-[200px] sticky top-0 left-0"
-      rootStyles={{
-        position: "sticky",
-        height: "100vh",
-        width: "200px",
-        top: 0,
-        left: 0,
-        zIndex: 1000,
-      }}
+      // rootStyles={{
+      //   position: "fixed",
+      //   height: "100vh",
+      //   top: 0,
+      //   left: 0,
+      //   zIndex: 1000,
+      // }}
     >
       <Menu
         menuItemStyles={{
@@ -264,13 +223,13 @@ const Sidebar = () => {
       >
         {/* Sidebar Header */}
         <div className="flex items-center justify-between p-4">
-          <Link href={"/"} className="flex items-center gap-2 cursor-pointer">
+          <div className="flex items-center gap-2">
             <Image src={logo} height={40} width={40} alt="logo" />
             {!collapsed && <p className="font-bold text-inherit">DocEye</p>}
-          </Link>
+          </div>
           <span
             onClick={() => setCollapsed(!collapsed)}
-            className="bg-primary text-white rounded-l  cursor-pointer text-[12px] absolute right-0 top-[25px]"
+            className="text-gray-500 hover:text-gray-800 cursor-pointer text-sm"
           >
             {collapsed ? <MenuIcon /> : <XMarkIcon />}
           </span>
@@ -282,12 +241,10 @@ const Sidebar = () => {
         {/* Sign Out Button */}
         <MenuItem className="mt-auto">
           <Button
-            className="text-red-500 w-full"
-            onPress={handleSignOut}
             startContent={<SignOutIcon className="size-5" />}
-            isIconOnly={collapsed ? true : false}
+            className="text-red-500 w-full"
           >
-            {collapsed ? "" : "Signout"}
+            Signout
           </Button>
         </MenuItem>
       </Menu>

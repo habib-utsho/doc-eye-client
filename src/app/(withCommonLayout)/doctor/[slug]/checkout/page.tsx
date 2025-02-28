@@ -1,8 +1,169 @@
+import Container from "@/src/components/ui/Container";
+import { getCurrentUser } from "@/src/services/auth";
+import { getDoctorByDoctorCode } from "@/src/services/doctor";
+import { TResponse } from "@/src/types";
+import { TDoctor } from "@/src/types/user";
+import {
+  CalendarOutlined,
+  ClockCircleOutlined,
+  DollarCircleOutlined,
+  UserAddOutlined,
+} from "@ant-design/icons";
+import { Badge } from "@heroui/badge";
+import Image from "next/image";
 import React from "react";
+import moment from "moment";
 
-const DoctorCheckout = ({ params }: { params: { slug: string } }) => {
-  console.log({ params });
-  return <div>This is doctor checkout page</div>;
+const getNext15Days = () => {
+  const days = [];
+  for (let i = 0; i < 15; i++) {
+    days.push({
+      date: moment().add(i, "days").format("DD-MM-YYYY"),
+      day: moment().add(i, "days").format("dddd"),
+    });
+  }
+  return days;
+};
+
+const DoctorCheckout = async ({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams: Record<string, string | string[]> | undefined;
+}) => {
+  const doctorRes = (await getDoctorByDoctorCode(
+    params.slug
+  )) as TResponse<TDoctor>;
+  const doctor = doctorRes?.data;
+  const me = await getCurrentUser();
+  // const me = await getCurrentUser();
+  // console.log({ me, doctor, params, searchParams }, "doctor details page");
+  console.log({ me }, "doctor details page");
+  console.log(getNext15Days(), "next 15 days");
+  return (
+    <div className="py-8 space-y-4 md:space-y-8">
+      <Container className="grid grid-cols-12 gap-6">
+        <div className="col-span-12 md:col-span-7 space-y-4">
+          {/* Patient selection */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">
+            <h1 className="font-semibold text-lg">
+              <UserAddOutlined /> Patient Selection
+            </h1>
+            <div className="flex flex-wrap items-center gap-4">
+              {me?.profileImg ? (
+                <Image
+                  src={me?.profileImg}
+                  alt={me?.name}
+                  width={80}
+                  height={80}
+                  className="border-2 rounded-md h-[80px] w-[80px]"
+                />
+              ) : (
+                ""
+              )}
+              <div>
+                <h2>{me?.name}</h2>
+              </div>
+            </div>
+          </div>
+
+          {searchParams?.isAvailableNow && (
+            <div className=" bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">
+              <h1 className="font-semibold text-md">
+                <CalendarOutlined className="mr-2" />
+                Appointment
+              </h1>
+              <div className="flex  overflow-auto gap-2 my-3">
+                {getNext15Days().map((day) => {
+                  return (
+                    <span className="rounded-md border px-2 py-1 text-center cursor-pointer">
+                      {day.date?.split("-")?.[0]} <br /> {day.day}
+                    </span>
+                  );
+                })}
+              </div>
+              <div>
+                <h1 className="font-semibold text-md">
+                  <ClockCircleOutlined className="mr-2" />
+                  Available Time Slots
+                </h1>
+              </div>
+            </div>
+          )}
+
+          {/* Payment details */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">
+            <h1 className="font-semibold text-md">
+              <DollarCircleOutlined /> Payment Details
+            </h1>
+            <div className="space-y-1 ">
+              <div className="flex justify-between items-center">
+                <p className="text-sm">Consultation Fee</p>
+                <p className="text-lg font-semibold">
+                  ৳{doctor.consultationFee}
+                </p>
+              </div>
+              <div className="flex justify-between items-center">
+                <p className="text-sm">Followup Fee</p>
+                <p className="text-lg font-semibold">৳{doctor.followupFee}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-span-12 md:col-span-5 space-y-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
+            <div className="grid grid-cols-12 ">
+              <div className="flex items-center gap-4 col-span-8">
+                {doctor?.profileImg ? (
+                  <div className="relative">
+                    <Image
+                      src={doctor?.profileImg}
+                      alt={doctor?.name}
+                      width={200}
+                      height={200}
+                      className="border-2 rounded-md h-[100px] w-[100px]"
+                    />
+                    <span className="flex justify-center items-center ">
+                      <Badge
+                        color={
+                          searchParams?.isAvailableNow ? "success" : "primary"
+                        }
+                        className="text-white"
+                        content={
+                          searchParams?.isAvailableNow
+                            ? "Online"
+                            : "Appointment"
+                        }
+                        size="sm"
+                      >
+                        {" "}
+                      </Badge>
+                    </span>
+                  </div>
+                ) : (
+                  <div className="rounded-lg w-14 h-16 bg-primary-500 bg-opacity-20 mr-2" />
+                )}
+                <div>
+                  <h1 className="font-semibold text-lg">
+                    {doctor.doctorTitle} {doctor.name}
+                  </h1>
+                  <p className="text-sm text-gray-500">{doctor.doctorType}</p>
+                  <p>{doctor.medicalDegree}</p>
+                  <p className="text-sm bg-primary-500 text-white my-1 pl-1 pr-2 py-[1px] rounded-r-xl font-bold">
+                    {doctor?.medicalSpecialties
+                      ?.map((specialty) => specialty.name)
+                      ?.join(", ")}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </div>
+  );
 };
 
 export default DoctorCheckout;

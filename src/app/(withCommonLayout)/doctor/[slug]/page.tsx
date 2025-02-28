@@ -14,7 +14,7 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
   const doctor = doctorRes?.data as TDoctor;
   // console.log(doctor, "doctor");
   const isDoctorAvailableP = isDoctorAvailable(doctor);
-  console.log(isDoctorAvailableP, "isDoctorAvailableP");
+  // console.log(isDoctorAvailableP, "isDoctorAvailableP");
   return (
     <div className="py-8 space-y-4 md:space-y-8">
       <div className="bg-gradient-to-r from-white to-gray-100 dark:from-black dark:to-gray-900 py-4">
