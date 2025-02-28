@@ -13,8 +13,10 @@ import { Badge } from "@heroui/badge";
 import Image from "next/image";
 import React from "react";
 import moment from "moment";
+import isDoctorAvailableByDay from "@/src/utils/isDoctorAvailableByDay";
+import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
 
-const getNext15Days = () => {
+const getNext15DaysFunc = () => {
   const days = [];
   for (let i = 0; i < 15; i++) {
     days.push({
@@ -23,6 +25,37 @@ const getNext15Days = () => {
     });
   }
   return days;
+};
+const availableTimeSlotsFunc = (doctor: TDoctor) => {
+  const parseTime = (time: string | undefined) => {
+    if (!time) return 0;
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours * 60 + minutes;
+  };
+  const roundToNearest15 = (minutes: number) => {
+    return Math.round(minutes / 15) * 15;
+  };
+  const startMinutes = roundToNearest15(
+    parseTime(doctor.availability?.timeStart)
+  );
+  const endMinutes = roundToNearest15(parseTime(doctor.availability?.timeEnd));
+  console.log({ startTime: startMinutes, endTime: endMinutes });
+  console.log(
+    doctor.availability.timeEnd,
+    doctor.availability.timeStart,
+    "time end start"
+  );
+  if (isNaN(startMinutes) || isNaN(endMinutes)) {
+    return [];
+  }
+  const timeSlots = [];
+  for (let minutes = startMinutes; minutes <= endMinutes; minutes += 15) {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    timeSlots.push(`${hours}:${mins}`);
+  }
+  console.log(timeSlots, "timeSlots");
+  return timeSlots;
 };
 
 const DoctorCheckout = async ({
@@ -39,8 +72,11 @@ const DoctorCheckout = async ({
   const me = await getCurrentUser();
   // const me = await getCurrentUser();
   // console.log({ me, doctor, params, searchParams }, "doctor details page");
-  console.log({ me }, "doctor details page");
-  console.log(getNext15Days(), "next 15 days");
+  // console.log({ me }, "doctor details page");
+  // console.log(getNext15Days(), doctor, "next 15 days");
+  const availableTimeSlots = availableTimeSlotsFunc(doctor);
+  console.log(availableTimeSlots, "availableTimeSlotsP");
+
   return (
     <div className="py-8 space-y-4 md:space-y-8">
       <Container className="grid grid-cols-12 gap-6">
@@ -74,10 +110,19 @@ const DoctorCheckout = async ({
                 <CalendarOutlined className="mr-2" />
                 Appointment
               </h1>
+              {/* Next 15 days */}
               <div className="flex  overflow-auto gap-2 my-3">
-                {getNext15Days().map((day) => {
+                {getNext15DaysFunc().map((day) => {
+                  const isAvailableDay = isDoctorAvailableByDay(
+                    doctor,
+                    day.day
+                  );
                   return (
-                    <span className="rounded-md border px-2 py-1 text-center cursor-pointer">
+                    <span
+                      className={`rounded-md border px-2 py-1 text-center cursor-pointer ${
+                        !isAvailableDay && "blur-[1px] pointer-events-none"
+                      }`}
+                    >
                       {day.date?.split("-")?.[0]} <br /> {day.day}
                     </span>
                   );
@@ -88,6 +133,19 @@ const DoctorCheckout = async ({
                   <ClockCircleOutlined className="mr-2" />
                   Available Time Slots
                 </h1>
+                <div className="flex flex-wrap gap-2 my-3">
+                  {availableTimeSlotsFunc(doctor).map((time: string) => {
+                    return (
+                      <span
+                        className={`rounded-md border px-2 py-1 text-center cursor-pointer ${
+                          !time && "blur-[1px] pointer-events-none"
+                        }`}
+                      >
+                        {convertTo12HourTime(time)}
+                      </span>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           )}
