@@ -133,6 +133,7 @@ const DoctorCheckout = async ({
                   <ClockCircleOutlined className="mr-2" />
                   Available Time Slots
                 </h1>
+                
                 <div className="flex flex-wrap gap-2 my-3">
                   {availableTimeSlotsFunc(doctor).map((time: string) => {
                     return (
