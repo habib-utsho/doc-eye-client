@@ -24,7 +24,7 @@ const BookingButton = ({
       onPress={() =>
         router.push(
           `/doctor/${params?.slug}/checkout${
-            !isDoctorAvailableP ? "?isAvailableNow=true" : ""
+            isDoctorAvailableP ? "?isAvailableNow=true" : ""
           }`
         )
       }

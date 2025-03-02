@@ -27,3 +27,37 @@
   width: 100%;
   cursor: pointer;
 }
+
+/* Scrollbar */
+
+body,
+.my-scrollbar {
+  --sb-track-color: #dcdcdc;
+  --sb-thumb-color: #09528c;
+  --sb-size: 10px;
+}
+
+body::-webkit-scrollbar,
+.my-scrollbar::-webkit-scrollbar {
+  width: var(--sb-size);
+  height: var(--sb-size);
+}
+
+body::-webkit-scrollbar-track,
+.my-scrollbar::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 5px;
+}
+
+body::-webkit-scrollbar-thumb,
+.my-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 5px;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  body,
+  .my-scrollbar {
+    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+  }
+}
