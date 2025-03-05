@@ -58,15 +58,15 @@ const Appointments = ({
   const next15Days: { date: string; day: string }[] = getNext15DaysFunc();
   console.log(availableTimeSlots, "availableTimeSlotsP");
 
-  const activeDate = next15Days.find((day) =>
+  const availableActiveDate = next15Days.find((day) =>
     isDoctorAvailableByDay(doctor, day.day)
   )?.date;
-  const [activeDay, setActiveDay] = React.useState<string | null>(activeDate!!);
+  const [activeDay, setActiveDay] = React.useState<string | null>(availableActiveDate!!);
   const [activeTime, setActiveTime] = React.useState<string | null>(null);
   console.log(availableTimeSlots[0], "availableTimeSlots[0]");
 
   return (
-    <div className=" bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">
+    <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">
       <h1 className="font-semibold text-md">
         <CalendarOutlined className="mr-2" />
         Appointment
@@ -93,6 +93,7 @@ const Appointments = ({
           );
         })}
       </div>
+      {/* Available time slots */}
       <div>
         <h1 className="font-semibold text-md">
           <ClockCircleOutlined className="mr-2" />
@@ -117,6 +118,22 @@ const Appointments = ({
               </span>
             );
           })}
+        </div>
+      </div>
+
+      {/* color to understand */}
+      <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center gap-1">
+          <div className="bg-primary-500 w-4 h-4 rounded-md"></div>
+          <p>Selected</p>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="bg-white border-2 rounded-md w-4 h-4 "></div>
+          <p>Available</p>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="bg-white border rounded-md w-4 h-4 blur-[1px]"></div>
+          <p>Not Available</p>
         </div>
       </div>
     </div>

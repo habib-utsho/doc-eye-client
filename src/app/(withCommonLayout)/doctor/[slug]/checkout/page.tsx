@@ -3,13 +3,20 @@ import { getCurrentUser } from "@/src/services/auth";
 import { getDoctorByDoctorCode } from "@/src/services/doctor";
 import { TResponse } from "@/src/types";
 import { TDoctor } from "@/src/types/user";
-import { DollarCircleOutlined, UserAddOutlined } from "@ant-design/icons";
+import {
+  DollarCircleOutlined,
+  UserAddOutlined,
+  WalletOutlined,
+} from "@ant-design/icons";
 import { Badge } from "@heroui/badge";
 import Image from "next/image";
 import React from "react";
 
 import Appointments from "../_components/Appointments";
-import { Divider } from "@heroui/divider";
+import { Button } from "@heroui/button";
+import bKashLogo from "@/src/assets/img/payment/bkash_logo.png";
+import sslcommerzLogo from "@/src/assets/img/payment/sslcommerz_logo.png";
+import { Radio, RadioGroup } from "@heroui/radio";
 
 const DoctorCheckout = async ({
   params,
@@ -27,7 +34,7 @@ const DoctorCheckout = async ({
   const vat5Percent = Math.round((doctor.consultationFee / 100) * 5);
 
   return (
-    <div className="py-8 space-y-4 md:space-y-8">
+    <div className="py-8 space-y-4 md:space-y-8 bg-slate-50 dark:bg-gray-900">
       <Container className="grid grid-cols-12 gap-6">
         <div className="col-span-12 md:col-span-7 space-y-4">
           {/* Patient selection */}
@@ -55,7 +62,7 @@ const DoctorCheckout = async ({
 
           <Appointments doctor={doctor} searchParams={searchParams} />
 
-          {/* Payment details */}
+          {/* Payment Details */}
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">
             <h1 className="font-semibold text-md">
               <DollarCircleOutlined /> Payment Details
@@ -79,6 +86,46 @@ const DoctorCheckout = async ({
                   ৳{vat5Percent + doctor.consultationFee + 15}
                 </p>
               </div>
+            </div>
+          </div>
+
+          {/* Payment Methods */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">
+            <h1 className="font-semibold text-md">
+              <WalletOutlined /> Payment Methods
+            </h1>
+            <div className="space-y-1 ">
+              <RadioGroup className="bg-green-500 !w-full">
+                <Radio value="bkash" className="bg-blue-500 !w-full !block">
+                  {" "}
+                  <div className="flex justify-between items-center">
+                    <p className="text-sm">bKash</p>
+                    <Image src={bKashLogo} alt="bKash" width={35} height={35} />
+                  </div>
+                </Radio>
+                <Radio value="SSLCOMMERZ" className="bg-red-500 !w-full !block">
+                  {" "}
+                  <div className="flex justify-between items-center pb-2">
+                    <p className="text-sm">SSLCOMMERZ</p>
+                    <Image
+                      src={sslcommerzLogo}
+                      alt="sslcommerzLogo"
+                      width={100}
+                      height={100}
+                    />
+                  </div>
+                </Radio>
+              </RadioGroup>
+
+              <div className="flex justify-between items-center pt-2 border-t-4 border-dotted font-semibold">
+                <p className="text-md">Payable Amount</p>
+                <p className="text-md">
+                  ৳{vat5Percent + doctor.consultationFee + 15}
+                </p>
+              </div>
+              <Button className="text-white w-full !mt-3" color="primary">
+                Pay Now
+              </Button>
             </div>
           </div>
         </div>
