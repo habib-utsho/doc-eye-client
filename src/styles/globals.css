@@ -61,3 +61,8 @@ body::-webkit-scrollbar-thumb,
     scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
   }
 }
+
+/* modify radio of payment option in checkout page  */
+.payment-radio > div {
+  flex: 1;
+}

@@ -95,17 +95,17 @@ const DoctorCheckout = async ({
               <WalletOutlined /> Payment Methods
             </h1>
             <div className="space-y-1 ">
-              <RadioGroup className="bg-green-500 !w-full">
-                <Radio value="bkash" className="bg-blue-500 !w-full !block">
+              <RadioGroup className="pb-4">
+                <Radio value="bkash" className="max-w-full payment-radio mb-2">
                   {" "}
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center w-full">
                     <p className="text-sm">bKash</p>
                     <Image src={bKashLogo} alt="bKash" width={35} height={35} />
                   </div>
                 </Radio>
-                <Radio value="SSLCOMMERZ" className="bg-red-500 !w-full !block">
+                <Radio value="SSLCOMMERZ" className="max-w-full payment-radio">
                   {" "}
-                  <div className="flex justify-between items-center pb-2">
+                  <div className="flex justify-between items-center">
                     <p className="text-sm">SSLCOMMERZ</p>
                     <Image
                       src={sslcommerzLogo}
@@ -130,10 +130,11 @@ const DoctorCheckout = async ({
           </div>
         </div>
 
+        {/* Doctor side */}
         <div className="col-span-12 md:col-span-5 space-y-4">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-            <div className="grid grid-cols-12 ">
-              <div className="flex items-center gap-4 col-span-8">
+            <div className="">
+              <div className="flex items-center gap-4 ">
                 {doctor?.profileImg ? (
                   <div className="relative">
                     <Image
@@ -175,6 +176,13 @@ const DoctorCheckout = async ({
                       ?.join(", ")}
                   </p>
                 </div>
+              </div>
+              <div className="pt-6">
+                <p className="text-[12px] text-gray-500">Working in</p>
+                <p className="text-sm text-gray-500 font-semibold">
+                  {doctor?.currentWorkplace?.workPlace} -{" "}
+                  {doctor?.currentWorkplace?.department}
+                </p>
               </div>
             </div>
           </div>
