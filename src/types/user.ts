@@ -87,6 +87,7 @@ export type TUser = {
   isDeleted: boolean;
 };
 export type TDecodedUser = {
+  userId: string;
   _id: string;
   email: string;
   role: TUserRole;

@@ -1,20 +1,11 @@
 "use client";
 import { TDoctor } from "@/src/types/user";
 import { CalendarOutlined, ClockCircleOutlined } from "@ant-design/icons";
-import moment from "moment";
 import isDoctorAvailableByDay from "@/src/utils/isDoctorAvailableByDay";
 import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
-import React from "react";
-const getNext15DaysFunc = () => {
-  const days = [];
-  for (let i = 0; i < 15; i++) {
-    days.push({
-      date: moment().add(i, "days").format("DD-MM-YYYY"),
-      day: moment().add(i, "days").format("dddd"),
-    });
-  }
-  return days;
-};
+import React, { useEffect } from "react";
+import { getNext15DaysFunc } from "@/src/utils/getNext15DaysFunc";
+
 const availableTimeSlotsFunc = (doctor: TDoctor) => {
   const parseTime = (time: string | undefined) => {
     if (!time) return 0;
@@ -28,12 +19,12 @@ const availableTimeSlotsFunc = (doctor: TDoctor) => {
     parseTime(doctor.availability?.timeStart)
   );
   const endMinutes = roundToNearest15(parseTime(doctor.availability?.timeEnd));
-  console.log({ startTime: startMinutes, endTime: endMinutes });
-  console.log(
-    doctor.availability.timeEnd,
-    doctor.availability.timeStart,
-    "time end start"
-  );
+  // console.log({ startTime: startMinutes, endTime: endMinutes });
+  // console.log(
+  //   doctor.availability.timeEnd,
+  //   doctor.availability.timeStart,
+  //   "time end start"
+  // );
   if (isNaN(startMinutes) || isNaN(endMinutes)) {
     return [];
   }
@@ -43,27 +34,39 @@ const availableTimeSlotsFunc = (doctor: TDoctor) => {
     const mins = minutes % 60;
     timeSlots.push(`${hours}:${mins}`);
   }
-  console.log(timeSlots, "timeSlots");
+  // console.log(timeSlots, "timeSlots");
   return timeSlots;
 };
 const Appointments = ({
   doctor,
-  searchParams,
+  isAvailableNow,
+  activeDay,
+  setActiveDay,
+  activeTime,
+  setActiveTime,
 }: {
   doctor: TDoctor;
-  searchParams: Record<string, string | string[]> | undefined;
+  isAvailableNow: boolean | undefined;
+  activeDay: string | null;
+  setActiveDay: (day: string) => void;
+  activeTime: string | null;
+  setActiveTime: (time: string) => void;
 }) => {
-  if (searchParams?.isAvailableNow) return;
-  const availableTimeSlots: string[] = availableTimeSlotsFunc(doctor);
-  const next15Days: { date: string; day: string }[] = getNext15DaysFunc();
-  console.log(availableTimeSlots, "availableTimeSlotsP");
+  if (isAvailableNow) return;
+  // console.log(availableTimeSlots, "availableTimeSlotsP");
 
-  const availableActiveDate = next15Days.find((day) =>
-    isDoctorAvailableByDay(doctor, day.day)
-  )?.date;
-  const [activeDay, setActiveDay] = React.useState<string | null>(availableActiveDate!!);
-  const [activeTime, setActiveTime] = React.useState<string | null>(null);
-  console.log(availableTimeSlots[0], "availableTimeSlots[0]");
+  // console.log(availableTimeSlots[0], "availableTimeSlots[0]");
+
+  // console.log(activeDay, "activeDay from appointments");
+
+  useEffect(() => {
+    const availableActiveDate = next15Days.find((day) =>
+      isDoctorAvailableByDay(doctor, day.day)
+    )?.date;
+    setActiveDay(availableActiveDate!!);
+  }, []);
+
+  const next15Days: { date: string; day: string }[] = getNext15DaysFunc();
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">

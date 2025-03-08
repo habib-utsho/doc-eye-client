@@ -1,8 +1,5 @@
+"use client";
 import Container from "@/src/components/ui/Container";
-import { getCurrentUser } from "@/src/services/auth";
-import { getDoctorByDoctorCode } from "@/src/services/doctor";
-import { TResponse } from "@/src/types";
-import { TDoctor } from "@/src/types/user";
 import {
   DollarCircleOutlined,
   UserAddOutlined,
@@ -10,28 +7,90 @@ import {
 } from "@ant-design/icons";
 import { Badge } from "@heroui/badge";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 
 import Appointments from "../_components/Appointments";
 import { Button } from "@heroui/button";
 import bKashLogo from "@/src/assets/img/payment/bkash_logo.png";
 import sslcommerzLogo from "@/src/assets/img/payment/sslcommerz_logo.png";
 import { Radio, RadioGroup } from "@heroui/radio";
+import { useParams, useSearchParams } from "next/navigation";
+import { useGetDoctorByDoctorCode } from "@/src/hooks/doctor.hook";
+import useUserData from "@/src/hooks/user.hook";
+import Loading from "@/src/components/ui/Loading";
+import { TDoctor } from "@/src/types/user";
+import { toast } from "sonner";
 
-const DoctorCheckout = async ({
-  params,
-  searchParams,
-}: {
-  params: { slug: string };
-  searchParams: Record<string, string | string[]> | undefined;
-}) => {
-  const doctorRes = (await getDoctorByDoctorCode(
-    params.slug
-  )) as TResponse<TDoctor>;
-  const doctor = doctorRes?.data;
-  const me = await getCurrentUser();
+const DoctorCheckout = () => {
+  const params = useParams() as { slug: string };
+  const searchParams = useSearchParams();
+  const isAvailableNow = searchParams.get("isAvailableNow") === "true";
+  const { data: doctorRes, isLoading: isDoctorLoading } =
+    useGetDoctorByDoctorCode(params?.slug);
+  const doctor = doctorRes?.data as TDoctor;
+  const { isLoading: isUserLoading, user } = useUserData();
 
-  const vat5Percent = Math.round((doctor.consultationFee / 100) * 5);
+  const [activePaymentMethod, setActivePaymentMethod] = useState("bKash");
+
+  const [activeDay, setActiveDay] = useState<string | null>(null);
+  const [activeTime, setActiveTime] = useState<string | null>(null);
+
+  console.log({
+    id: params.slug,
+    activeDay,
+    searchParams,
+    isAvailableNow,
+    isUserLoading,
+    user,
+    isDoctorLoading,
+    doctor,
+  });
+
+  if (isDoctorLoading || isUserLoading) return <Loading />;
+
+  const vat5Percent = Math.round((doctor?.consultationFee / 100) * 5);
+  const totalAmount =
+    vat5Percent +
+    doctor?.consultationFee +
+    Number(process.env.NEXT_PUBLIC_PER_CONSULTATION_SERVICE_FEE!!);
+
+  // console.log(activePaymentMethod);
+
+  const handlePaymentFunc = () => {
+    if (!activeDay) {
+      toast.error("Please select a date");
+      return;
+    }
+
+    if (!activeTime) {
+      toast.error("Please select a time");
+      return;
+    }
+    if (!user) {
+      toast.error("Please select a patient");
+      return;
+    }
+    const data = {
+      doctor: doctor._id,
+      patient: user._id,
+      payment: "payment id",
+      amount: totalAmount,
+      date: activeDay,
+      time: activeTime,
+      schedule: new Date(activeDay + " " + activeTime),
+      status: "pending",
+    };
+
+    console.log(data);
+
+    return;
+
+    if (activePaymentMethod === "bKash") {
+      console.log("Payment with bKash");
+    } else {
+      console.log("Payment with SSLCOMMERZ");
+    }
+  };
 
   return (
     <div className="py-8 space-y-4 md:space-y-8 bg-slate-50 dark:bg-gray-900">
@@ -43,10 +102,10 @@ const DoctorCheckout = async ({
               <UserAddOutlined /> Patient Selection
             </h1>
             <div className="flex flex-wrap items-center gap-4">
-              {me?.profileImg ? (
+              {user?.profileImg ? (
                 <Image
-                  src={me?.profileImg}
-                  alt={me?.name}
+                  src={user?.profileImg}
+                  alt={user?.name}
                   width={80}
                   height={80}
                   className="border-2 rounded-md h-[80px] w-[80px]"
@@ -55,12 +114,19 @@ const DoctorCheckout = async ({
                 ""
               )}
               <div>
-                <h2>{me?.name}</h2>
+                <h2>{user?.name}</h2>
               </div>
             </div>
           </div>
 
-          <Appointments doctor={doctor} searchParams={searchParams} />
+          <Appointments
+            doctor={doctor}
+            isAvailableNow={isAvailableNow}
+            activeDay={activeDay}
+            activeTime={activeTime}
+            setActiveDay={setActiveDay}
+            setActiveTime={setActiveTime}
+          />
 
           {/* Payment Details */}
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">
@@ -80,33 +146,42 @@ const DoctorCheckout = async ({
                 <p className="text-sm">Platform Fee</p>
                 <p className="text-md">৳15</p>
               </div>
-              <div className="flex justify-between items-center pt-2 border-t-4 border-dotted font-semibold">
+              <div className="flex justify-between items-center pt-2 border-t-4 border-dotted font-[500]">
                 <p className="text-md">Subtotal</p>
-                <p className="text-md">
-                  ৳{vat5Percent + doctor.consultationFee + 15}
-                </p>
+                <p className="text-md">৳{totalAmount}</p>
               </div>
             </div>
           </div>
 
           {/* Payment Methods */}
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">
-            <h1 className="font-semibold text-md">
+            <h1 className="font-[500] text-md">
               <WalletOutlined /> Payment Methods
             </h1>
             <div className="space-y-1 ">
-              <RadioGroup className="pb-4">
-                <Radio value="bkash" className="max-w-full payment-radio mb-2">
+              <RadioGroup
+                className="pb-4"
+                defaultValue={activePaymentMethod}
+                onValueChange={(e) => setActivePaymentMethod(e)}
+              >
+                <Radio value="bKash" className="max-w-full payment-radio mb-2">
                   {" "}
                   <div className="flex justify-between items-center w-full">
-                    <p className="text-sm">bKash</p>
+                    <div className="text-sm">
+                      <h2 className="font-[500]">bKash</h2>
+                      <p className="font-thin">Pay via bKash</p>
+                    </div>
+
                     <Image src={bKashLogo} alt="bKash" width={35} height={35} />
                   </div>
                 </Radio>
                 <Radio value="SSLCOMMERZ" className="max-w-full payment-radio">
                   {" "}
                   <div className="flex justify-between items-center">
-                    <p className="text-sm">SSLCOMMERZ</p>
+                    <div className="text-sm">
+                      <h2 className="font-[500]">SSLCOMMERZ</h2>
+                      <p className="font-thin">Other option to pay</p>
+                    </div>
                     <Image
                       src={sslcommerzLogo}
                       alt="sslcommerzLogo"
@@ -117,20 +192,24 @@ const DoctorCheckout = async ({
                 </Radio>
               </RadioGroup>
 
-              <div className="flex justify-between items-center pt-2 border-t-4 border-dotted font-semibold">
+              <div className="flex justify-between items-center pt-2 border-t-4 border-dotted font-[500]">
                 <p className="text-md">Payable Amount</p>
-                <p className="text-md">
-                  ৳{vat5Percent + doctor.consultationFee + 15}
-                </p>
+                <p className="text-md">৳{totalAmount}</p>
               </div>
-              <Button className="text-white w-full !mt-3" color="primary">
-                Pay Now
+              <Button
+                className="text-white w-full !mt-3"
+                color="primary"
+                onPress={handlePaymentFunc}
+              >
+                {activePaymentMethod === "bKash"
+                  ? "Pay with bKash"
+                  : "Pay with SSLCOMMERZ"}
               </Button>
             </div>
           </div>
         </div>
 
-        {/* Doctor side */}
+        {/* Right side for doctor info */}
         <div className="col-span-12 md:col-span-5 space-y-4">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
             <div className="">
@@ -146,15 +225,9 @@ const DoctorCheckout = async ({
                     />
                     <span className="flex justify-center items-center ">
                       <Badge
-                        color={
-                          searchParams?.isAvailableNow ? "success" : "primary"
-                        }
+                        color={isAvailableNow ? "success" : "primary"}
                         className="text-white"
-                        content={
-                          searchParams?.isAvailableNow
-                            ? "Online"
-                            : "Appointment"
-                        }
+                        content={isAvailableNow ? "Online" : "Appointment"}
                         size="sm"
                       >
                         {" "}
