@@ -5,6 +5,7 @@ import isDoctorAvailableByDay from "@/src/utils/isDoctorAvailableByDay";
 import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
 import React, { useEffect } from "react";
 import { getNext15DaysFunc } from "@/src/utils/getNext15DaysFunc";
+import { useGetAllAppointments } from "@/src/hooks/appointment.hook";
 
 const availableTimeSlotsFunc = (doctor: TDoctor) => {
   const parseTime = (time: string | undefined) => {
@@ -59,6 +60,23 @@ const Appointments = ({
 
   // console.log(activeDay, "activeDay from appointments");
 
+  // TODO: how to filter appointments by date and doctorId and get the available time slots
+
+  console.log(doctor._id, activeDay, "doctor._id");
+  const { data: appointments, isLoading: isLoadingAppointments } =
+    useGetAllAppointments([
+      { name: "doctor", value: doctor._id },
+      { name: "date", value: activeDay },
+      { name: "limit", value: 250 },
+    ]);
+
+  console.log(
+    appointments,
+    isLoadingAppointments,
+    "isLoadingAppointments",
+    "appointments"
+  );
+
   useEffect(() => {
     const availableActiveDate = next15Days.find((day) =>
       isDoctorAvailableByDay(doctor, day.day)
@@ -91,7 +109,7 @@ const Appointments = ({
               `}
               onClick={() => setActiveDay(day.date)}
             >
-              {day.date?.split("-")?.[0]} <br /> {day.day}
+              {day.date?.split("-")?.[2]} <br /> {day.day}
             </span>
           );
         })}

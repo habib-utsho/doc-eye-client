@@ -20,6 +20,8 @@ import useUserData from "@/src/hooks/user.hook";
 import Loading from "@/src/components/ui/Loading";
 import { TDoctor } from "@/src/types/user";
 import { toast } from "sonner";
+import PaymentModal from "../_components/PaymentModal";
+import { useInitPayment } from "@/src/hooks/payment.hook";
 
 const DoctorCheckout = () => {
   const params = useParams() as { slug: string };
@@ -30,10 +32,14 @@ const DoctorCheckout = () => {
   const doctor = doctorRes?.data as TDoctor;
   const { isLoading: isUserLoading, user } = useUserData();
 
-  const [activePaymentMethod, setActivePaymentMethod] = useState("bKash");
+  const [activePaymentMethod, setActivePaymentMethod] = useState<
+    "bKash" | "SSLCOMMERZ"
+  >("bKash");
 
   const [activeDay, setActiveDay] = useState<string | null>(null);
   const [activeTime, setActiveTime] = useState<string | null>(null);
+
+  const { mutate: initPayment, isPending:isLoadingInitPayment } = useInitPayment();
 
   console.log({
     id: params.slug,
@@ -70,6 +76,14 @@ const DoctorCheckout = () => {
       toast.error("Please select a patient");
       return;
     }
+
+    const paymentData = initPayment({
+      appointment: null,
+      amount: totalAmount,
+      paymentMethod: activePaymentMethod,
+    });
+
+    console.log(paymentData, "paymentData");
     const data = {
       doctor: doctor._id,
       patient: user._id,
@@ -196,15 +210,14 @@ const DoctorCheckout = () => {
                 <p className="text-md">Payable Amount</p>
                 <p className="text-md">৳{totalAmount}</p>
               </div>
-              <Button
-                className="text-white w-full !mt-3"
-                color="primary"
-                onPress={handlePaymentFunc}
-              >
-                {activePaymentMethod === "bKash"
-                  ? "Pay with bKash"
-                  : "Pay with SSLCOMMERZ"}
-              </Button>
+
+              <PaymentModal
+                handlePaymentFunc={handlePaymentFunc}
+                paymentType={activePaymentMethod}
+                amount={totalAmount}
+                isDisabled={!activeDay || !activeTime || !user}
+                isLoading={isLoadingInitPayment}
+              />
             </div>
           </div>
         </div>
