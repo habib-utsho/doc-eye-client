@@ -6,8 +6,13 @@ import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
 import React, { useEffect } from "react";
 import { getNext15DaysFunc } from "@/src/utils/getNext15DaysFunc";
 import { useGetAllAppointments } from "@/src/hooks/appointment.hook";
+import { TAppointment } from "@/src/types/appointment";
+import { Skeleton } from "@heroui/skeleton";
+import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 
 const availableTimeSlotsFunc = (doctor: TDoctor) => {
+  if (!doctor.availability?.timeStart || !doctor.availability?.timeEnd)
+    return [];
   const parseTime = (time: string | undefined) => {
     if (!time) return 0;
     const [hours, minutes] = time.split(":").map(Number);
@@ -38,6 +43,66 @@ const availableTimeSlotsFunc = (doctor: TDoctor) => {
   // console.log(timeSlots, "timeSlots");
   return timeSlots;
 };
+
+const CategorizeTimeSlotsCompo = ({
+  period,
+  timeSlots,
+  appointmentsSchedule,
+  activeTime,
+  setActiveTime,
+}: {
+  period: "morning" | "afternoon" | "evening" | "night";
+  timeSlots: string[];
+  appointmentsSchedule: string[];
+  activeTime: string | null;
+  setActiveTime: (time: string | null) => void;
+}) => {
+  let icon = null;
+  switch (period) {
+    case "morning":
+      icon = "🌅 ";
+      break;
+    case "afternoon":
+      icon = "🌞 ";
+      break;
+    case "evening":
+      icon = "🌆 ";
+      break;
+    case "night":
+      icon = "🌙 ";
+      break;
+    default:
+      icon = "🌞 ";
+  }
+  return (
+    <div className="space-y-2 my-3">
+      <h2>
+        {icon} {firstLetterCapital(period)}{" "}
+      </h2>
+      <div className="flex flex-wrap gap-2">
+        {timeSlots?.map((time: string) => {
+          console.log(time, "time");
+          const isBookedTime = appointmentsSchedule?.includes(time);
+          return (
+            <span
+              className={`rounded-md border px-2 py-1 text-center cursor-pointer 
+        ${
+          (!time || isBookedTime) &&
+          "blur-[1px] pointer-events-none cursor-not-allowed"
+        }
+    ${activeTime === time ? "bg-primary text-white" : "bg-white text-black"}
+    `}
+              onClick={() => setActiveTime(time)}
+            >
+              {convertTo12HourTime(time)}
+            </span>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 const Appointments = ({
   doctor,
   isAvailableNow,
@@ -51,31 +116,16 @@ const Appointments = ({
   activeDay: string | null;
   setActiveDay: (day: string) => void;
   activeTime: string | null;
-  setActiveTime: (time: string) => void;
+  setActiveTime: (time: string | null) => void;
 }) => {
   if (isAvailableNow) return;
-  // console.log(availableTimeSlots, "availableTimeSlotsP");
 
-  // console.log(availableTimeSlots[0], "availableTimeSlots[0]");
-
-  // console.log(activeDay, "activeDay from appointments");
-
-  // TODO: how to filter appointments by date and doctorId and get the available time slots
-
-  console.log(doctor._id, activeDay, "doctor._id");
   const { data: appointments, isLoading: isLoadingAppointments } =
     useGetAllAppointments([
       { name: "doctor", value: doctor._id },
       { name: "date", value: activeDay },
       { name: "limit", value: 250 },
     ]);
-
-  console.log(
-    appointments,
-    isLoadingAppointments,
-    "isLoadingAppointments",
-    "appointments"
-  );
 
   useEffect(() => {
     const availableActiveDate = next15Days.find((day) =>
@@ -84,7 +134,44 @@ const Appointments = ({
     setActiveDay(availableActiveDate!!);
   }, []);
 
+  const appointmentsSchedule = appointments?.data?.map(
+    (appointment: TAppointment) => {
+      const date = new Date(appointment.schedule);
+      const time = date.toISOString().slice(11, 16);
+      return time;
+    }
+  );
+  console.log(
+    appointmentsSchedule,
+    isLoadingAppointments,
+    "isLoadingAppointments",
+    "appointments"
+  );
   const next15Days: { date: string; day: string }[] = getNext15DaysFunc();
+  const availableTimeSlots = availableTimeSlotsFunc(doctor);
+  const categorizeTimeSlotsFunc = (timeSlots: string[]) => {
+    return {
+      morning: timeSlots.filter((time) => {
+        const hour = parseInt(time.split(":")[0], 10);
+        return hour >= 5 && hour < 12;
+      }),
+      afternoon: timeSlots.filter((time) => {
+        const hour = parseInt(time.split(":")[0], 10);
+        return hour >= 12 && hour < 17;
+      }),
+      evening: timeSlots.filter((time) => {
+        const hour = parseInt(time.split(":")[0], 10);
+        return hour >= 17 && hour < 21;
+      }),
+      night: timeSlots.filter((time) => {
+        const hour = parseInt(time.split(":")[0], 10);
+        return hour >= 21 || hour < 5;
+      }),
+    };
+  };
+  const categorizeTimeSlots = categorizeTimeSlotsFunc(availableTimeSlots);
+
+  console.log(categorizeTimeSlots, "categorizeTimeSlots");
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">
@@ -121,25 +208,30 @@ const Appointments = ({
           Available Time Slots
         </h1>
 
-        <div className="flex flex-wrap gap-2 my-3">
-          {availableTimeSlotsFunc(doctor).map((time: string) => {
+        {isLoadingAppointments ? (
+          <div className="flex flex-wrap gap-2 my-3">
+            {Array.from({ length: 48 }).map((_, ind) => {
+              return <Skeleton className="rounded-lg h-[33.79px] w-[75px]" />;
+            })}
+          </div>
+        ) : (
+          (
+            Object.keys(categorizeTimeSlots) as Array<
+              "morning" | "afternoon" | "evening" | "night"
+            >
+          ).map((period) => {
+            if (!categorizeTimeSlots[period].length) return null;
             return (
-              <span
-                className={`rounded-md border px-2 py-1 text-center cursor-pointer 
-                    ${!time && "blur-[1px] pointer-events-none"}
-                ${
-                  activeTime === time
-                    ? "bg-primary text-white"
-                    : "bg-white text-black"
-                }
-                `}
-                onClick={() => setActiveTime(time)}
-              >
-                {convertTo12HourTime(time)}
-              </span>
+              <CategorizeTimeSlotsCompo
+                period={period}
+                activeTime={activeTime}
+                setActiveTime={setActiveTime}
+                appointmentsSchedule={appointmentsSchedule}
+                timeSlots={categorizeTimeSlots[period]}
+              />
             );
-          })}
-        </div>
+          })
+        )}
       </div>
 
       {/* color to understand */}
