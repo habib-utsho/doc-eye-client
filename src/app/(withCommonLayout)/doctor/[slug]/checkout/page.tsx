@@ -36,14 +36,15 @@ const DoctorCheckout = () => {
     "bKash" | "SSLCOMMERZ"
   >("bKash");
 
-  const [activeDay, setActiveDay] = useState<string | null>(null);
+  const [activeDate, setActiveDate] = useState<string | null>(null);
   const [activeTime, setActiveTime] = useState<string | null>(null);
 
-  const { mutate: initPayment, isPending:isLoadingInitPayment } = useInitPayment();
+  const { mutate: initPayment, isPending: isLoadingInitPayment } =
+    useInitPayment();
 
   console.log({
     id: params.slug,
-    activeDay,
+    activeDate,
     searchParams,
     isAvailableNow,
     isUserLoading,
@@ -63,7 +64,7 @@ const DoctorCheckout = () => {
   // console.log(activePaymentMethod);
 
   const handlePaymentFunc = () => {
-    if (!activeDay) {
+    if (!activeDate) {
       toast.error("Please select a date");
       return;
     }
@@ -89,9 +90,9 @@ const DoctorCheckout = () => {
       patient: user._id,
       payment: "payment id",
       amount: totalAmount,
-      date: activeDay,
+      date: activeDate,
       time: activeTime,
-      schedule: new Date(activeDay + " " + activeTime),
+      schedule: new Date(activeDate + " " + activeTime),
       status: "pending",
     };
 
@@ -136,9 +137,9 @@ const DoctorCheckout = () => {
           <Appointments
             doctor={doctor}
             isAvailableNow={isAvailableNow}
-            activeDay={activeDay}
+            activeDate={activeDate}
+            setActiveDate={setActiveDate}
             activeTime={activeTime}
-            setActiveDay={setActiveDay}
             setActiveTime={setActiveTime}
           />
 
@@ -215,7 +216,7 @@ const DoctorCheckout = () => {
                 handlePaymentFunc={handlePaymentFunc}
                 paymentType={activePaymentMethod}
                 amount={totalAmount}
-                isDisabled={!activeDay || !activeTime || !user}
+                isDisabled={!activeDate || !activeTime || !user}
                 isLoading={isLoadingInitPayment}
               />
             </div>

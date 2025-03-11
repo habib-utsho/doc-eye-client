@@ -9,49 +9,18 @@ import { useGetAllAppointments } from "@/src/hooks/appointment.hook";
 import { TAppointment } from "@/src/types/appointment";
 import { Skeleton } from "@heroui/skeleton";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
-
-const availableTimeSlotsFunc = (doctor: TDoctor) => {
-  if (!doctor.availability?.timeStart || !doctor.availability?.timeEnd)
-    return [];
-  const parseTime = (time: string | undefined) => {
-    if (!time) return 0;
-    const [hours, minutes] = time.split(":").map(Number);
-    return hours * 60 + minutes;
-  };
-  const roundToNearest15 = (minutes: number) => {
-    return Math.round(minutes / 15) * 15;
-  };
-  const startMinutes = roundToNearest15(
-    parseTime(doctor.availability?.timeStart)
-  );
-  const endMinutes = roundToNearest15(parseTime(doctor.availability?.timeEnd));
-  // console.log({ startTime: startMinutes, endTime: endMinutes });
-  // console.log(
-  //   doctor.availability.timeEnd,
-  //   doctor.availability.timeStart,
-  //   "time end start"
-  // );
-  if (isNaN(startMinutes) || isNaN(endMinutes)) {
-    return [];
-  }
-  const timeSlots = [];
-  for (let minutes = startMinutes; minutes <= endMinutes; minutes += 15) {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    timeSlots.push(`${hours}:${mins}`);
-  }
-  // console.log(timeSlots, "timeSlots");
-  return timeSlots;
-};
+import { availableTimeSlotsFunc } from "@/src/utils/availableTimeSlots";
 
 const CategorizeTimeSlotsCompo = ({
   period,
+  activeDate,
   timeSlots,
   appointmentsSchedule,
   activeTime,
   setActiveTime,
 }: {
   period: "morning" | "afternoon" | "evening" | "night";
+  activeDate: string | null;
   timeSlots: string[];
   appointmentsSchedule: string[];
   activeTime: string | null;
@@ -74,6 +43,11 @@ const CategorizeTimeSlotsCompo = ({
     default:
       icon = "🌞 ";
   }
+  const date = new Date();
+  const currentDate = date.toISOString().slice(0, 10);
+  const currentTime = `${String(date.getHours()).padStart(2, "0")}:${String(
+    date.getMinutes()
+  ).padStart(2, "0")}`;
   return (
     <div className="space-y-2 my-3">
       <h2>
@@ -81,17 +55,23 @@ const CategorizeTimeSlotsCompo = ({
       </h2>
       <div className="flex flex-wrap gap-2">
         {timeSlots?.map((time: string) => {
-          console.log(time, "time");
+          // console.log(time, "time");
           const isBookedTime = appointmentsSchedule?.includes(time);
+          const isToday = currentDate === activeDate;
+          const isExpiredTime =
+            isToday &&
+            Number(time.split(":").join("")) <
+              Number(currentTime.split(":").join(""));
           return (
             <span
               className={`rounded-md border px-2 py-1 text-center cursor-pointer 
         ${
-          (!time || isBookedTime) &&
+          (!time || isBookedTime || isExpiredTime) &&
           "blur-[1px] pointer-events-none cursor-not-allowed"
         }
-    ${activeTime === time ? "bg-primary text-white" : "bg-white text-black"}
-    `}
+       ${
+         activeTime === time ? "bg-primary text-white" : "bg-white text-black"
+       }`}
               onClick={() => setActiveTime(time)}
             >
               {convertTo12HourTime(time)}
@@ -106,15 +86,15 @@ const CategorizeTimeSlotsCompo = ({
 const Appointments = ({
   doctor,
   isAvailableNow,
-  activeDay,
-  setActiveDay,
+  activeDate,
+  setActiveDate,
   activeTime,
   setActiveTime,
 }: {
   doctor: TDoctor;
   isAvailableNow: boolean | undefined;
-  activeDay: string | null;
-  setActiveDay: (day: string) => void;
+  activeDate: string | null;
+  setActiveDate: (day: string) => void;
   activeTime: string | null;
   setActiveTime: (time: string | null) => void;
 }) => {
@@ -123,7 +103,7 @@ const Appointments = ({
   const { data: appointments, isLoading: isLoadingAppointments } =
     useGetAllAppointments([
       { name: "doctor", value: doctor._id },
-      { name: "date", value: activeDay },
+      { name: "date", value: activeDate },
       { name: "limit", value: 250 },
     ]);
 
@@ -131,7 +111,7 @@ const Appointments = ({
     const availableActiveDate = next15Days.find((day) =>
       isDoctorAvailableByDay(doctor, day.day)
     )?.date;
-    setActiveDay(availableActiveDate!!);
+    setActiveDate(availableActiveDate!!);
   }, []);
 
   const appointmentsSchedule = appointments?.data?.map(
@@ -141,12 +121,7 @@ const Appointments = ({
       return time;
     }
   );
-  console.log(
-    appointmentsSchedule,
-    isLoadingAppointments,
-    "isLoadingAppointments",
-    "appointments"
-  );
+
   const next15Days: { date: string; day: string }[] = getNext15DaysFunc();
   const availableTimeSlots = availableTimeSlotsFunc(doctor);
   const categorizeTimeSlotsFunc = (timeSlots: string[]) => {
@@ -171,8 +146,7 @@ const Appointments = ({
   };
   const categorizeTimeSlots = categorizeTimeSlotsFunc(availableTimeSlots);
 
-  console.log(categorizeTimeSlots, "categorizeTimeSlots");
-
+  
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">
       <h1 className="font-semibold text-md">
@@ -189,12 +163,12 @@ const Appointments = ({
                 !isAvailableDay && "blur-[1px] pointer-events-none"
               }
               ${
-                activeDay === day.date
+                activeDate === day.date
                   ? "bg-primary text-white"
                   : "bg-white text-black"
               }
               `}
-              onClick={() => setActiveDay(day.date)}
+              onClick={() => setActiveDate(day.date)}
             >
               {day.date?.split("-")?.[2]} <br /> {day.day}
             </span>
@@ -224,6 +198,7 @@ const Appointments = ({
             return (
               <CategorizeTimeSlotsCompo
                 period={period}
+                activeDate={activeDate}
                 activeTime={activeTime}
                 setActiveTime={setActiveTime}
                 appointmentsSchedule={appointmentsSchedule}
