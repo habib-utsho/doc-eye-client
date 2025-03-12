@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import PaymentModal from "../_components/PaymentModal";
 import { useInitPayment } from "@/src/hooks/payment.hook";
 import { TAppointmentType } from "@/src/types/appointment";
+import { useGetAllAppointments } from "@/src/hooks/appointment.hook";
 
 const DoctorCheckout = () => {
   const params = useParams() as { slug: string };
@@ -40,19 +41,26 @@ const DoctorCheckout = () => {
   const [activeDate, setActiveDate] = useState<string | null>(null);
   const [activeTime, setActiveTime] = useState<string | null>(null);
 
-  const { mutate: initPayment, isPending: isLoadingInitPayment } =
-    useInitPayment();
+  const {
+    data: appointments,
+    isLoading: isLoadingAppointments,
+    refetch: refetchAppointments,
+  } = useGetAllAppointments([
+    { name: "doctor", value: doctor?._id },
+    { name: "date", value: activeDate },
+    { name: "limit", value: 250 },
+  ]);
 
-  console.log({
-    id: params.slug,
-    activeDate,
-    searchParams,
-    isAvailableNow,
-    isUserLoading,
-    user,
-    isDoctorLoading,
-    doctor,
-  });
+  // console.log({
+  //   id: params.slug,
+  //   activeDate,
+  //   searchParams,
+  //   isAvailableNow,
+  //   isUserLoading,
+  //   user,
+  //   isDoctorLoading,
+  //   doctor,
+  // });
 
   if (isDoctorLoading || isUserLoading) return <Loading />;
 
@@ -61,55 +69,6 @@ const DoctorCheckout = () => {
     vat5Percent +
     doctor?.consultationFee +
     Number(process.env.NEXT_PUBLIC_PER_CONSULTATION_SERVICE_FEE!!);
-
-  // console.log(activePaymentMethod);
-
-  const handlePaymentFunc = () => {
-    if (!activeDate) {
-      toast.error("Please select a date");
-      return;
-    }
-
-    if (!activeTime) {
-      toast.error("Please select a time");
-      return;
-    }
-    if (!user) {
-      toast.error("Please select a patient");
-      return;
-    }
-
-    const payload = {
-      doctor: doctor._id,
-      patient: user._id,
-      schedule: new Date(activeDate + " " + activeTime),
-      appointmentType: "online" as TAppointmentType,
-      amount: totalAmount,
-      paymentMethod: activePaymentMethod,
-    };
-
-    console.log(payload, "payload");
-
-    // return 
-    const paymentData = initPayment(payload, {
-      onSuccess: (data) => {
-        console.log(data, "data");
-      },
-      onError: (error) => {
-        console.log(error, "error");
-      },
-    });
-
-    console.log(paymentData, "paymentData");
-
-    return;
-
-    if (activePaymentMethod === "bKash") {
-      console.log("Payment with bKash");
-    } else {
-      console.log("Payment with SSLCOMMERZ");
-    }
-  };
 
   return (
     <div className="py-8 space-y-4 md:space-y-8 bg-slate-50 dark:bg-gray-900">
@@ -139,6 +98,8 @@ const DoctorCheckout = () => {
           </div>
 
           <Appointments
+            appointments={appointments?.data}
+            isLoadingAppointments={isLoadingAppointments}
             doctor={doctor}
             isAvailableNow={isAvailableNow}
             activeDate={activeDate}
@@ -217,11 +178,14 @@ const DoctorCheckout = () => {
               </div>
 
               <PaymentModal
-                handlePaymentFunc={handlePaymentFunc}
                 paymentType={activePaymentMethod}
                 amount={totalAmount}
                 isDisabled={!activeDate || !activeTime || !user}
-                isLoading={isLoadingInitPayment}
+                doctor={doctor}
+                activeDate={activeDate}
+                activeTime={activeTime}
+                user={user}
+                refetchAppointments={refetchAppointments}
               />
             </div>
           </div>

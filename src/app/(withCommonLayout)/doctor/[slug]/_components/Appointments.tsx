@@ -10,6 +10,7 @@ import { TAppointment } from "@/src/types/appointment";
 import { Skeleton } from "@heroui/skeleton";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { availableTimeSlotsFunc } from "@/src/utils/availableTimeSlots";
+import { TResponse } from "@/src/types";
 
 const CategorizeTimeSlotsCompo = ({
   period,
@@ -56,7 +57,6 @@ const CategorizeTimeSlotsCompo = ({
       <div className="flex flex-wrap gap-2">
         {timeSlots?.map((time: string) => {
           // console.log(time, "time");
-          console.log({ appointmentsSchedule, time });
           const isBookedTime = appointmentsSchedule?.includes(time);
           const isToday = currentDate === activeDate;
           const isExpiredTime =
@@ -91,6 +91,8 @@ const Appointments = ({
   setActiveDate,
   activeTime,
   setActiveTime,
+  appointments,
+  isLoadingAppointments,
 }: {
   doctor: TDoctor;
   isAvailableNow: boolean | undefined;
@@ -98,15 +100,17 @@ const Appointments = ({
   setActiveDate: (day: string) => void;
   activeTime: string | null;
   setActiveTime: (time: string | null) => void;
+  appointments: TAppointment[];
+  isLoadingAppointments: boolean;
 }) => {
   if (isAvailableNow) return;
 
-  const { data: appointments, isLoading: isLoadingAppointments } =
-    useGetAllAppointments([
-      { name: "doctor", value: doctor._id },
-      { name: "date", value: activeDate },
-      { name: "limit", value: 250 },
-    ]);
+  // const { data: appointments, isLoading: isLoadingAppointments, refetch:refetchAppointments } =
+  //   useGetAllAppointments([
+  //     { name: "doctor", value: doctor._id },
+  //     { name: "date", value: activeDate },
+  //     { name: "limit", value: 250 },
+  //   ]);
 
   useEffect(() => {
     const availableActiveDate = next15Days.find((day) =>
@@ -115,7 +119,7 @@ const Appointments = ({
     setActiveDate(availableActiveDate!!);
   }, []);
 
-  const appointmentsSchedule = appointments?.data?.map(
+  const appointmentsSchedule = appointments?.map(
     (appointment: TAppointment) => {
       const date = new Date(appointment.schedule);
       const time = date.toISOString().slice(11, 16);
@@ -168,7 +172,10 @@ const Appointments = ({
                   : "bg-white text-black"
               }
               `}
-              onClick={() => setActiveDate(day.date)}
+              onClick={() => {
+                setActiveDate(day.date);
+                setActiveTime(null);
+              }}
             >
               {day.date?.split("-")?.[2]} <br /> {day.day}
             </span>

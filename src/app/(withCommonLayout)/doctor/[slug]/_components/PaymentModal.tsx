@@ -1,4 +1,7 @@
 "use client";
+import { useInitPayment } from "@/src/hooks/payment.hook";
+import { TAppointmentType } from "@/src/types/appointment";
+import { TDecodedUser, TDoctor } from "@/src/types/user";
 import { DollarOutlined } from "@ant-design/icons";
 import { Button } from "@heroui/button";
 import {
@@ -10,23 +13,77 @@ import {
   useDisclosure,
 } from "@heroui/modal";
 import React from "react";
+import { toast } from "sonner";
 
 type TPaymentModalProps = {
   paymentType: "bKash" | "SSLCOMMERZ";
-  handlePaymentFunc: () => void;
   amount: number;
   isDisabled?: boolean;
-  isLoading?: boolean;
+  activeDate: string | null;
+  activeTime: string | null;
+  user: TDecodedUser | null;
+  doctor: TDoctor | null;
+  refetchAppointments: () => void;
 };
 const PaymentModal: React.FC<TPaymentModalProps> = ({
   paymentType,
-  handlePaymentFunc,
   amount,
   isDisabled,
-  isLoading,
+  activeDate,
+  activeTime,
+  user,
+  doctor,
+  refetchAppointments,
 }) => {
+  const { mutate: initPayment, isPending: isLoadingInitPayment } =
+    useInitPayment();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  const handlePaymentFunc = () => {
+    if (!activeDate) {
+      toast.error("Please select a date");
+      return;
+    }
+
+    if (!activeTime) {
+      toast.error("Please select a time");
+      return;
+    }
+    if (!user) {
+      toast.error("Please select a patient");
+      return;
+    }
+    if (!doctor) {
+      toast.error("Please select a doctor");
+      return;
+    }
+
+    const payload = {
+      doctor: doctor._id,
+      patient: user._id,
+      schedule: new Date(activeDate + " " + activeTime),
+      appointmentType: "online" as TAppointmentType,
+      amount,
+      paymentMethod: paymentType,
+    };
+
+
+    initPayment(payload, {
+      onSuccess: (data) => {
+        console.log(data, "data");
+        if (data?.success) {
+          toast.success(data?.message || "Payment successful!");
+          refetchAppointments();
+          onOpenChange();
+        } else {
+          toast.error(data?.message || "Failed to payment!");
+        }
+      },
+      onError: (error) => {
+        toast.error(error?.message || "Failed to payment!");
+      },
+    });
+  };
   return (
     <>
       <Button
@@ -95,7 +152,7 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
                   onPress={() => {
                     handlePaymentFunc();
                   }}
-                  isLoading={isLoading}
+                  isLoading={isLoadingInitPayment}
                   className="text-white"
                 >
                   Pay {amount} BDT

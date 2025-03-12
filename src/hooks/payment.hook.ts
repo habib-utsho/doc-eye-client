@@ -9,16 +9,8 @@ export const useInitPayment = () => {
     mutationKey: ["payment"],
     mutationFn: async (payload: TCreateAppointment) =>
       await makePaymentInit(payload),
-    async onSuccess(data) {
-      if (data?.success) {
-        toast.success(data?.message || "Payment successful!");
-      } else {
-        toast.error(data?.message || "Failed to payment!");
-      }
-    },
-    onError(error) {
-      toast.error(error?.message || "Failed to payment!");
-    },
+    async onSuccess(data) {},
+    onError(error) {},
   });
 };
 export const useGetAllPayment = (query: TFilterQuery[] | undefined) => {
