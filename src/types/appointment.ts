@@ -15,7 +15,7 @@ export type TAppointment = {
 export type TCreateAppointment = {
   doctor: string;
   patient: string;
-  schedule: Date;
+  schedule: string;
   amount: number;
   paymentMethod: "bKash" | "SSLCOMMERZ";
   appointmentType: "in-person" | "online";

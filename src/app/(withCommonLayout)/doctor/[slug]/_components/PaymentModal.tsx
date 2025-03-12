@@ -61,14 +61,11 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
     const payload = {
       doctor: doctor._id,
       patient: user._id,
-      schedule: new Date(activeDate + " " + activeTime),
+      schedule: activeDate + "T" + activeTime + ":00Z",
       appointmentType: "online" as TAppointmentType,
       amount,
       paymentMethod: paymentType,
     };
-
-
-    
     initPayment(payload, {
       onSuccess: (data) => {
         console.log(data, "data");
