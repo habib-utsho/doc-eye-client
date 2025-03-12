@@ -56,6 +56,7 @@ const CategorizeTimeSlotsCompo = ({
       <div className="flex flex-wrap gap-2">
         {timeSlots?.map((time: string) => {
           // console.log(time, "time");
+          console.log({ appointmentsSchedule, time });
           const isBookedTime = appointmentsSchedule?.includes(time);
           const isToday = currentDate === activeDate;
           const isExpiredTime =
@@ -146,7 +147,6 @@ const Appointments = ({
   };
   const categorizeTimeSlots = categorizeTimeSlotsFunc(availableTimeSlots);
 
-  
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">
       <h1 className="font-semibold text-md">

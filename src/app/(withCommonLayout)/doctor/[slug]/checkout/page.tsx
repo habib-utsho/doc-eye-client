@@ -22,6 +22,7 @@ import { TDoctor } from "@/src/types/user";
 import { toast } from "sonner";
 import PaymentModal from "../_components/PaymentModal";
 import { useInitPayment } from "@/src/hooks/payment.hook";
+import { TAppointmentType } from "@/src/types/appointment";
 
 const DoctorCheckout = () => {
   const params = useParams() as { slug: string };
@@ -78,25 +79,28 @@ const DoctorCheckout = () => {
       return;
     }
 
-    const paymentData = initPayment({
-      appointment: null,
+    const payload = {
+      doctor: doctor._id,
+      patient: user._id,
+      schedule: new Date(activeDate + " " + activeTime),
+      appointmentType: "online" as TAppointmentType,
       amount: totalAmount,
       paymentMethod: activePaymentMethod,
+    };
+
+    console.log(payload, "payload");
+
+    // return 
+    const paymentData = initPayment(payload, {
+      onSuccess: (data) => {
+        console.log(data, "data");
+      },
+      onError: (error) => {
+        console.log(error, "error");
+      },
     });
 
     console.log(paymentData, "paymentData");
-    const data = {
-      doctor: doctor._id,
-      patient: user._id,
-      payment: "payment id",
-      amount: totalAmount,
-      date: activeDate,
-      time: activeTime,
-      schedule: new Date(activeDate + " " + activeTime),
-      status: "pending",
-    };
-
-    console.log(data);
 
     return;
 

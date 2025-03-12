@@ -1,28 +1,16 @@
 "use server";
 
+import axiosInstance from "@/src/lib/axiosInstance";
 import { TFilterQuery } from "@/src/types";
 import { TCreateAppointment } from "@/src/types/appointment";
 import { revalidateTag } from "next/cache";
 
 export const makePaymentInit = async (payload: TCreateAppointment) => {
   try {
-    const fetchOption = {
-      method: "POST",
-      body: JSON.stringify(payload),
-    };
-    console.log(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/payment`,
-      "`${process.env.NEXT_PUBLIC_BASE_URL}/payment}`"
-    );
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/payment`,
-      fetchOption
-    );
+    const response = await axiosInstance.post(`/payment`, payload);
     revalidateTag("payment");
-    if (!response.ok) {
-      throw new Error("Failed to init payment!");
-    }
-    return response.json();
+    revalidateTag("appointment");
+    return response.data;
   } catch (e: any) {
     throw new Error(
       `${
