@@ -68,6 +68,7 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
     };
 
 
+    
     initPayment(payload, {
       onSuccess: (data) => {
         console.log(data, "data");
