@@ -13,6 +13,7 @@ import moment from "moment";
 import Image from "next/image";
 import React, { ReactNode } from "react";
 import { WorkingExperiencesTable } from "./WorkingExperiencesModal";
+import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
 
 const DoctorDetailsModal = ({ doctor }: { doctor: TDoctor }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -66,10 +67,15 @@ const DoctorDetailsModal = ({ doctor }: { doctor: TDoctor }) => {
                       <p className="text-gray-600 flex items-center gap-1">
                         <UsersIcon /> {doctor.patientAttended} patients attended
                       </p>
-                      <p className="text-gray-500">{doctor.bio}</p>
                     </div>
                   </div>
 
+                  {/* Bio */}
+                  <div>
+                    <h3 className="text-lg font-semibold mt-4">Bio</h3>
+
+                    <p className="text-gray-500">{doctor.bio}</p>
+                  </div>
                   {/* General Information */}
                   <div>
                     <h3 className="text-lg font-semibold mt-4">
@@ -108,20 +114,17 @@ const DoctorDetailsModal = ({ doctor }: { doctor: TDoctor }) => {
                         label="Current Workplace"
                         value={
                           <div>
-                            <p className="font-semibold">
+                            <p className="">
                               <span>{doctor?.currentWorkplace?.workPlace}</span>{" "}
                               - {doctor?.currentWorkplace?.department}
                             </p>
-                            <p>
+                            <p className="text-gray-500">
                               {doctor?.currentWorkplace?.designation},{" "}
                               <ClockCircleOutlined className="mr-1" />
                               {moment(
                                 doctor?.currentWorkplace?.workingPeriodStart
                               ).format("YYYY")}{" "}
-                              - <ClockCircleOutlined className="mr-1" />
-                              {moment(
-                                doctor?.currentWorkplace?.workingPeriodEnd
-                              ).format("YYYY")}
+                              - Running
                             </p>
                           </div>
                         }
@@ -181,8 +184,8 @@ const DoctorDetailsModal = ({ doctor }: { doctor: TDoctor }) => {
                     <p>
                       {doctor.availability.dayStart} -{" "}
                       {doctor.availability.dayEnd},{" "}
-                      {doctor.availability.timeStart} -{" "}
-                      {doctor.availability.timeEnd}
+                      {convertTo12HourTime(doctor.availability.timeStart)} -{" "}
+                      {convertTo12HourTime(doctor.availability.timeEnd)}
                     </p>
                   </div>
 

@@ -42,8 +42,24 @@ const adminRoutes: TSidebarRoute[] = [
   },
   {
     name: "Manage Users",
-    path: "/dashboard/admin/manage-users",
     icon: <UserOutlined />,
+    children: [
+      {
+        name: "Patients",
+        path: "/dashboard/admin/patients",
+        icon: <UserOutlined />,
+      },
+      {
+        name: "Doctors",
+        path: "/dashboard/admin/doctors",
+        icon: <UserOutlined />,
+      },
+      {
+        name: "Admins",
+        path: "/dashboard/admin/admins",
+        icon: <UserOutlined />,
+      },
+    ],
   },
   {
     name: "Appointments",

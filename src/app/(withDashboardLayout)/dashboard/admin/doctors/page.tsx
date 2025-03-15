@@ -12,12 +12,7 @@ import { TAdmin, TDoctor, TUser } from "@/src/types/user";
 import moment from "moment";
 import { Switch } from "@heroui/switch";
 import { Input } from "@heroui/input";
-import {
-  CheckIcon,
-  PhoneIcon,
-  SearchIcon,
-  XMarkIcon,
-} from "@/src/components/ui/icons";
+import { CheckIcon, SearchIcon, XMarkIcon } from "@/src/components/ui/icons";
 import DeleteModal from "../../_components/DeleteModal";
 import { useToggleUserStatus } from "@/src/hooks/auth.hook";
 import { TSpecialty } from "@/src/types/specialty";
@@ -26,14 +21,15 @@ import {
   ClockCircleOutlined,
   MailOutlined,
   PhoneOutlined,
-  RightOutlined,
 } from "@ant-design/icons";
 import DoctorDetailsModal from "./_components/modal/DoctorDetailsModal";
 import { Button } from "@heroui/button";
-import { toast } from "sonner";
+import { Select, SelectItem } from "@heroui/select";
+import { useGetAllSpecialties } from "@/src/hooks/specialty.hook";
 
 const DoctorsPage = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
+  const [specialty, setSpecialty] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
   const {
@@ -41,10 +37,22 @@ const DoctorsPage = () => {
     isLoading: isLoadingDoctors,
     refetch: refetchDoctors,
   } = useGetAllDoctors([
-    {
-      name: "searchTerm",
-      value: debounceSearch,
-    },
+    ...(debounceSearch
+      ? [
+          {
+            name: "searchTerm",
+            value: debounceSearch,
+          },
+        ]
+      : []),
+    ...(specialty
+      ? [
+          {
+            name: "medicalSpecialties",
+            value: specialty,
+          },
+        ]
+      : []),
     {
       name: "page",
       value: pagination.page,
@@ -54,6 +62,17 @@ const DoctorsPage = () => {
       value: pagination.limit,
     },
   ]);
+  const { data: specialties, isLoading: isLoadingSpecialties } =
+    useGetAllSpecialties([
+      {
+        name: "limit",
+        value: 50000,
+      },
+      {
+        name: "isDeleted",
+        value: false,
+      },
+    ]);
   const {
     mutate: deleteDoctorMutate,
     isPending: isLoadingDeleteDoctor,
@@ -89,11 +108,11 @@ const DoctorsPage = () => {
         )}
         <div>
           <p>{doctor?.name}</p>
-          <p className="text-slate-700 flex items-center gap-1">
+          <p className="text-gray-500 flex items-center gap-1">
             <MailOutlined />
             {doctor?.email}
           </p>
-          <p className="text-slate-700 flex items-center gap-1">
+          <p className="text-gray-500 flex items-center gap-1">
             <PhoneOutlined /> {doctor?.phone}
           </p>
         </div>
@@ -125,14 +144,13 @@ const DoctorsPage = () => {
           <span>{doctor?.currentWorkplace?.workPlace}</span> -{" "}
           {doctor?.currentWorkplace?.department}
         </p>
-        <p>
+        <p className="text-gray-500">
           {doctor?.currentWorkplace?.designation},{" "}
           <ClockCircleOutlined className="mr-1" />
           {moment(doctor?.currentWorkplace?.workingPeriodStart).format(
             "YYYY"
           )}{" "}
-          - <ClockCircleOutlined className="mr-1" />
-          {moment(doctor?.currentWorkplace?.workingPeriodEnd).format("YYYY")}
+          - Running
         </p>
       </div>
     ),
@@ -233,8 +251,8 @@ const DoctorsPage = () => {
 
   return (
     <div className="p-4">
-      <div className="flex justify-between items-center mb-4 xl:mb-6 gap-4">
-        <div className="flex items-center gap-2">
+      <div className="mb-4 xl:mb-6 gap-4">
+        <div className=" grid grid-cols-4 gap-4 text-nowrap">
           <Input
             name="search"
             startContent={<SearchIcon />}
@@ -243,9 +261,41 @@ const DoctorsPage = () => {
             isClearable
             onClear={() => setSearchTerm("")}
           />
-        </div>
 
-        {/* <SpecialtyModal /> */}
+          <Select
+            className=" "
+            label="Filter by specialty"
+            onChange={(e) => setSpecialty(e.target.value)}
+          >
+            {specialties?.data?.map((specialty: TSpecialty) => (
+              <SelectItem key={specialty._id}>{specialty.name}</SelectItem>
+            ))}
+          </Select>
+          <Select
+            className=""
+            label="Sort by consultation fee"
+            // onChange={(e) => setSpecialty(e.target.value)}
+          >
+            {[
+              { title: "High to Low", value: "desc" },
+              { title: "Low to High", value: "asc" },
+            ]?.map((elem) => (
+              <SelectItem key={elem.value}>{elem.title}</SelectItem>
+            ))}
+          </Select>
+          <Select
+            className=""
+            label="Sort by experience"
+            // onChange={(e) => setSpecialty(e.target.value)}
+          >
+            {[
+              { title: "High to Low", value: "desc" },
+              { title: "Low to High", value: "asc" },
+            ]?.map((elem) => (
+              <SelectItem key={elem.value}>{elem.title}</SelectItem>
+            ))}
+          </Select>
+        </div>
       </div>
 
       <DETable

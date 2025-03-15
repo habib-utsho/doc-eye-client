@@ -1,5 +1,10 @@
-import { EyeFilledIcon } from "@/src/components/ui/icons";
+import {
+  EyeFilledIcon,
+  LocationIcon,
+  PhoneIcon,
+} from "@/src/components/ui/icons";
 import { TPatient } from "@/src/types/user";
+import { PhoneOutlined } from "@ant-design/icons";
 import { Button } from "@heroui/button";
 import {
   Modal,
@@ -10,6 +15,7 @@ import {
 } from "@heroui/modal";
 import moment from "moment";
 import React from "react";
+import { FaLocationArrow, FaLocationPin } from "react-icons/fa6";
 
 const PatientDetailsModal = ({ patient }: { patient: TPatient }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -33,7 +39,7 @@ const PatientDetailsModal = ({ patient }: { patient: TPatient }) => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Doctor Details
+                Patient Details
               </ModalHeader>
               <ModalBody>
                 <div className="flex flex-col gap-4">
@@ -44,19 +50,25 @@ const PatientDetailsModal = ({ patient }: { patient: TPatient }) => {
                       alt={patient.name}
                       className="w-24 h-24 rounded-full"
                     />
-                    <div>
-                      <h2 className="text-xl font-bold">{patient.name}</h2>
-                      <h2 className="text-xl font-bold">{patient.district}</h2>
-                      <p className="text-gray-600">{patient.phone}</p>
-                      <p className="text-gray-500">{patient.bloodGroup}</p>
+                    <div className="space-y-[2px]">
+                      <h2 className="font-semibold">{patient.name}</h2>
+                      <h2 className="font-semibold flex items-center gap-[2px] ">
+                        {" "}
+                        <LocationIcon /> {patient.district}
+                      </h2>
+                      <p className="text-gray-600 flex items-center gap-[2px]">
+                        {" "}
+                        <PhoneIcon /> {patient.phone}
+                      </p>
+                      <p className="text-gray-500 flex items-center gap-[2px]">
+                        <span>🩸</span> {patient.bloodGroup}
+                      </p>
                     </div>
                   </div>
 
                   {/* General Information */}
                   <div>
-                    <h3 className="text-lg font-semibold mt-4">
-                      General Information
-                    </h3>
+                    <h3 className="font-semibold mt-4">General Information</h3>
                     <div className="grid grid-cols-2 gap-4 mt-4">
                       <InfoItem label="Email" value={patient.email} />
                       <InfoItem label="Phone" value={patient.phone} />
