@@ -30,6 +30,12 @@ import { useGetAllSpecialties } from "@/src/hooks/specialty.hook";
 const DoctorsPage = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [specialty, setSpecialty] = useState<string | null>(null);
+  const [consultationFeeSort, setConsultationFeeSort] = useState<string | null>(
+    null
+  );
+  const [totalExperienceYearSort, setTotalExperienceYearSort] = useState<
+    string | null
+  >(null);
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
   const {
@@ -50,6 +56,14 @@ const DoctorsPage = () => {
           {
             name: "medicalSpecialties",
             value: specialty,
+          },
+        ]
+      : []),
+    ...(consultationFeeSort || totalExperienceYearSort
+      ? [
+          {
+            name: "sort",
+            value: `${consultationFeeSort} ${totalExperienceYearSort}`,
           },
         ]
       : []),
@@ -249,6 +263,9 @@ const DoctorsPage = () => {
     }
   }, [isSuccessToggleUserStatus, isSuccessDeleteDoctor, isSuccessUpdateDoctor]);
 
+  const c = doctors?.data?.map((doctor) => doctor.consultationFee);
+  console.log(c, "c");
+
   return (
     <div className="p-4">
       <div className="mb-4 xl:mb-6 gap-4">
@@ -274,11 +291,11 @@ const DoctorsPage = () => {
           <Select
             className=""
             label="Sort by consultation fee"
-            // onChange={(e) => setSpecialty(e.target.value)}
+            onChange={(e) => setConsultationFeeSort(e.target.value)}
           >
             {[
-              { title: "High to Low", value: "desc" },
-              { title: "Low to High", value: "asc" },
+              { title: "High to Low", value: "-consultationFee" },
+              { title: "Low to High", value: "consultationFee" },
             ]?.map((elem) => (
               <SelectItem key={elem.value}>{elem.title}</SelectItem>
             ))}
@@ -286,11 +303,11 @@ const DoctorsPage = () => {
           <Select
             className=""
             label="Sort by experience"
-            // onChange={(e) => setSpecialty(e.target.value)}
+            onChange={(e) => setConsultationFeeSort(e.target.value)}
           >
             {[
-              { title: "High to Low", value: "desc" },
-              { title: "Low to High", value: "asc" },
+              { title: "High to Low", value: "-totalExperienceYear" },
+              { title: "Low to High", value: "totalExperienceYear" },
             ]?.map((elem) => (
               <SelectItem key={elem.value}>{elem.title}</SelectItem>
             ))}
