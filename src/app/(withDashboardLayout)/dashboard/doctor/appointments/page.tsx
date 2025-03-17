@@ -13,14 +13,19 @@ import { CheckIcon, SearchIcon, XMarkIcon } from "@/src/components/ui/icons";
 import { TAppointment } from "@/src/types/appointment";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { Button } from "@heroui/button";
+import useUserData from "@/src/hooks/user.hook";
 
 const AppointmentsPage = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
 
+  const { isLoading: isLoadingUser, user } = useUserData();
+  console.log(user, "user");
+
   const { data: appointments, isLoading: isLoadingAppointments } =
     useGetAllAppointments([
+      { name: "doctor", value: user?._id },
       { name: "searchTerm", value: debounceSearch },
       { name: "page", value: pagination.page },
       { name: "limit", value: pagination.limit },

@@ -24,7 +24,6 @@ import {
   MenuItem,
   SubMenu,
 } from "react-pro-sidebar";
-import { useTheme } from "next-themes";
 
 // Dashboard routes
 type TSidebarRoute = {
@@ -43,24 +42,8 @@ const adminRoutes: TSidebarRoute[] = [
   },
   {
     name: "Manage Users",
+    path: "/dashboard/admin/manage-users",
     icon: <UserOutlined />,
-    children: [
-      {
-        name: "Patients",
-        path: "/dashboard/admin/patients",
-        icon: <UserOutlined />,
-      },
-      {
-        name: "Doctors",
-        path: "/dashboard/admin/doctors",
-        icon: <UserOutlined />,
-      },
-      {
-        name: "Admins",
-        path: "/dashboard/admin/admins",
-        icon: <UserOutlined />,
-      },
-    ],
   },
   {
     name: "Appointments",
@@ -178,7 +161,6 @@ const Sidebar = () => {
   const { isLoading, user } = useUserData();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
-  const { theme } = useTheme();
 
   if (isLoading) return <SidebarLoading />;
 
@@ -198,7 +180,6 @@ const Sidebar = () => {
           </SubMenu>
         );
       }
-
       return (
         <MenuItem
           key={route.path}
@@ -219,7 +200,7 @@ const Sidebar = () => {
       collapsedWidth="80px"
       rtl={false}
       toggled
-      backgroundColor={theme === "light" ? "#f5f5f5" : "#333"}
+      backgroundColor="#f5f5f5"
       breakPoint="md"
       transitionDuration={300}
       // rootStyles={{
@@ -262,9 +243,8 @@ const Sidebar = () => {
           <Button
             startContent={<SignOutIcon className="size-5" />}
             className="text-red-500 w-full"
-            isIconOnly={collapsed}
           >
-            {!collapsed ? "Signout" : ""}
+            Signout
           </Button>
         </MenuItem>
       </Menu>
