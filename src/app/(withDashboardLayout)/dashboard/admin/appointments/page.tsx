@@ -98,7 +98,11 @@ const AppointmentsPage = () => {
                 disabled
                 isIconOnly
                 startContent={
-                  appointment.status === "completed" ? <CheckIcon /> : <XMarkIcon />
+                  appointment.status === "completed" ? (
+                    <CheckIcon />
+                  ) : (
+                    <XMarkIcon />
+                  )
                 }
                 isLoading={isLoadingUpdateStatus}
                 color={`${
@@ -130,6 +134,7 @@ const AppointmentsPage = () => {
     appointment: TAppointment,
     status: "completed" | "canceled"
   ) => {
+    console.log(status, "status");
     updateAppointmentStatus(
       { id: appointment?._id, status }
       // {

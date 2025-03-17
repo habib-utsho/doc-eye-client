@@ -48,7 +48,7 @@ export const updateAppointmentStatusById = async ({
   try {
     const response = await axiosInstance.patch(
       `/appointment/update-status/${id}`,
-      status
+      { status }
     );
     revalidateTag("appointment");
     return response.data;
