@@ -8,7 +8,7 @@ import useDebounce from "@/src/hooks/useDebounce";
 import React, { useEffect, useState } from "react";
 import DETable from "../../_components/DETable";
 import Image from "next/image";
-import { TAdmin, TDoctor, TUser } from "@/src/types/user";
+import { TDoctor, TUser } from "@/src/types/user";
 import moment from "moment";
 import { Switch } from "@heroui/switch";
 import { Input } from "@heroui/input";
@@ -263,9 +263,6 @@ const DoctorsPage = () => {
     }
   }, [isSuccessToggleUserStatus, isSuccessDeleteDoctor, isSuccessUpdateDoctor]);
 
-  const c = doctors?.data?.map((doctor) => doctor.consultationFee);
-  console.log(c, "c");
-
   return (
     <div className="p-4">
       <div className="mb-4 xl:mb-6 gap-4">
@@ -280,7 +277,6 @@ const DoctorsPage = () => {
           />
 
           <Select
-            className=" "
             label="Filter by specialty"
             onChange={(e) => setSpecialty(e.target.value)}
           >

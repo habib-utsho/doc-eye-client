@@ -1,10 +1,13 @@
+import { TPayment } from "./payment";
+import { TDoctor, TPatient } from "./user";
+
 export type TAppointmentType = "online" | "in-person";
 
 export type TAppointment = {
   _id: string;
-  doctor: string;
-  patient: string;
-  payment: string;
+  doctor: TDoctor;
+  patient: TPatient;
+  payment: TPayment;
   schedule: Date;
   appointmentType: "in-person" | "online";
   symptoms?: string;

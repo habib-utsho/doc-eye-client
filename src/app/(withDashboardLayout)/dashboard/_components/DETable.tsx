@@ -69,7 +69,7 @@ const DETable = ({
       >
         {(item: any) => (
           <TableRow
-            key={item.name}
+            key={item._id}
             className={`${
               item.isDeleted || user?._id === item?.user?._id
                 ? "bg-red-50 pointer-events-none blur-[.5px]"

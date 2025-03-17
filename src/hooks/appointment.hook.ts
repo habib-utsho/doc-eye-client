@@ -3,30 +3,31 @@ import { toast } from "sonner";
 import {
   getAppointmentById,
   getAppointments,
-  updateAppointment,
+  updateAppointmentStatusById,
 } from "../services/appointment";
 import { TFilterQuery } from "../types";
-import { TCreateAppointment } from "../types/appointment";
 
-export const useUpdateAppointment = () => {
+export const useUpdateAppointmentStatusById = () => {
   return useMutation({
     mutationKey: ["appointment"],
     mutationFn: async ({
       id,
-      payload,
+      status,
     }: {
       id: string;
-      payload: Partial<TCreateAppointment>;
-    }) => await updateAppointment({ id, payload }),
+      status: "completed" | "canceled";
+    }) => await updateAppointmentStatusById({ id, status }),
     async onSuccess(data) {
       if (data?.success) {
-        toast.success(data?.message || "Appointment updated successfully!");
+        toast.success(
+          data?.message || "Appointment status updated successfully!"
+        );
       } else {
-        toast.error(data?.message || "Failed to update appointment!");
+        toast.error(data?.message || "Failed to update appointment status!");
       }
     },
     onError(error) {
-      toast.error(error?.message || "Failed to update appointment!");
+      toast.error(error?.message || "Failed to update appointment status!");
     },
   });
 };

@@ -38,15 +38,18 @@ export const getAppointmentById = async (id: string | undefined) => {
   return response.json();
 };
 
-export const updateAppointment = async ({
+export const updateAppointmentStatusById = async ({
   id,
-  payload,
+  status,
 }: {
   id: string;
-  payload: Partial<TCreateAppointment>;
+  status: "completed" | "canceled";
 }) => {
   try {
-    const response = await axiosInstance.patch(`/appointment/${id}`, payload);
+    const response = await axiosInstance.patch(
+      `/appointment/update-status/${id}`,
+      status
+    );
     revalidateTag("appointment");
     return response.data;
   } catch (e: any) {
@@ -57,7 +60,7 @@ export const updateAppointment = async ({
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
         e?.response?.data ||
         e.message ||
-        "Failed to update appointment!"
+        "Failed to update appointment status!"
     );
   }
 };
