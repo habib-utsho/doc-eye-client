@@ -9,10 +9,16 @@ import DETable from "../../_components/DETable";
 import Image from "next/image";
 import moment from "moment";
 import { Input } from "@heroui/input";
-import { CheckIcon, SearchIcon, XMarkIcon } from "@/src/components/ui/icons";
+import {
+  CheckBadgeIcon,
+  CheckIcon,
+  SearchIcon,
+  XMarkIcon,
+} from "@/src/components/ui/icons";
 import { TAppointment } from "@/src/types/appointment";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { Button } from "@heroui/button";
+import { CheckCircleFilled, CheckCircleOutlined } from "@ant-design/icons";
 
 const AppointmentsPage = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
@@ -67,49 +73,62 @@ const AppointmentsPage = () => {
       // status: firstLetterCapital(appointment?.status),
       status: (
         <>
-          <div>
-            {appointment.status === "pending" ? (
-              "Pending"
-            ) : appointment.status === "confirmed" ? (
-              <div className="flex items-center gap-1">
-                <Button
-                  onPress={() =>
-                    handleAppointmentApproval(appointment, "canceled")
-                  }
-                  isIconOnly
-                  startContent={<XMarkIcon />}
-                  isLoading={isLoadingUpdateStatus}
-                  color="danger"
-                />
-                <Button
-                  onPress={() =>
-                    handleAppointmentApproval(appointment, "completed")
-                  }
-                  isIconOnly
-                  startContent={<CheckIcon />}
-                  isLoading={isLoadingUpdateStatus}
-                  color="success"
-                />
-              </div>
-            ) : (
+          {appointment.status === "completed" ? (
+            <Button
+              disabled
+              isIconOnly
+              startContent={<CheckBadgeIcon />}
+              isLoading={isLoadingUpdateStatus}
+              color="success"
+              className="text-white opacity-30 pointer-events-none"
+            />
+          ) : appointment.status === "pending" ? (
+            <div className="flex items-center gap-1">
               <Button
-                disabled
-                isIconOnly
-                startContent={
-                  appointment.status === "completed" ? (
-                    <CheckIcon />
-                  ) : (
-                    <XMarkIcon />
-                  )
+                onPress={() =>
+                  handleAppointmentApproval(appointment, "canceled")
                 }
+                isIconOnly
+                startContent={<XMarkIcon />}
                 isLoading={isLoadingUpdateStatus}
-                color={`${
-                  appointment.status === "completed" ? "success" : "danger"
-                }`}
-                className="opacity-30"
+                color="danger"
+                className="text-white"
               />
-            )}
-          </div>
+              <Button
+                onPress={() =>
+                  handleAppointmentApproval(appointment, "confirmed")
+                }
+                isIconOnly
+                startContent={<CheckIcon />}
+                isLoading={isLoadingUpdateStatus}
+                color="success"
+                className="text-white"
+              />
+            </div>
+          ) : (
+            <Button
+              disabled
+              isIconOnly
+              onPress={() =>
+                handleAppointmentApproval(appointment, "completed")
+              }
+              startContent={
+                appointment.status === "confirmed" ? (
+                  <CheckBadgeIcon />
+                ) : (
+                  <XMarkIcon />
+                )
+              }
+              isLoading={isLoadingUpdateStatus}
+              color={`${
+                appointment.status === "confirmed" ? "success" : "danger"
+              }`}
+              className={`text-white ${
+                appointment.status === "canceled" &&
+                "opacity-30 pointer-events-none"
+              }`}
+            />
+          )}
         </>
       ),
       createdAt: moment(appointment?.createdAt).format("DD-MMM-YYYY"),
@@ -130,17 +149,9 @@ const AppointmentsPage = () => {
 
   const handleAppointmentApproval = (
     appointment: TAppointment,
-    status: "completed" | "canceled"
+    status: "confirmed" | "canceled" | "completed"
   ) => {
-    console.log(status, "status");
-    updateAppointmentStatus(
-      { id: appointment?._id, status }
-      // {
-      //   onSuccess: (data) => {
-      //     refetchApppointments()
-      //   },
-      // }
-    );
+    updateAppointmentStatus({ id: appointment?._id, status });
   };
 
   return (

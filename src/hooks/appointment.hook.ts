@@ -15,7 +15,7 @@ export const useUpdateAppointmentStatusById = () => {
       status,
     }: {
       id: string;
-      status: "confirmed" | "canceled";
+      status: "confirmed" | "canceled" | "completed";
     }) => await updateAppointmentStatusById({ id, status }),
     async onSuccess(data) {
       if (data?.success) {

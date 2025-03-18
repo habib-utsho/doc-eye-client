@@ -91,7 +91,7 @@ const AppointmentsPage = () => {
               ? "danger"
               : "warning"
           }`}
-          className="opacity-30 pointer-events-none"
+          className="opacity-50 pointer-events-none text-white"
         >
           {firstLetterCapital(appointment.status)}
         </Button>
