@@ -43,7 +43,7 @@ export const updateAppointmentStatusById = async ({
   status,
 }: {
   id: string;
-  status: "completed" | "canceled";
+  status: "confirmed" | "canceled";
 }) => {
   try {
     const response = await axiosInstance.patch(

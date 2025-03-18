@@ -19,13 +19,15 @@ import {
 } from "@/src/components/ui/icons";
 import Image from "next/image";
 import NavbarProfileDropdown from "./NavbarProfileDropdown";
+import useUserData from "@/src/hooks/user.hook";
 
 export const DashboardNavbar = () => {
+
   return (
     <NextUINavbar
       maxWidth="full"
       position="sticky"
-      className="bg-gray-100 dark:bg-gray-700"
+      className="bg-[#f3f4f6] dark:bg-[#374151]"
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">

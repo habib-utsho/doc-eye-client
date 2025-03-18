@@ -14,6 +14,7 @@ import { TAppointment } from "@/src/types/appointment";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { Button } from "@heroui/button";
 import useUserData from "@/src/hooks/user.hook";
+import { CheckCircleFilled, CheckCircleOutlined } from "@ant-design/icons";
 
 const AppointmentsPage = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
@@ -21,7 +22,6 @@ const AppointmentsPage = () => {
   const debounceSearch = useDebounce(searchTerm, 500);
 
   const { isLoading: isLoadingUser, user } = useUserData();
-  console.log(user, "user");
 
   const { data: appointments, isLoading: isLoadingAppointments } =
     useGetAllAppointments([
@@ -67,15 +67,22 @@ const AppointmentsPage = () => {
       symptoms: appointment?.symptoms
         ? firstLetterCapital(appointment?.symptoms)
         : "N/A",
-      schedule: moment(appointment?.schedule).format("DD-MMM-YYYY hh:mm A"),
+      schedule: moment.utc(appointment?.schedule).format("DD-MMM-YYYY hh:mm A"),
       paymentStatus: firstLetterCapital(appointment?.payment?.status),
       // status: firstLetterCapital(appointment?.status),
       status: (
         <>
           <div>
-            {appointment.status === "pending" ? (
-              "Pending"
-            ) : appointment.status === "confirmed" ? (
+            {appointment.status === "completed" ? (
+              <Button
+                disabled
+                isIconOnly
+                startContent={<CheckCircleFilled />}
+                isLoading={isLoadingUpdateStatus}
+                color="success"
+                className="text-white opacity-30 pointer-events-none"
+              />
+            ) : appointment.status === "pending" ? (
               <div className="flex items-center gap-1">
                 <Button
                   onPress={() =>
@@ -85,15 +92,17 @@ const AppointmentsPage = () => {
                   startContent={<XMarkIcon />}
                   isLoading={isLoadingUpdateStatus}
                   color="danger"
+                  className="text-white"
                 />
                 <Button
                   onPress={() =>
-                    handleAppointmentApproval(appointment, "completed")
+                    handleAppointmentApproval(appointment, "confirmed")
                   }
                   isIconOnly
                   startContent={<CheckIcon />}
                   isLoading={isLoadingUpdateStatus}
                   color="success"
+                  className="text-white"
                 />
               </div>
             ) : (
@@ -101,17 +110,17 @@ const AppointmentsPage = () => {
                 disabled
                 isIconOnly
                 startContent={
-                  appointment.status === "completed" ? (
-                    <CheckIcon />
+                  appointment.status === "confirmed" ? (
+                    <CheckCircleOutlined />
                   ) : (
                     <XMarkIcon />
                   )
                 }
                 isLoading={isLoadingUpdateStatus}
                 color={`${
-                  appointment.status === "completed" ? "success" : "danger"
+                  appointment.status === "confirmed" ? "success" : "danger"
                 }`}
-                className="opacity-30"
+                className="text-white opacity-30 pointer-events-none"
               />
             )}
           </div>
@@ -135,17 +144,9 @@ const AppointmentsPage = () => {
 
   const handleAppointmentApproval = (
     appointment: TAppointment,
-    status: "completed" | "canceled"
+    status: "confirmed" | "canceled"
   ) => {
-    console.log(status, "status");
-    updateAppointmentStatus(
-      { id: appointment?._id, status }
-      // {
-      //   onSuccess: (data) => {
-      //     refetchApppointments()
-      //   },
-      // }
-    );
+    updateAppointmentStatus({ id: appointment?._id, status });
   };
 
   return (
@@ -165,7 +166,7 @@ const AppointmentsPage = () => {
 
       <DETable
         data={appointments}
-        isLoading={isLoadingAppointments}
+        isLoading={isLoadingAppointments || isLoadingUser}
         columns={columns}
         rows={rows}
         pagination={pagination}

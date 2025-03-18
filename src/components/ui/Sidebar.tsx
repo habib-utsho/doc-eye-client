@@ -24,6 +24,7 @@ import {
   MenuItem,
   SubMenu,
 } from "react-pro-sidebar";
+import { useTheme } from "next-themes";
 
 // Dashboard routes
 type TSidebarRoute = {
@@ -162,6 +163,9 @@ const Sidebar = () => {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   if (isLoading) return <SidebarLoading />;
 
   const routes =
@@ -186,6 +190,7 @@ const Sidebar = () => {
           component={<Link href={route.path || "#"} />}
           active={pathname === route.path}
           icon={route.icon}
+          className={`${isDark && "hover:text-black"} `}
         >
           {route.name}
         </MenuItem>
@@ -200,7 +205,7 @@ const Sidebar = () => {
       collapsedWidth="80px"
       rtl={false}
       toggled
-      backgroundColor="#f5f5f5"
+      backgroundColor={isDark ? `#374151` : `#f3f4f6`}
       breakPoint="md"
       transitionDuration={300}
       // rootStyles={{
@@ -239,14 +244,15 @@ const Sidebar = () => {
         {renderRoutes(routes)}
 
         {/* Sign Out Button */}
-        <MenuItem className="mt-auto">
+        <div className="text-center">
           <Button
             startContent={<SignOutIcon className="size-5" />}
-            className="text-red-500 w-full"
+            className="text-danger border border-danger w-[85%]"
+            isIconOnly={collapsed}
           >
-            Signout
+            {collapsed ? "" : "Signout"}
           </Button>
-        </MenuItem>
+        </div>
       </Menu>
     </ReactProSidebar>
   );
