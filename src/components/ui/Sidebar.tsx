@@ -43,8 +43,24 @@ const adminRoutes: TSidebarRoute[] = [
   },
   {
     name: "Manage Users",
-    path: "/dashboard/admin/manage-users",
     icon: <UserOutlined />,
+    children: [
+      {
+        name: "Doctor",
+        path: "/dashboard/admin/doctors",
+        icon: <UserOutlined />,
+      },
+      {
+        name: "Patient",
+        path: "/dashboard/admin/patients",
+        icon: <UserOutlined />,
+      },
+      {
+        name: "Admin",
+        path: "/dashboard/admin/admins",
+        icon: <UserOutlined />,
+      },
+    ],
   },
   {
     name: "Appointments",
@@ -58,7 +74,7 @@ const adminRoutes: TSidebarRoute[] = [
   },
   {
     name: "Payment History",
-    path: "/dashboard/payment-history",
+    path: "/dashboard/admin/payment-history",
     icon: <DollarOutlined />,
   },
   { name: "Profile", path: "/dashboard/admin/profile", icon: <UserOutlined /> },

@@ -100,7 +100,7 @@ const AppointmentsPage = () => {
                 startContent={<XMarkIcon />}
                 isLoading={isLoadingUpdateStatus}
                 color="danger"
-                className="text-white"
+                className="text-white cursor-pointer"
               />
               <Button
                 onPress={() =>
@@ -110,7 +110,7 @@ const AppointmentsPage = () => {
                 startContent={<CheckIcon />}
                 isLoading={isLoadingUpdateStatus}
                 color="success"
-                className="text-white"
+                className="text-white cursor-pointer"
               />
             </div>
           ) : (
@@ -132,8 +132,9 @@ const AppointmentsPage = () => {
                 appointment.status === "confirmed" ? "success" : "danger"
               }`}
               className={`text-white ${
-                appointment.status === "canceled" &&
-                "opacity-30 pointer-events-none"
+                appointment.status === "canceled"
+                  ? "opacity-30 pointer-events-none"
+                  : "cursor-pointer"
               }`}
             />
           )}
