@@ -4,6 +4,7 @@ import axiosInstance from "@/src/lib/axiosInstance";
 import { TFilterQuery } from "@/src/types";
 import { TCreateAppointment } from "@/src/types/appointment";
 import { revalidateTag } from "next/cache";
+import { cookies } from "next/headers";
 
 export const makePaymentInit = async (payload: TCreateAppointment) => {
   try {
@@ -25,7 +26,11 @@ export const makePaymentInit = async (payload: TCreateAppointment) => {
 };
 
 export const getAllPayment = async (query: TFilterQuery[] | undefined) => {
+  const accessToken = cookies().get("DEaccessToken")?.value;
   const fetchOption = {
+    headers: {
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    },
     next: {
       tags: ["payment"],
       revalidate: 60,
