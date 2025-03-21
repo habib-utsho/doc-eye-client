@@ -1,11 +1,8 @@
 "use client";
-import {
-  useGetAllAppointments,
-  useUpdateAppointmentStatusById,
-} from "@/src/hooks/appointment.hook";
+import { useGetAllAppointments } from "@/src/hooks/appointment.hook";
 import useDebounce from "@/src/hooks/useDebounce";
 import React, { useState } from "react";
-import DETable from "../../_components/DETable";
+import DETable from "../DETable";
 import Image from "next/image";
 import moment from "moment";
 import { Input } from "@heroui/input";
@@ -16,7 +13,11 @@ import { Button } from "@heroui/button";
 import useUserData from "@/src/hooks/user.hook";
 import { CheckCircleFilled, CheckCircleOutlined } from "@ant-design/icons";
 
-const AppointmentsPage = () => {
+const PatientAppointmentsPage = ({
+  state = "upcoming",
+}: {
+  state: "upcoming" | "expired";
+}) => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
@@ -29,9 +30,10 @@ const AppointmentsPage = () => {
       { name: "searchTerm", value: debounceSearch },
       { name: "page", value: pagination.page },
       { name: "limit", value: pagination.limit },
+      { name: "state", value: state },
     ]);
-  const { mutate: updateAppointmentStatus, isPending: isLoadingUpdateStatus } =
-    useUpdateAppointmentStatusById();
+
+  console.log(state, "state");
 
   const rows = appointments?.data?.map(
     (appointment: TAppointment, ind: number) => ({
@@ -81,7 +83,6 @@ const AppointmentsPage = () => {
               <XMarkIcon />
             ) : null
           }
-          isLoading={isLoadingUpdateStatus}
           color={`${
             appointment.status === "confirmed"
               ? "primary"
@@ -140,4 +141,4 @@ const AppointmentsPage = () => {
   );
 };
 
-export default AppointmentsPage;
+export default PatientAppointmentsPage;

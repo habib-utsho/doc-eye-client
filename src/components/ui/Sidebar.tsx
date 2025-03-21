@@ -127,8 +127,19 @@ const patientRoutes: TSidebarRoute[] = [
   },
   {
     name: "Appointments",
-    path: "/dashboard/patient/appointments",
     icon: <HistoryOutlined />,
+    children: [
+      {
+        name: "Upcoming Appointments",
+        path: "/dashboard/patient/upcoming-appointments",
+        icon: <HistoryOutlined />,
+      },
+      {
+        name: "Expired Appointments",
+        path: "/dashboard/patient/expired-appointments",
+        icon: <HistoryOutlined />,
+      },
+    ],
   },
   {
     name: "Consultation History",
