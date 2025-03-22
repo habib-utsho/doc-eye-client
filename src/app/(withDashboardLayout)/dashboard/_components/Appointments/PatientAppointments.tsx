@@ -33,8 +33,6 @@ const PatientAppointmentsPage = ({
       { name: "state", value: state },
     ]);
 
-  console.log(state, "state");
-
   const rows = appointments?.data?.map(
     (appointment: TAppointment, ind: number) => ({
       _id: appointment?._id,

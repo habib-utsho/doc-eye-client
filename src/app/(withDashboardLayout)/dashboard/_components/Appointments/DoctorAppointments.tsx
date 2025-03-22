@@ -19,13 +19,12 @@ import { TAppointment } from "@/src/types/appointment";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { Button } from "@heroui/button";
 import useUserData from "@/src/hooks/user.hook";
-import {
-  CheckCircleFilled,
-  CheckCircleOutlined,
-  CheckOutlined,
-} from "@ant-design/icons";
 
-const AppointmentsPage = () => {
+const DoctorAppointmentsPage = ({
+  state = "upcoming",
+}: {
+  state: "upcoming" | "expired";
+}) => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
@@ -38,6 +37,7 @@ const AppointmentsPage = () => {
       { name: "searchTerm", value: debounceSearch },
       { name: "page", value: pagination.page },
       { name: "limit", value: pagination.limit },
+      { name: "state", value: state },
     ]);
   const { mutate: updateAppointmentStatus, isPending: isLoadingUpdateStatus } =
     useUpdateAppointmentStatusById();
@@ -191,4 +191,4 @@ const AppointmentsPage = () => {
   );
 };
 
-export default AppointmentsPage;
+export default DoctorAppointmentsPage;

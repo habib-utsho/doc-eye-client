@@ -6,16 +6,32 @@ import moment from "moment";
 import { Input } from "@heroui/input";
 import { SearchIcon, XMarkIcon } from "@/src/components/ui/icons";
 import { Button } from "@heroui/button";
-import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
+import {
+  CheckCircleOutlined,
+  EyeOutlined,
+  WarningOutlined,
+} from "@ant-design/icons";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { TPayment } from "@/src/types/payment";
 import { useGetAllPayment } from "@/src/hooks/payment.hook";
 import DETable from "./DETable";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  useDisclosure,
+} from "@heroui/modal";
+import { TAppointment } from "@/src/types/appointment";
 
 const PaymentHistory = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<TAppointment | null>(null);
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const { data: payments, isLoading: isLoadingPayments } = useGetAllPayment([
     { name: "searchTerm", value: debounceSearch },
@@ -78,6 +94,16 @@ const PaymentHistory = () => {
         {firstLetterCapital(payment.status)}
       </Button>
     ),
+    appointment: (
+      <Button
+        onPress={() => {
+          setSelectedAppointment(payment.appointment);
+          onOpen();
+        }}
+        isIconOnly
+        startContent={<EyeOutlined />}
+      />
+    ),
     createdAt: moment(payment?.createdAt).format("DD-MMM-YYYY"),
   }));
 
@@ -88,6 +114,7 @@ const PaymentHistory = () => {
     { key: "amount", label: "Amount" },
     { key: "paymentMethod", label: "Method" },
     { key: "status", label: "Status" },
+    { key: "appointment", label: "Appointment" },
     { key: "createdAt", label: "Date" },
   ];
 
@@ -115,6 +142,45 @@ const PaymentHistory = () => {
         setPagination={setPagination}
         notFoundMessage="No payments found"
       />
+
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="md">
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">
+            Appointment Details
+          </ModalHeader>
+          <ModalBody>
+            {selectedAppointment ? (
+              <div className="border rounded-lg p-6 space-y-4 bg-gray-50 dark:bg-gray-800 shadow-md">
+                <div className="flex flex-col gap-2">
+                  <div className="text-lg font-semibold">
+                    {firstLetterCapital(selectedAppointment?.appointmentType)}
+                  </div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">
+                    Scheduled on{" "}
+                    {moment
+                      .utc(selectedAppointment?.schedule)
+                      .format("DD-MMM-YYYY hh:mm A")}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between bg-white dark:bg-black p-4 rounded-md shadow-sm">
+                  <strong>Status:</strong>
+                  <span className="text-primary">
+                    {firstLetterCapital(selectedAppointment?.status)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between p-4 bg-white dark:bg-black rounded-md shadow-sm">
+                  <strong>Symptoms:</strong>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    {selectedAppointment?.symptoms || "N/A"}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <p>No appointment details available.</p>
+            )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
