@@ -180,6 +180,7 @@ const PaymentHistory = () => {
             )}
           </ModalBody>
         </ModalContent>
+      
       </Modal>
     </div>
   );
