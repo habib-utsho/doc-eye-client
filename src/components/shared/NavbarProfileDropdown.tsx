@@ -9,32 +9,16 @@ import {
   DropdownTrigger,
 } from "@heroui/dropdown";
 import React from "react";
-import { HeartFilledIcon } from "../ui/icons";
 import { Link } from "@heroui/link";
-import { signOut } from "@/src/services/auth";
 import useUserData from "@/src/hooks/user.hook";
 import { Skeleton } from "@heroui/skeleton";
-import { protectedRoutes } from "@/src/constant";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useSignOut } from "@/src/hooks/useSignOut.hook";
 
 const NavbarProfileDropdown = () => {
-  const { isLoading, user, setUser } = useUserData();
+  const { isLoading, user } = useUserData();
   const router = useRouter();
-  const pathname = usePathname();
-
-  const handleSignOut = async () => {
-    signOut();
-    setUser(null);
-
-    const isMatchProtectedRoute = protectedRoutes?.some((route) => {
-      const partial = route?.split("/")?.[1];
-      return pathname.match(partial);
-    });
-
-    if (isMatchProtectedRoute) {
-      router.push(`/signin?redirect=${pathname}`);
-    }
-  };
+  const { handleSignOut } = useSignOut();
 
   return (
     <>

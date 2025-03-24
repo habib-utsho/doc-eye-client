@@ -1,10 +1,8 @@
 "use client";
-import useDebounce from "@/src/hooks/useDebounce";
 import React, { useState } from "react";
 import Image from "next/image";
 import moment from "moment";
-import { Input } from "@heroui/input";
-import { SearchIcon, XMarkIcon } from "@/src/components/ui/icons";
+import { XMarkIcon } from "@/src/components/ui/icons";
 import { Button } from "@heroui/button";
 import {
   CheckCircleOutlined,
@@ -26,15 +24,12 @@ import { TAppointment } from "@/src/types/appointment";
 
 const PaymentHistory = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
-  const [searchTerm, setSearchTerm] = useState("");
-  const debounceSearch = useDebounce(searchTerm, 500);
   const [selectedAppointment, setSelectedAppointment] =
     useState<TAppointment | null>(null);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const { data: payments, isLoading: isLoadingPayments } = useGetAllPayment([
-    { name: "searchTerm", value: debounceSearch },
     { name: "page", value: pagination.page },
     { name: "limit", value: pagination.limit },
   ]);
@@ -120,19 +115,6 @@ const PaymentHistory = () => {
 
   return (
     <div className="w-full p-4">
-      <div className="flex justify-between items-center mb-4 xl:mb-6 gap-4">
-        <div className="flex items-center gap-2">
-          <Input
-            name="search"
-            startContent={<SearchIcon />}
-            placeholder="Search payments..."
-            onChange={(e) => setSearchTerm(e.target.value)}
-            isClearable
-            onClear={() => setSearchTerm("")}
-          />
-        </div>
-      </div>
-
       <DETable
         data={payments}
         isLoading={isLoadingPayments}
@@ -180,7 +162,6 @@ const PaymentHistory = () => {
             )}
           </ModalBody>
         </ModalContent>
-      
       </Modal>
     </div>
   );

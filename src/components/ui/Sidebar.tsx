@@ -25,6 +25,9 @@ import {
   SubMenu,
 } from "react-pro-sidebar";
 import { useTheme } from "next-themes";
+import { signOut } from "@/src/services/auth";
+import { protectedRoutes } from "@/src/constant";
+import { useSignOut } from "@/src/hooks/useSignOut.hook";
 
 // Dashboard routes
 type TSidebarRoute = {
@@ -200,6 +203,7 @@ const Sidebar = () => {
   const { isLoading, user } = useUserData();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const { handleSignOut } = useSignOut();
 
   const { theme } = useTheme();
   const isDark = theme === "dark";
@@ -287,6 +291,7 @@ const Sidebar = () => {
             startContent={<SignOutIcon className="size-5" />}
             className="text-danger border border-danger w-[85%]"
             isIconOnly={collapsed}
+            onPress={handleSignOut}
           >
             {collapsed ? "" : "Signout"}
           </Button>
