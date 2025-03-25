@@ -19,6 +19,7 @@ import PatientDetailsModal from "../../admin/patients/_components/modal/PatientD
 import useUserData from "@/src/hooks/user.hook";
 import { useGetAllAppointments } from "@/src/hooks/appointment.hook";
 import { TAppointment } from "@/src/types/appointment";
+import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 
 const ManagePatientsPage = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
@@ -74,6 +75,24 @@ const ManagePatientsPage = () => {
           </div>
         </div>
       ),
+      appointment: <div>
+        {appointment.symptoms}
+        {moment(appointment?.schedule).format("DD MMM YYYY")}
+        <br />
+        <span className="font-semibold">
+
+          {firstLetterCapital(appointment.appointmentType)}
+        </span>
+        <div>
+          <span className="font-semibold">
+            {appointment.payment.amount} BDT
+          </span> | {" "}
+          <span className="font-semibold">
+            {appointment.payment.paymentMethod}
+          </span>
+        </div>
+      </div>,
+
       actions: (
         <div className="flex items-center gap-1">
           <PatientDetailsModal patient={appointment.patient} />
@@ -85,10 +104,10 @@ const ManagePatientsPage = () => {
   const columns = [
     { key: "sl", label: "SL" },
     { key: "userInfo", label: "Patient" },
-    { key: "dateOfBirth", label: "Date of Birth" },
-    { key: "status", label: "Status" },
+    { key: "appointment", label: "Appointment" },
     { key: "actions", label: "Actions" },
   ];
+  console.log(appointments);
 
   return (
     <div className="p-4">
