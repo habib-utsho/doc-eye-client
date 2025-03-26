@@ -76,6 +76,7 @@ const ManagePatientsPage = () => {
         </div>
       ),
 
+
       
       appointment: <div>
         {appointment.symptoms}
