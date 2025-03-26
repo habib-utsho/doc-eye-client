@@ -75,6 +75,8 @@ const ManagePatientsPage = () => {
           </div>
         </div>
       ),
+
+      
       appointment: <div>
         {appointment.symptoms}
         {moment(appointment?.schedule).format("DD MMM YYYY")}
