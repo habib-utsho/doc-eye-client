@@ -3,7 +3,12 @@ import { TDoctor, TPatient } from "./user";
 
 export type TPayment = {
   _id: string;
-  amount: number;
+  amount: {  
+    consultationFee: number,
+    vat: number,
+    platformFee: number,
+    total: number,
+  };
   appointment: TAppointment;
   doctor: TDoctor;
   patient: TPatient;

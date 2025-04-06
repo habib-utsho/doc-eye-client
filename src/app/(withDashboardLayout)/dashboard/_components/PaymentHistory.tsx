@@ -63,7 +63,7 @@ const PaymentHistory = () => {
         <div>{payment?.patient?.name}</div>
       </div>
     ),
-    amount: `${payment?.amount.toFixed(2)} BDT`,
+    amount: `${payment?.amount.total?.toFixed(2)} BDT`,
     paymentMethod: payment?.paymentMethod,
     status: (
       <Button
@@ -81,8 +81,8 @@ const PaymentHistory = () => {
           payment.status === "confirmed"
             ? "success"
             : payment.status === "canceled"
-            ? "danger"
-            : "warning"
+              ? "danger"
+              : "warning"
         }
         className="opacity-50 pointer-events-none text-white"
       >

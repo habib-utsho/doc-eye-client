@@ -19,7 +19,12 @@ export type TCreateAppointment = {
   doctor: string;
   patient: string;
   schedule: string;
-  amount: number;
+  amount: {  
+    consultationFee: number,
+    vat: number,
+    platformFee: number,
+    total: number,
+  };
   paymentMethod: "bKash" | "SSLCOMMERZ";
   appointmentType: "in-person" | "online";
   symptoms?: string;

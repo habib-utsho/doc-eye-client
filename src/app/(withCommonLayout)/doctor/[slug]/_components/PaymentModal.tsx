@@ -17,7 +17,12 @@ import { toast } from "sonner";
 
 type TPaymentModalProps = {
   paymentType: "bKash" | "SSLCOMMERZ";
-  amount: number;
+  amount:  {
+    consultationFee: number
+    vat: number
+    platformFee: number
+    total: number
+  };
   isDisabled?: boolean;
   activeDate: string | null;
   activeTime: string | null;
@@ -152,7 +157,7 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
                   isLoading={isLoadingInitPayment}
                   className="text-white"
                 >
-                  Pay {amount} BDT
+                  Pay {amount.total} BDT
                 </Button>
               </ModalFooter>
             </>

@@ -179,7 +179,7 @@ const DoctorCheckout = () => {
 
               <PaymentModal
                 paymentType={activePaymentMethod}
-                amount={totalAmount}
+                amount={{consultationFee: doctor?.consultationFee, vat: vat5Percent, total:totalAmount, platformFee: Number(process.env.NEXT_PUBLIC_PER_CONSULTATION_SERVICE_FEE!!)}}
                 isDisabled={!activeDate || !activeTime || !user}
                 doctor={doctor}
                 activeDate={activeDate}
