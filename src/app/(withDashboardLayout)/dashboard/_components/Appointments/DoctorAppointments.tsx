@@ -19,6 +19,7 @@ import { TAppointment } from "@/src/types/appointment";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { Button } from "@heroui/button";
 import useUserData from "@/src/hooks/user.hook";
+import { toast } from "sonner";
 
 const DoctorAppointmentsPage = ({
   state = "upcoming",
@@ -115,7 +116,7 @@ const DoctorAppointmentsPage = ({
             </div>
           ) : (
             <Button
-              disabled
+              disabled={appointment.status === "canceled"}
               isIconOnly
               onPress={() =>
                 handleAppointmentApproval(appointment, "completed")
@@ -160,6 +161,12 @@ const DoctorAppointmentsPage = ({
     appointment: TAppointment,
     status: "confirmed" | "canceled" | "completed"
   ) => {
+    if (appointment.status === "confirmed" && status === "completed") {
+      toast.error(
+        "You need to make the appointment completed from the appointment history page."
+      );
+      return 
+    };
     updateAppointmentStatus({ id: appointment?._id, status });
   };
 

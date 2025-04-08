@@ -14,7 +14,7 @@ import { Button } from "@heroui/button";
 import bKashLogo from "@/src/assets/img/payment/bkash_logo.png";
 import sslcommerzLogo from "@/src/assets/img/payment/sslcommerz_logo.png";
 import { Radio, RadioGroup } from "@heroui/radio";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
 import { useGetDoctorByDoctorCode } from "@/src/hooks/doctor.hook";
 import useUserData from "@/src/hooks/user.hook";
 import Loading from "@/src/components/ui/Loading";
@@ -24,6 +24,7 @@ import PaymentModal from "../_components/PaymentModal";
 import { useInitPayment } from "@/src/hooks/payment.hook";
 import { TAppointmentType } from "@/src/types/appointment";
 import { useGetAllAppointments } from "@/src/hooks/appointment.hook";
+import Link from "next/link";
 
 const DoctorCheckout = () => {
   const params = useParams() as { slug: string };
@@ -33,6 +34,9 @@ const DoctorCheckout = () => {
     useGetDoctorByDoctorCode(params?.slug);
   const doctor = doctorRes?.data as TDoctor;
   const { isLoading: isUserLoading, user } = useUserData();
+  const pathname = usePathname();
+
+
 
   const [activePaymentMethod, setActivePaymentMethod] = useState<
     "bKash" | "SSLCOMMERZ"
@@ -177,7 +181,8 @@ const DoctorCheckout = () => {
                 <p className="text-md">৳{totalAmount}</p>
               </div>
 
-              <PaymentModal
+           {!user? <Link href={`/signin?redirect=${pathname}`} className="w-full">
+            <Button  color="primary" className="w-full">Signin</Button> </Link>:   <PaymentModal
                 paymentType={activePaymentMethod}
                 amount={{consultationFee: doctor?.consultationFee, vat: vat5Percent, total:totalAmount, platformFee: Number(process.env.NEXT_PUBLIC_PER_CONSULTATION_SERVICE_FEE!!)}}
                 isDisabled={!activeDate || !activeTime || !user}
@@ -186,7 +191,7 @@ const DoctorCheckout = () => {
                 activeTime={activeTime}
                 user={user}
                 refetchAppointments={refetchAppointments}
-              />
+              />}
             </div>
           </div>
         </div>
