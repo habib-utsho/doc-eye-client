@@ -20,12 +20,19 @@ import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { Button } from "@heroui/button";
 import useUserData from "@/src/hooks/user.hook";
 import { toast } from "sonner";
+import { modal } from "@heroui/theme";
+import { Modal, ModalContent, useDisclosure } from "@heroui/modal";
+import DEForm from "@/src/components/ui/Form/DEForm";
+import { medicalReportValidationSchema } from "@/src/schemas/medicalReport.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import MyInp from "@/src/components/ui/Form/MyInp";
 
 const DoctorAppointmentsPage = ({
   state = "upcoming",
 }: {
   state: "upcoming" | "expired";
 }) => {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
@@ -162,11 +169,12 @@ const DoctorAppointmentsPage = ({
     status: "confirmed" | "canceled" | "completed"
   ) => {
     if (appointment.status === "confirmed" && status === "completed") {
+      onOpen();
       toast.error(
         "You need to make the appointment completed from the appointment history page."
       );
-      return 
-    };
+      return;
+    }
     updateAppointmentStatus({ id: appointment?._id, status });
   };
 
@@ -194,6 +202,67 @@ const DoctorAppointmentsPage = ({
         setPagination={setPagination}
         notFoundMessage="No Appointments found"
       />
+
+      {/* Complete appointment modal */}
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        size="lg"
+        className="!max-w-2xl"
+        backdrop="opaque"
+        classNames={{
+          backdrop:
+            "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
+        }}
+        motionProps={{
+          variants: {
+            enter: {
+              y: 0,
+              opacity: 1,
+              transition: {
+                duration: 0.3,
+                ease: "easeOut",
+              },
+            },
+            exit: {
+              y: -20,
+              opacity: 0,
+              transition: {
+                duration: 0.2,
+                ease: "easeIn",
+              },
+            },
+          },
+        }}
+      >
+        <ModalContent className="py-12 px-8">
+          <DEForm
+            onSubmit={(data) => {
+              console.log(data);
+            }}
+            resolver={zodResolver(
+              medicalReportValidationSchema.createMedicalReportZodSchema
+            )}
+          >
+            <MyInp
+              name="diagnosis"
+              type="text"
+              label="Diagnosis"
+              placeholder="Enter diagnosis"
+            />
+
+            <Button
+              // isLoading={}
+              type="submit"
+              color="primary"
+              className="text-white mt-3 w-full"
+              variant="shadow"
+            >
+              Signup
+            </Button>
+          </DEForm>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

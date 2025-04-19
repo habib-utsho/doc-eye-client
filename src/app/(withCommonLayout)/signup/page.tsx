@@ -415,13 +415,13 @@ const SignupPage = () => {
       dateOfBirth: new Date(payload?.dateOfBirth),
     };
 
-    console.log(
-      {
-        ...updatedValues,
-        profileImg: selectedFile,
-      },
-      "updatedValues, experiences"
-    );
+    // console.log(
+    //   {
+    //     ...updatedValues,
+    //     profileImg: selectedFile,
+    //   },
+    //   "updatedValues, experiences"
+    // );
 
     // return;
     formData.append("file", selectedFile as Blob);

@@ -76,25 +76,25 @@ const ManagePatientsPage = () => {
         </div>
       ),
 
-
-      
-      appointment: <div>
-        {appointment.symptoms}
-        {moment(appointment?.schedule).format("DD MMM YYYY")}
-        <br />
-        <span className="font-semibold">
-
-          {firstLetterCapital(appointment.appointmentType)}
-        </span>
+      appointment: (
         <div>
+          {appointment.symptoms}
+          {moment(appointment?.schedule).format("DD MMM YYYY")}
+          <br />
           <span className="font-semibold">
-            {appointment.payment.amount} BDT
-          </span> | {" "}
-          <span className="font-semibold">
-            {appointment.payment.paymentMethod}
+            {firstLetterCapital(appointment.appointmentType)}
           </span>
+          <div>
+            <span className="font-semibold">
+              {appointment.payment.amount?.consultationFee} BDT
+            </span>{" "}
+            |{" "}
+            <span className="font-semibold">
+              {appointment.payment.paymentMethod}
+            </span>
+          </div>
         </div>
-      </div>,
+      ),
 
       actions: (
         <div className="flex items-center gap-1">

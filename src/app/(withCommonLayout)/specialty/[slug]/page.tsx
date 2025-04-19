@@ -9,12 +9,12 @@ import DoctorCard from "../_components/DoctorCard";
 import { TDoctor } from "@/src/types/user";
 
 const SpecialtyPage = async ({ params }: { params: { slug: string } }) => {
-  console.log(params.slug, "slug");
+  // console.log(params.slug, "slug");
   const doctors = await getAllDoctors([
     // { name: "specialty", value: params.slug },
   ]);
 
-  console.log(doctors, "doctors");
+  // console.log(doctors, "doctors");
 
   return (
     <div className="py-8">
