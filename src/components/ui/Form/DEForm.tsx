@@ -8,6 +8,7 @@ type TFormConfig = {
   resolver?: any;
 };
 type DEFormProps = {
+  className?: string;
   children: ReactNode;
   onSubmit: SubmitHandler<any>;
 } & TFormConfig;
@@ -17,6 +18,8 @@ const DEForm = ({
   onSubmit,
   defaultValues,
   resolver,
+  className,
+  ...rest
 }: DEFormProps) => {
   const formConfig: TFormConfig = {};
   if (!!defaultValues) {
@@ -40,7 +43,11 @@ const DEForm = ({
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className={`w-full ${className}`}
+        {...rest}
+      >
         {children}
       </form>
     </FormProvider>

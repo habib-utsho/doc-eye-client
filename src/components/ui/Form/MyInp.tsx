@@ -1,14 +1,21 @@
 "use client";
 import { Input, Textarea } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { EyeFilledIcon, EyeSlashFilledIcon } from "../icons";
+import {
+  EyeFilledIcon,
+  EyeSlashFilledIcon,
+  PlusIcon,
+  XMarkIcon,
+} from "../icons";
+import { Badge } from "@heroui/badge";
 
 type TMyInp = {
   name: string;
   type:
     | "text"
+    | "array"
     | "file"
     | "number"
     | "password"
@@ -59,7 +66,8 @@ const MyInp = ({
     formState: { errors },
   } = useFormContext();
 
-  const [isVisible, setIsVisible] = React.useState(false);
+  const [isVisible, setIsVisible] = useState<Boolean>(false);
+  const [arr, setArr] = useState<string[]>([]);
 
   if (type === "file") {
     return (
@@ -78,6 +86,22 @@ const MyInp = ({
       />
     );
   }
+
+  // Arr functions
+  const handleAddArrFunc = () => {
+    const inputValue = (document.getElementById(name) as HTMLInputElement)
+      ?.value;
+    console.log(name, inputValue, "inputValue");
+    if (inputValue && !arr.includes(inputValue)) {
+      setArr((prev) => [...prev, inputValue]);
+      (document.getElementById(name) as HTMLInputElement).value = "";
+    }
+  };
+  const handleRemoveArrFunc = (item: string) => {
+    setArr((prev) => prev.filter((i) => i !== item));
+  };
+
+  console.log(arr, "arr");
 
   return (
     <Controller
@@ -110,6 +134,51 @@ const MyInp = ({
               errorMessage={errors[name]?.message as string}
               className={className}
             />
+          );
+        }
+
+        if (type === "array") {
+          return (
+            <div className="shadow p-4 rounded-md">
+              <div className="relative ">
+                <Input
+                  {...field}
+                  onChange={handleChange}
+                  size={size}
+                  radius={radius}
+                  color={color}
+                  label={label}
+                  id={name}
+                  placeholder={placeholder}
+                  isInvalid={!!errors[name]}
+                  disabled={disabled}
+                  errorMessage={errors[name]?.message as string}
+                  className={className}
+                />
+                <PlusIcon
+                  onClick={() => handleAddArrFunc()}
+                  className={`cursor-pointer text-primary text-[12px] absolute right-1 top-1/2 ${
+                    !!errors[name] ? "-translate-y-[24px]" : "-translate-y-1/2"
+                  } translate`}
+                />
+              </div>
+
+              {/* Arr items */}
+              <div className="flex flex-wrap gap-4 mt-3">
+                {arr.map((item) => (
+                  <div key={item} className="relative">
+                    <span className="text-primary bg-primary bg-opacity-20 pl-2 pr-6 rounded-r-md">
+                      {item}
+                    </span>
+                    <XMarkIcon
+                      onClick={() => handleRemoveArrFunc(item)}
+                      className="text-danger text-[10px] cursor-pointer absolute top-0 right-0 translate-x-[8px] -translate-y-[8px] bg-danger bg-opacity-20 rounded-md p-[2px]"
+                      aria-label="remove item"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           );
         }
 

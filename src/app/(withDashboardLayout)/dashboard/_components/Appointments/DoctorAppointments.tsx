@@ -243,13 +243,42 @@ const DoctorAppointmentsPage = ({
             resolver={zodResolver(
               medicalReportValidationSchema.createMedicalReportZodSchema
             )}
+            className="space-y-4"
           >
+            <h2 className="font-semibold text-xl mb-4 text-center text-primary">
+              Record Medical Report
+            </h2>
             <MyInp
               name="diagnosis"
               type="text"
               label="Diagnosis"
               placeholder="Enter diagnosis"
             />
+            <MyInp
+              name="problems"
+              type="array"
+              label="Problems"
+              placeholder="Enter problems"
+            />
+            <MyInp
+              name="medications"
+              type="array"
+              label="Medications"
+              placeholder="Enter medications"
+            />
+            <MyInp
+              name="advices"
+              type="array"
+              label="Advices"
+              placeholder="Enter advices"
+            />
+            <MyInp
+              name="tests"
+              type="array"
+              label="Tests"
+              placeholder="Enter tests"
+            />
+            <MyInp name="followUpDate" type="date" label="Follow Up Date" />
 
             <Button
               // isLoading={}
@@ -258,7 +287,7 @@ const DoctorAppointmentsPage = ({
               className="text-white mt-3 w-full"
               variant="shadow"
             >
-              Signup
+              Submit
             </Button>
           </DEForm>
         </ModalContent>
