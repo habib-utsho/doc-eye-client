@@ -19,10 +19,7 @@ import { useGetDoctorByDoctorCode } from "@/src/hooks/doctor.hook";
 import useUserData from "@/src/hooks/user.hook";
 import Loading from "@/src/components/ui/Loading";
 import { TDoctor } from "@/src/types/user";
-import { toast } from "sonner";
 import PaymentModal from "../_components/PaymentModal";
-import { useInitPayment } from "@/src/hooks/payment.hook";
-import { TAppointmentType } from "@/src/types/appointment";
 import { useGetAllAppointments } from "@/src/hooks/appointment.hook";
 import Link from "next/link";
 
@@ -35,8 +32,6 @@ const DoctorCheckout = () => {
   const doctor = doctorRes?.data as TDoctor;
   const { isLoading: isUserLoading, user } = useUserData();
   const pathname = usePathname();
-
-
 
   const [activePaymentMethod, setActivePaymentMethod] = useState<
     "bKash" | "SSLCOMMERZ"
@@ -75,7 +70,11 @@ const DoctorCheckout = () => {
     Number(process.env.NEXT_PUBLIC_PER_CONSULTATION_SERVICE_FEE!!);
 
   return (
-    <div className="py-8 space-y-4 md:space-y-8 bg-slate-50 dark:bg-gray-900">
+    <div
+      className={`py-8 space-y-4 md:space-y-8 bg-slate-50 dark:bg-gray-900 ${
+        user?.role != "patient" ? "pointer-events-none opacity-50" : ""
+      }`}
+    >
       <Container className="grid grid-cols-12 gap-6">
         <div className="col-span-12 md:col-span-7 space-y-4">
           {/* Patient selection */}
@@ -146,7 +145,9 @@ const DoctorCheckout = () => {
               <RadioGroup
                 className="pb-4"
                 defaultValue={activePaymentMethod}
-                onValueChange={(e) => setActivePaymentMethod(e)}
+                onValueChange={(e) =>
+                  setActivePaymentMethod(e as "bKash" | "SSLCOMMERZ")
+                }
               >
                 <Radio value="bKash" className="max-w-full payment-radio mb-2">
                   {" "}
@@ -181,17 +182,31 @@ const DoctorCheckout = () => {
                 <p className="text-md">৳{totalAmount}</p>
               </div>
 
-           {!user? <Link href={`/signin?redirect=${pathname}`} className="w-full">
-            <Button  color="primary" className="w-full">Signin</Button> </Link>:   <PaymentModal
-                paymentType={activePaymentMethod}
-                amount={{consultationFee: doctor?.consultationFee, vat: vat5Percent, total:totalAmount, platformFee: Number(process.env.NEXT_PUBLIC_PER_CONSULTATION_SERVICE_FEE!!)}}
-                isDisabled={!activeDate || !activeTime || !user}
-                doctor={doctor}
-                activeDate={activeDate}
-                activeTime={activeTime}
-                user={user}
-                refetchAppointments={refetchAppointments}
-              />}
+              {!user ? (
+                <Link href={`/signin?redirect=${pathname}`} className="w-full">
+                  <Button color="primary" className="w-full">
+                    Signin
+                  </Button>{" "}
+                </Link>
+              ) : (
+                <PaymentModal
+                  paymentType={activePaymentMethod}
+                  amount={{
+                    consultationFee: doctor?.consultationFee,
+                    vat: vat5Percent,
+                    total: totalAmount,
+                    platformFee: Number(
+                      process.env.NEXT_PUBLIC_PER_CONSULTATION_SERVICE_FEE!!
+                    ),
+                  }}
+                  isDisabled={!activeDate || !activeTime || !user}
+                  doctor={doctor}
+                  activeDate={activeDate}
+                  activeTime={activeTime}
+                  user={user}
+                  refetchAppointments={refetchAppointments}
+                />
+              )}
             </div>
           </div>
         </div>

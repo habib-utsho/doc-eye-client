@@ -20,22 +20,19 @@ import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { Button } from "@heroui/button";
 import useUserData from "@/src/hooks/user.hook";
 import { toast } from "sonner";
-import { modal } from "@heroui/theme";
-import { Modal, ModalContent, useDisclosure } from "@heroui/modal";
-import DEForm from "@/src/components/ui/Form/DEForm";
-import { medicalReportValidationSchema } from "@/src/schemas/medicalReport.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import MyInp from "@/src/components/ui/Form/MyInp";
+
+import CompleteAppointmentsModal from "./CompleteAppointmentsModal";
+import { useDisclosure } from "@heroui/modal";
 
 const DoctorAppointmentsPage = ({
   state = "upcoming",
 }: {
   state: "upcoming" | "expired";
 }) => {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const { isLoading: isLoadingUser, user } = useUserData();
 
@@ -204,7 +201,7 @@ const DoctorAppointmentsPage = ({
       />
 
       {/* Complete appointment modal */}
-      <Modal
+      {/* <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         size="lg"
@@ -235,7 +232,7 @@ const DoctorAppointmentsPage = ({
           },
         }}
       >
-        <ModalContent className="py-12 px-8">
+        <ModalContent className="py-12 px-8 overflow-auto h-[70%]">
           <DEForm
             onSubmit={(data) => {
               console.log(data);
@@ -252,31 +249,31 @@ const DoctorAppointmentsPage = ({
               name="diagnosis"
               type="text"
               label="Diagnosis"
-              placeholder="Enter diagnosis"
+              placeholder="Enter diagnosis and enter"
             />
             <MyInp
               name="problems"
               type="array"
               label="Problems"
-              placeholder="Enter problems"
+              placeholder="Enter problems and enter"
             />
             <MyInp
               name="medications"
               type="array"
               label="Medications"
-              placeholder="Enter medications"
+              placeholder="Enter medications and enter"
             />
             <MyInp
               name="advices"
               type="array"
               label="Advices"
-              placeholder="Enter advices"
+              placeholder="Enter advices and enter"
             />
             <MyInp
               name="tests"
               type="array"
               label="Tests"
-              placeholder="Enter tests"
+              placeholder="Enter tests and enter"
             />
             <MyInp name="followUpDate" type="date" label="Follow Up Date" />
 
@@ -291,7 +288,12 @@ const DoctorAppointmentsPage = ({
             </Button>
           </DEForm>
         </ModalContent>
-      </Modal>
+      </Modal> */}
+      <CompleteAppointmentsModal
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onOpenChange={onOpenChange}
+      />
     </div>
   );
 };

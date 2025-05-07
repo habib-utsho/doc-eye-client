@@ -1,7 +1,7 @@
 "use client";
 import { Input, Textarea } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
-import React, { ReactNode, useState } from "react";
+import React, { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import {
   EyeFilledIcon,
@@ -9,7 +9,6 @@ import {
   PlusIcon,
   XMarkIcon,
 } from "../icons";
-import { Badge } from "@heroui/badge";
 
 type TMyInp = {
   name: string;
@@ -44,6 +43,8 @@ type TMyInp = {
   options?: { key: string; label: string }[];
   className?: string;
   selectionMode?: "single" | "multiple";
+  arr?: any[];
+  setArr?: Dispatch<SetStateAction<any[]>>;
 };
 
 const MyInp = ({
@@ -60,6 +61,8 @@ const MyInp = ({
   options = [],
   className,
   selectionMode = "single",
+  arr,
+  setArr,
 }: TMyInp) => {
   const {
     control,
@@ -67,7 +70,6 @@ const MyInp = ({
   } = useFormContext();
 
   const [isVisible, setIsVisible] = useState<Boolean>(false);
-  const [arr, setArr] = useState<string[]>([]);
 
   if (type === "file") {
     return (
@@ -87,22 +89,6 @@ const MyInp = ({
     );
   }
 
-  // Arr functions
-  const handleAddArrFunc = () => {
-    const inputValue = (document.getElementById(name) as HTMLInputElement)
-      ?.value;
-    console.log(name, inputValue, "inputValue");
-    if (inputValue && !arr.includes(inputValue)) {
-      setArr((prev) => [...prev, inputValue]);
-      (document.getElementById(name) as HTMLInputElement).value = "";
-    }
-  };
-  const handleRemoveArrFunc = (item: string) => {
-    setArr((prev) => prev.filter((i) => i !== item));
-  };
-
-  console.log(arr, "arr");
-
   return (
     <Controller
       name={name}
@@ -114,28 +100,23 @@ const MyInp = ({
           if (onChange) onChange(e);
 
           if (type === "select" && selectionMode === "multiple") {
-            console.log(e?.target?.value?.split(","), "e");
+            // console.log(e?.target?.value?.split(","), "e");
             field.onChange(e?.target?.value?.split(","));
           }
         };
-
-        if (type === "textarea") {
-          return (
-            <Textarea
-              {...field}
-              onChange={handleChange}
-              size={size}
-              radius={radius}
-              color={color}
-              label={label}
-              placeholder={placeholder}
-              isInvalid={!!errors[name]}
-              disabled={disabled}
-              errorMessage={errors[name]?.message as string}
-              className={className}
-            />
-          );
-        }
+        const handleAddArrFunc = () => {
+          const input = document.getElementById(name) as HTMLInputElement;
+          const inputValue = input?.value?.trim();
+          if (inputValue && !arr.includes(inputValue)) {
+            const updatedArr = [...arr, inputValue];
+            setArr(updatedArr);
+            field.value = "";
+          }
+        };
+        const handleRemoveArrFunc = (item: string) => {
+          const updatedArr = arr.filter((i) => i !== item);
+          setArr(updatedArr);
+        };
 
         if (type === "array") {
           return (
@@ -154,6 +135,12 @@ const MyInp = ({
                   disabled={disabled}
                   errorMessage={errors[name]?.message as string}
                   className={className}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleAddArrFunc();
+                    }
+                  }}
                 />
                 <PlusIcon
                   onClick={() => handleAddArrFunc()}
@@ -179,6 +166,24 @@ const MyInp = ({
                 ))}
               </div>
             </div>
+          );
+        }
+
+        if (type === "textarea") {
+          return (
+            <Textarea
+              {...field}
+              onChange={handleChange}
+              size={size}
+              radius={radius}
+              color={color}
+              label={label}
+              placeholder={placeholder}
+              isInvalid={!!errors[name]}
+              disabled={disabled}
+              errorMessage={errors[name]?.message as string}
+              className={className}
+            />
           );
         }
 

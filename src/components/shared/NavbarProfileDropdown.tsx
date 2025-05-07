@@ -14,6 +14,7 @@ import useUserData from "@/src/hooks/user.hook";
 import { Skeleton } from "@heroui/skeleton";
 import { useRouter } from "next/navigation";
 import { useSignOut } from "@/src/hooks/useSignOut.hook";
+import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 
 const NavbarProfileDropdown = () => {
   const { isLoading, user } = useUserData();
@@ -51,7 +52,12 @@ const NavbarProfileDropdown = () => {
                   }
                   className="cursor-pointer"
                 />
-                <span>{user?.name}</span>
+                <div className="flex flex-col gap-0">
+                  <span className="text-primary font-semibold">
+                    {user?.name}
+                  </span>
+                  <p>{firstLetterCapital(user?.role)}</p>
+                </div>
               </div>
             </DropdownItem>
             <DropdownItem
