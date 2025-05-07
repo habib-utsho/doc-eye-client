@@ -22,7 +22,7 @@ const CompleteAppointmentsModal = ({
   const [medications, setMedications] = useState<TMedication[]>([]);
 
   const handleSubmit = (data: any) => {
-    console.log({ data });
+    console.log({ ...data, problems, advices, tests, medications });
   };
   return (
     <div>
@@ -61,9 +61,9 @@ const CompleteAppointmentsModal = ({
         <ModalContent className="py-12 px-8 overflow-auto h-[70%]">
           <DEForm
             onSubmit={handleSubmit}
-            resolver={zodResolver(
-              medicalReportValidationSchema.createMedicalReportZodSchema
-            )}
+            // resolver={zodResolver(
+            //   medicalReportValidationSchema.createMedicalReportZodSchema
+            // )}
             className="space-y-4"
           >
             <h2 className="font-semibold text-xl mb-4 text-center text-primary">

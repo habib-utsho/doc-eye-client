@@ -105,17 +105,21 @@ const MyInp = ({
           }
         };
         const handleAddArrFunc = () => {
-          const input = document.getElementById(name) as HTMLInputElement;
-          const inputValue = input?.value?.trim();
-          if (inputValue && !arr.includes(inputValue)) {
-            const updatedArr = [...arr, inputValue];
-            setArr(updatedArr);
-            field.value = "";
+          if (type === "array" && arr && setArr) {
+            const input = document.getElementById(name) as HTMLInputElement;
+            const inputValue = input?.value?.trim();
+            if (inputValue && !arr.includes(inputValue)) {
+              const updatedArr = [...arr, inputValue];
+              setArr!!(updatedArr);
+              field.value = "";
+            }
           }
         };
         const handleRemoveArrFunc = (item: string) => {
-          const updatedArr = arr.filter((i) => i !== item);
-          setArr(updatedArr);
+          if (type === "array" && arr && setArr) {
+            const updatedArr = arr.filter((i) => i !== item);
+            setArr!!(updatedArr);
+          }
         };
 
         if (type === "array") {
@@ -152,7 +156,7 @@ const MyInp = ({
 
               {/* Arr items */}
               <div className="flex flex-wrap gap-4 mt-3">
-                {arr.map((item) => (
+                {arr?.map((item) => (
                   <div key={item} className="relative">
                     <span className="text-primary bg-primary bg-opacity-20 pl-2 pr-6 rounded-r-md">
                       {item}
