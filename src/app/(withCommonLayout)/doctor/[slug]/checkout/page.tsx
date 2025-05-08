@@ -199,7 +199,9 @@ const DoctorCheckout = () => {
                       process.env.NEXT_PUBLIC_PER_CONSULTATION_SERVICE_FEE!!
                     ),
                   }}
-                  isDisabled={!activeDate || !activeTime || !user}
+                  isDisabled={
+                    !isAvailableNow && (!activeDate || !activeTime || !user)
+                  }
                   doctor={doctor}
                   activeDate={activeDate}
                   activeTime={activeTime}

@@ -6,6 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import MyInp from "@/src/components/ui/Form/MyInp";
 import { Button } from "@heroui/button";
 import { TMedication } from "@/src/types/medicalReport.type";
+import { toast } from "sonner";
+import { Divider } from "@heroui/divider";
+import { PlusIcon } from "@/src/components/ui/icons";
 
 const CompleteAppointmentsModal = ({
   isOpen,
@@ -23,6 +26,7 @@ const CompleteAppointmentsModal = ({
 
   const handleSubmit = (data: any) => {
     console.log({ ...data, problems, advices, tests, medications });
+    toast.success("Medical report submitted successfully!");
   };
   return (
     <div>
@@ -83,14 +87,39 @@ const CompleteAppointmentsModal = ({
               arr={problems}
               setArr={setProblems}
             />
-            <MyInp
-              name="medications"
-              type="array"
-              label="Medications"
-              placeholder="Enter medications and enter"
-              arr={medications}
-              setArr={setMedications}
-            />
+            <div className="shadow p-4 rounded-md">
+              <h2 className="font-semibold">Medications</h2>
+              <Divider className="mt-1 mb-6" />
+              <div className="grid grid-cols-2 gap-4">
+                <MyInp
+                  name="medications.name"
+                  type="text"
+                  label="Name"
+                  placeholder="Enter medications name"
+                />
+                <MyInp
+                  name="medications.dosage"
+                  type="text"
+                  label="Dosage"
+                  placeholder="Enter medications dosage"
+                />
+                <MyInp
+                  name="medications.frequency"
+                  type="text"
+                  label="Frequency"
+                  placeholder="Enter medications frequency"
+                />
+                <MyInp
+                  name="medications.duration"
+                  type="text"
+                  label="Duration"
+                  placeholder="Enter medications duration"
+                />
+              </div>
+              <Button type="button">
+                <PlusIcon />
+              </Button>
+            </div>
             <MyInp
               name="advices"
               type="array"
