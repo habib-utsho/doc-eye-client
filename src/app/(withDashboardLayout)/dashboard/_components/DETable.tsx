@@ -33,6 +33,8 @@ const DETable = ({
 }) => {
   const { isLoading: isLoadingUser, user } = useUserData();
 
+  console.log({ data, rows, notFoundMessage });
+
   return (
     <Table
       className="my-5"

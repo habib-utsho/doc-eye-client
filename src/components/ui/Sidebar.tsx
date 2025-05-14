@@ -97,7 +97,7 @@ const doctorRoutes: TSidebarRoute[] = [
   },
   {
     name: "Appointments",
-    icon: <HistoryOutlined />,
+    icon: <DashboardOutlined />,
     children: [
       {
         name: "Upcoming Appointments",
@@ -157,7 +157,7 @@ const patientRoutes: TSidebarRoute[] = [
   },
   {
     name: "Consultation History",
-    path: "/dashboard/patient/past-consultation",
+    path: "/dashboard/patient/consultation-history",
     icon: <HistoryOutlined />,
   },
   { name: "Specialties", path: "/specialty", icon: <SettingOutlined /> },

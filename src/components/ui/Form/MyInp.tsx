@@ -111,7 +111,8 @@ const MyInp = ({
             if (inputValue && !arr.includes(inputValue)) {
               const updatedArr = [...arr, inputValue];
               setArr!!(updatedArr);
-              field.value = "";
+              // field.value = "";
+              field.onChange("");
             }
           }
         };

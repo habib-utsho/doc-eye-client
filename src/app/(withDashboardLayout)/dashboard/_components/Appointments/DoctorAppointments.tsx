@@ -32,7 +32,11 @@ const DoctorAppointmentsPage = ({
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
+
+  // complete appointment and create medical report
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [appointmentForModal, setAppointmentForModal] =
+    useState<TAppointment | null>(null);
 
   const { isLoading: isLoadingUser, user } = useUserData();
 
@@ -81,7 +85,9 @@ const DoctorAppointmentsPage = ({
       symptoms: appointment?.symptoms
         ? firstLetterCapital(appointment?.symptoms)
         : "N/A",
-      schedule: moment.utc(appointment?.schedule).format("DD-MMM-YYYY hh:mm A"),
+      schedule: moment
+        .utc(appointment?.schedule)
+        .format("DD-MMM-YYYY ⏰ hh:mm A"),
       paymentStatus: firstLetterCapital(appointment?.payment?.status),
       // status: firstLetterCapital(appointment?.status),
       status: (
@@ -145,7 +151,9 @@ const DoctorAppointmentsPage = ({
           )}
         </>
       ),
-      createdAt: moment(appointment?.createdAt).format("DD-MMM-YYYY"),
+      createdAt: moment(appointment?.createdAt).format(
+        "DD-MMM-YYYY ⏰ hh:mm A"
+      ),
     })
   );
 
@@ -167,6 +175,7 @@ const DoctorAppointmentsPage = ({
   ) => {
     if (appointment.status === "confirmed" && status === "completed") {
       onOpen();
+      setAppointmentForModal(appointment);
       toast.error(
         "You need to make the appointment completed from the appointment history page."
       );
@@ -293,6 +302,8 @@ const DoctorAppointmentsPage = ({
         isOpen={isOpen}
         onOpen={onOpen}
         onOpenChange={onOpenChange}
+        appointmentForModal={appointmentForModal}
+        setAppointmentForModal={setAppointmentForModal}
       />
     </div>
   );
