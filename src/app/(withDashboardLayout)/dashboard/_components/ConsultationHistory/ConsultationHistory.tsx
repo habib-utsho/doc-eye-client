@@ -1,20 +1,37 @@
 "use client";
-import React, { useState } from "react";
+import React, { ReactNode, RefObject, useRef, useState } from "react";
 import { Input } from "@heroui/input";
 import Image from "next/image";
 import moment from "moment";
-import { SearchIcon } from "@/src/components/ui/icons";
+import { DownloadIcon, SearchIcon } from "@/src/components/ui/icons";
 import DETable from "../../_components/DETable";
 import useDebounce from "@/src/hooks/useDebounce";
-import { useGetAllAppointments } from "@/src/hooks/appointment.hook";
 import useUserData from "@/src/hooks/user.hook";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { useGetAllMedicalReport } from "@/src/hooks/medicalReport.hook";
+import { Button } from "@heroui/button";
+import { useReactToPrint } from "react-to-print";
+import { ContentNode } from "react-to-print/lib/types/ContentNode";
 
 const ConsultationHistory = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
+
+  const [selectedHistory, setSelectedHistory] = useState(null);
+
+  const printContentRef = useRef<HTMLDivElement>(null);
+  // const handlePrint = useReactToPrint({
+  //   contentRef: printContentRef,
+
+  //   documentTitle: `history`,
+  //   // onBeforePrint: () => {console.log("before printing...");},
+  //   // onAfterPrint: () => {console.log("after printing...");},
+  //   removeAfterPrint: false,
+  // });
+  const handlePrint = useReactToPrint({ contentRef: printContentRef });
+
+  console.log(printContentRef, "printContentRef");
 
   const { isLoading: isLoadingUser, user } = useUserData();
 
@@ -75,6 +92,18 @@ const ConsultationHistory = () => {
         .utc(history?.appointment?.schedule)
         .format("DD-MMM-YYYY ⏰ hh:mm A"),
       createdAt: moment(history?.createdAt).format("DD-MMM-YYYY ⏰ hh:mm A"),
+      download: (
+        <Button
+          type="button"
+          color="primary"
+          className="text-white"
+          isIconOnly
+          variant="shadow"
+          onPress={handlePrint}
+        >
+          <DownloadIcon />
+        </Button>
+      ),
     })
   );
 
@@ -89,6 +118,7 @@ const ConsultationHistory = () => {
     { key: "followUp", label: "Follow-up Date" },
     { key: "schedule", label: "Schedule" },
     { key: "createdAt", label: "Created At" },
+    { key: "download", label: "Download" },
   ];
 
   console.log(rows, "rows");
@@ -117,6 +147,10 @@ const ConsultationHistory = () => {
         setPagination={setPagination}
         notFoundMessage="No consultation history found"
       />
+
+      <div id="printContent" ref={printContentRef}>
+        Content to print
+      </div>
     </div>
   );
 };

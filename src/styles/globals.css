@@ -66,3 +66,9 @@ body::-webkit-scrollbar-thumb,
 .payment-radio > div {
   flex: 1;
 }
+
+@media screen {
+  #printContent {
+    display: none;
+  }
+}
