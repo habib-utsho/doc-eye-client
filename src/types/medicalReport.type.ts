@@ -28,4 +28,6 @@ export type TMedicalReport = {
   advices: string[] | null; // "Take rest and drink plenty of fluids"
   tests: string[] | null; // "Blood test, X-ray"
   followUpDate: Date | null; // 2023-10-01
+  createdAt: Date;
+  updatedAt: Date;
 };
