@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import useUserData from "@/src/hooks/user.hook";
 import { getCurrentUser } from "@/src/services/auth";
 import { TColumn, TResponse, Trow } from "@/src/types";
@@ -19,6 +20,7 @@ const DETable = ({
   rows,
   columns,
   isLoading,
+  redirectByRowClick,
   pagination,
   setPagination,
   notFoundMessage,
@@ -28,10 +30,12 @@ const DETable = ({
   rows: Trow[];
   columns: TColumn[];
   isLoading: boolean;
+  redirectByRowClick: string;
   setPagination: (pagination: { limit: number; page: number }) => void;
   notFoundMessage: string;
 }) => {
   const { isLoading: isLoadingUser, user } = useUserData();
+  const router = useRouter();
 
   console.log({ data, rows, notFoundMessage });
 
@@ -72,11 +76,20 @@ const DETable = ({
         {(item: any) => (
           <TableRow
             key={item._id}
-            className={`${
-              item.isDeleted || user?._id === item?.user?._id
-                ? "bg-red-50 pointer-events-none blur-[.5px]"
-                : ""
-            }`}
+            className={`
+              ${
+                redirectByRowClick
+                  ? `cursor-pointer border-b border-slate-300 
+                   `
+                  : item.isDeleted || user?._id === item?.user?._id
+                  ? "bg-red-50 pointer-events-none blur-[.5px]"
+                  : ""
+              }
+            `}
+            onClick={() => {
+              redirectByRowClick &&
+                router.push(`${redirectByRowClick}/${item._id}`);
+            }}
           >
             {(columnKey) => (
               <TableCell>{getKeyValue(item, columnKey)}</TableCell>

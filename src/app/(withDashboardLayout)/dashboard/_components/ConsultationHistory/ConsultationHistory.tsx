@@ -1,43 +1,21 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Input } from "@heroui/input";
 import Image from "next/image";
 import moment from "moment";
-import { DownloadIcon, SearchIcon } from "@/src/components/ui/icons";
+import { SearchIcon } from "@/src/components/ui/icons";
 import DETable from "../../_components/DETable";
 import useDebounce from "@/src/hooks/useDebounce";
 import useUserData from "@/src/hooks/user.hook";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { useGetAllMedicalReport } from "@/src/hooks/medicalReport.hook";
-import { Button } from "@heroui/button";
-import { useReactToPrint } from "react-to-print";
-import { TMedicalReport } from "@/src/types/medicalReport.type";
-import { Divider } from "@heroui/divider";
+
 
 const ConsultationHistory = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
 
-  const [selectedHistory, setSelectedHistory] = useState<TMedicalReport | null>(
-    null
-  );
-
-  const printContentRef = useRef<HTMLDivElement>(null);
-  // const handlePrint = useReactToPrint({
-  //   contentRef: printContentRef,
-
-  //   documentTitle: `history`,
-  //   // onBeforePrint: () => {console.log("before printing...");},
-  //   // onAfterPrint: () => {console.log("after printing...");},
-  //   removeAfterPrint: false,
-  // });
-  const handlePrint = useReactToPrint({
-    contentRef: printContentRef,
-    documentTitle: "history",
-  });
-
-  console.log(printContentRef, "printContentRef");
 
   const { isLoading: isLoadingUser, user } = useUserData();
 
@@ -98,23 +76,6 @@ const ConsultationHistory = () => {
         .utc(history?.appointment?.schedule)
         .format("DD-MMM-YYYY ⏰ hh:mm A"),
       createdAt: moment(history?.createdAt).format("DD-MMM-YYYY ⏰ hh:mm A"),
-      download: (
-        <Button
-          type="button"
-          color="primary"
-          className="text-white"
-          isIconOnly
-          variant="shadow"
-          onPress={() => {
-            setSelectedHistory(history);
-            setTimeout(() => {
-              handlePrint();
-            }, 1);
-          }}
-        >
-          <DownloadIcon />
-        </Button>
-      ),
     })
   );
 
@@ -129,10 +90,8 @@ const ConsultationHistory = () => {
     { key: "followUp", label: "Follow-up Date" },
     { key: "schedule", label: "Schedule" },
     { key: "createdAt", label: "Created At" },
-    { key: "download", label: "Download" },
   ];
 
-  console.log(selectedHistory, "selectedHistory");
 
   return (
     <div className="w-full p-4">
@@ -142,7 +101,9 @@ const ConsultationHistory = () => {
             name="search"
             startContent={<SearchIcon />}
             placeholder="Search consultation history..."
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setSearchTerm(e.target.value)
+            }
             isClearable
             onClear={() => setSearchTerm("")}
           />
@@ -157,60 +118,9 @@ const ConsultationHistory = () => {
         pagination={pagination}
         setPagination={setPagination}
         notFoundMessage="No consultation history found"
+        redirectByRowClick={`/dashboard/doctor/consultation-history`}
       />
 
-      <div id="printContent" ref={printContentRef} className="px-8 py-4">
-        <div className="grid grid-cols-2 gap-4 ">
-          <div>
-            <h2 className="font-bold text-2xl">
-              {selectedHistory?.doctor.doctorTitle}{" "}
-              {selectedHistory?.doctor.name}
-            </h2>
-            <p className="font-semibold">
-              {selectedHistory?.doctor.doctorType}
-            </p>
-            <p className="font-semibold">
-              {selectedHistory?.doctor.doctorCode}
-            </p>
-          </div>
-          <div className="text-right">
-            <p>
-              {selectedHistory?.appointment.appointmentType &&
-                firstLetterCapital(
-                  selectedHistory?.appointment.appointmentType
-                )}
-            </p>
-            <p>
-              {moment
-                .utc(selectedHistory?.appointment?.schedule)
-                .format("DD-MMM-YYYY ⏰ hh:mm A")}
-            </p>
-          </div>
-        </div>
-
-        <Divider className="mt-6" />
-        <div className="flex gap-4 py-2">
-          <h2>
-            <span className="font-bold">Patient Name:</span>{" "}
-            {selectedHistory?.patient.name}
-          </h2>
-          <h2>
-            <span className="font-bold">Gender:</span>{" "}
-            {selectedHistory?.patient.gender}
-          </h2>
-          <h2>
-            <span className="font-bold">Weight:</span>{" "}
-            {selectedHistory?.patient.weight || "N/A"}
-          </h2>
-          <h2>
-            <span className="font-bold">Age:</span>{" "}
-            {selectedHistory?.patient.dateOfBirth
-              ? moment().diff(selectedHistory.patient.dateOfBirth, "years")
-              : ""}
-          </h2>
-        </div>
-        <Divider className="mb-6" />
-      </div>
     </div>
   );
 };
