@@ -2,7 +2,6 @@
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useRef } from "react";
-import prescriptionIcon from "@/src/assets/img/icon/prescription.png";
 import { useReactToPrint } from "react-to-print";
 import { useGetSingleMedicalReportById } from "@/src/hooks/medicalReport.hook";
 import { TMedicalReport } from "@/src/types/medicalReport.type";
@@ -11,10 +10,10 @@ import Loading from "@/src/components/ui/Loading";
 import moment from "moment";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { Button } from "@heroui/button";
-import { subtitle, title } from "@/src/components/primitives";
 import { PrescriptionIcon } from "@/src/components/ui/icons";
 import leftIcon from "@/src/assets/img/icon/left-icon.png";
 import Link from "next/link";
+import MedicalReportPDF from "../../../_components/MedicalReportPDF";
 
 const MedicalReportDetailsPage = () => {
   const { slug } = useParams() as { slug: string };
@@ -61,7 +60,7 @@ const MedicalReportDetailsPage = () => {
               <Image src={leftIcon} alt="Left icon" width={50} /> Consultation
               history
             </Link>
-            <h2>
+            <h2 className="text-paragraph">
               {moment(medicalReport.createdAt).format("DD-MMM-YYYY ⏰ hh:mm A")}
             </h2>
           </div>
@@ -270,51 +269,10 @@ const MedicalReportDetailsPage = () => {
       </div>
 
       {/* PDF content */}
-      <div id="printContent" ref={printContentRef} className="px-8 py-4">
-        <div className="grid grid-cols-2 gap-4 ">
-          <div>
-            <h2 className="font-bold text-2xl">
-              {data.data?.doctor.doctorTitle} {data.data?.doctor.name}
-            </h2>
-            <p className="font-semibold">{data.data?.doctor.doctorType}</p>
-            <p className="font-semibold">{data.data?.doctor.doctorCode}</p>
-          </div>
-          <div className="text-right">
-            <p>
-              {data.data?.appointment.appointmentType &&
-                firstLetterCapital(data.data?.appointment.appointmentType)}
-            </p>
-            <p>
-              {moment
-                .utc(data.data?.appointment?.schedule)
-                .format("DD-MMM-YYYY ⏰ hh:mm A")}
-            </p>
-          </div>
-        </div>
-
-        <Divider className="mt-6" />
-        <div className="flex gap-4 py-2">
-          <h2>
-            <span className="font-bold">Patient Name:</span>{" "}
-            {data.data?.patient.name}
-          </h2>
-          <h2>
-            <span className="font-bold">Gender:</span>{" "}
-            {data.data?.patient.gender}
-          </h2>
-          <h2>
-            <span className="font-bold">Weight:</span>{" "}
-            {data.data?.patient.weight || "N/A"}
-          </h2>
-          <h2>
-            <span className="font-bold">Age:</span>{" "}
-            {data.data?.patient.dateOfBirth
-              ? moment().diff(data.data.patient.dateOfBirth, "years")
-              : ""}
-          </h2>
-        </div>
-        <Divider className="mb-6" />
-      </div>
+      <MedicalReportPDF
+        medicalReport={data?.data}
+        printContentRef={printContentRef}
+      />
     </div>
   );
 };
