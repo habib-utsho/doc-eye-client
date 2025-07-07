@@ -4,6 +4,8 @@ import { Divider } from "@heroui/divider";
 import moment from "moment";
 import React from "react";
 import { FaPrescription } from "react-icons/fa6";
+import logo from "@/src/assets/img/logo.png";
+import Image from "next/image";
 
 const MedicalReportPDF = ({
   printContentRef,
@@ -31,6 +33,9 @@ const MedicalReportPDF = ({
           </p>
         </div>
         <div className="text-right">
+          <div className="flex justify-end items-center">
+            <Image src={logo} height={40} width={40} alt="logo" />
+          </div>
           <p className="mb-1">
             Appointment Type:{" "}
             <span className="font-semibold">

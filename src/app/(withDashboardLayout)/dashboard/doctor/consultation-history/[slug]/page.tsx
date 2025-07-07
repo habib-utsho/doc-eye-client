@@ -10,16 +10,18 @@ import Loading from "@/src/components/ui/Loading";
 import moment from "moment";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { Button } from "@heroui/button";
-import { PrescriptionIcon } from "@/src/components/ui/icons";
+import { DownloadIcon, PrescriptionIcon } from "@/src/components/ui/icons";
 import leftIcon from "@/src/assets/img/icon/left-icon.png";
 import Link from "next/link";
 import MedicalReportPDF from "../../../_components/MedicalReportPDF";
+import InvoicePDF from "../../../_components/InvoicePDF";
 
 const MedicalReportDetailsPage = () => {
   const { slug } = useParams() as { slug: string };
-  const printContentRef = useRef<HTMLDivElement>(null);
+  const printMedicalReportContentRef = useRef<HTMLDivElement>(null);
+  const printInvoiceContentRef = useRef<HTMLDivElement>(null);
   console.log(slug);
-  console.log(printContentRef, "printContentRef");
+  console.log(printMedicalReportContentRef, "printContentRef");
 
   const { data, isLoading } = useGetSingleMedicalReportById(slug);
 
@@ -34,9 +36,13 @@ const MedicalReportDetailsPage = () => {
   //   removeAfterPrint: false,
   // });
 
-  const handlePrint = useReactToPrint({
-    contentRef: printContentRef,
-    documentTitle: "history",
+  const handleMedicalReportPrint = useReactToPrint({
+    contentRef: printMedicalReportContentRef,
+    documentTitle: "medical_report_prescription",
+  });
+  const handleInvoicePrint = useReactToPrint({
+    contentRef: printInvoiceContentRef,
+    documentTitle: "invoice",
   });
 
   if (isLoading) {
@@ -145,7 +151,7 @@ const MedicalReportDetailsPage = () => {
             variant="shadow"
             className="text-white p-2 w-full h-[80px] flex items-center justify-start !gap-4 bg-primary"
             isIconOnly
-            onPress={handlePrint}
+            onPress={handleMedicalReportPrint}
             aria-label="Print prescription"
             block
           >
@@ -265,13 +271,32 @@ const MedicalReportDetailsPage = () => {
               </div>
             </div>
           </div>
+
+          {/* Invoice */}
+          <Button
+            type="button"
+            // variant="shadow"
+            className="text-black text-center p-2 w-full h-[70px] !gap-4 bg-gray-100 border"
+            isIconOnly
+            onPress={handleInvoicePrint}
+            aria-label="Print invoice"
+            block
+          >
+            <DownloadIcon className="text-2xl" />
+            {/* <Image src={prescriptionIcon} alt="Prescription icon" /> */}
+            <h2 className={`font-semibold text-lg  mb-0`}>Download Invoice</h2>
+          </Button>
         </div>
       </div>
 
       {/* PDF content */}
       <MedicalReportPDF
         medicalReport={data?.data}
-        printContentRef={printContentRef}
+        printContentRef={printMedicalReportContentRef}
+      />
+      <InvoicePDF
+        medicalReport={data?.data}
+        printContentRef={printInvoiceContentRef}
       />
     </div>
   );
