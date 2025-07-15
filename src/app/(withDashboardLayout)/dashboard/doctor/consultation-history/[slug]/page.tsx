@@ -25,31 +25,20 @@ const MedicalReportDetailsPage = () => {
 
   const { data, isLoading } = useGetSingleMedicalReportById(slug);
 
-  console.log(data, "data");
-
-  // const handlePrint = useReactToPrint({
-  //   contentRef: printContentRef,
-
-  //   documentTitle: `history`,
-  //   // onBeforePrint: () => {console.log("before printing...");},
-  //   // onAfterPrint: () => {console.log("after printing...");},
-  //   removeAfterPrint: false,
-  // });
+  const medicalReport = data?.data as TMedicalReport;
 
   const handleMedicalReportPrint = useReactToPrint({
     contentRef: printMedicalReportContentRef,
-    documentTitle: "medical_report_prescription",
+    documentTitle: `prescription-${medicalReport?.patient?.name}-${medicalReport?._id}`,
   });
   const handleInvoicePrint = useReactToPrint({
     contentRef: printInvoiceContentRef,
-    documentTitle: "invoice",
+    documentTitle: `invoice-${medicalReport?.patient?.name}-${medicalReport?.appointment?.payment?._id}`,
   });
 
   if (isLoading) {
     return <Loading></Loading>;
   }
-
-  const medicalReport = data.data as TMedicalReport;
 
   return (
     <div className="w-full p-4">
@@ -71,6 +60,7 @@ const MedicalReportDetailsPage = () => {
             </h2>
           </div>
 
+          {/* Patient , diagnosis , problems */}
           <div className="shadow p-4 rounded-md space-y-4">
             {/* Patient */}
             <div className="shadow p-4 rounded-md flex gap-4 justify-between items-center flex-wrap">
@@ -89,7 +79,7 @@ const MedicalReportDetailsPage = () => {
                   <div>
                     <h2 className="font-semibold text-xl">
                       {" "}
-                      {medicalReport.doctor.name}
+                      {medicalReport.patient.name}
                     </h2>
                     <div className="flex gap-2 items-center text-paragraph text-[13px]">
                       <p>

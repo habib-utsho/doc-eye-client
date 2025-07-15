@@ -30,7 +30,7 @@ const DETable = ({
   rows: Trow[];
   columns: TColumn[];
   isLoading: boolean;
-  redirectByRowClick: string;
+  redirectByRowClick?: string;
   setPagination: (pagination: { limit: number; page: number }) => void;
   notFoundMessage: string;
 }) => {

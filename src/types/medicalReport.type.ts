@@ -19,6 +19,7 @@ export type TCreateMedicalReport = {
   followUpDate: Date | null; // 2023-10-01
 };
 export type TMedicalReport = {
+  _id: string;
   appointment: TAppointment;
   doctor: TDoctor;
   patient: TPatient;

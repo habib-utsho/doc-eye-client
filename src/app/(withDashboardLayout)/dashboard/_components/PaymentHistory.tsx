@@ -66,28 +66,24 @@ const PaymentHistory = () => {
     amount: `${payment?.amount.total?.toFixed(2)} BDT`,
     paymentMethod: payment?.paymentMethod,
     status: (
-      <Button
-        disabled
-        startContent={
-          payment.status === "confirmed" ? (
-            <CheckCircleOutlined />
-          ) : payment.status === "canceled" ? (
-            <XMarkIcon />
-          ) : (
-            <WarningOutlined />
-          )
-        }
-        color={
+      <span
+        className={`font-semibold bg-opacity-10 flex items-center gap-2 bg-slate-100 py-2 px-2 text-center justify-center rounded-md ${
           payment.status === "confirmed"
-            ? "success"
+            ? "text-success bg-success "
             : payment.status === "canceled"
-              ? "danger"
-              : "warning"
-        }
-        className="opacity-50 pointer-events-none text-white"
+            ? "text-danger bg-danger"
+            : "text-warning bg-warning"
+        }`}
       >
         {firstLetterCapital(payment.status)}
-      </Button>
+        {payment.status === "confirmed" ? (
+          <CheckCircleOutlined />
+        ) : payment.status === "canceled" ? (
+          <XMarkIcon />
+        ) : (
+          <WarningOutlined />
+        )}
+      </span>
     ),
     appointment: (
       <Button
@@ -99,7 +95,8 @@ const PaymentHistory = () => {
         startContent={<EyeOutlined />}
       />
     ),
-    createdAt: moment(payment?.createdAt).format("DD-MMM-YYYY"),
+
+    createdAt: moment(payment?.createdAt).format("DD-MMM-YYYY ⏰ hh:mm A"),
   }));
 
   const columns = [
@@ -112,6 +109,8 @@ const PaymentHistory = () => {
     { key: "appointment", label: "Appointment" },
     { key: "createdAt", label: "Date" },
   ];
+
+  console.log({ payments });
 
   return (
     <div className="w-full p-4">

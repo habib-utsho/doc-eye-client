@@ -10,12 +10,10 @@ import useUserData from "@/src/hooks/user.hook";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { useGetAllMedicalReport } from "@/src/hooks/medicalReport.hook";
 
-
 const ConsultationHistory = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
-
 
   const { isLoading: isLoadingUser, user } = useUserData();
 
@@ -92,7 +90,6 @@ const ConsultationHistory = () => {
     { key: "createdAt", label: "Created At" },
   ];
 
-
   return (
     <div className="w-full p-4">
       <div className="flex justify-between items-center mb-4 xl:mb-6 gap-4">
@@ -120,7 +117,6 @@ const ConsultationHistory = () => {
         notFoundMessage="No consultation history found"
         redirectByRowClick={`/dashboard/doctor/consultation-history`}
       />
-
     </div>
   );
 };
