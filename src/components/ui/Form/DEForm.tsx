@@ -6,6 +6,7 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 type TFormConfig = {
   defaultValues?: any;
   resolver?: any;
+  methods?: any;
 };
 type DEFormProps = {
   className?: string;
@@ -19,6 +20,7 @@ const DEForm = ({
   defaultValues,
   resolver,
   className,
+  methods,
   ...rest
 }: DEFormProps) => {
   const formConfig: TFormConfig = {};
@@ -28,12 +30,12 @@ const DEForm = ({
   if (!!resolver) {
     formConfig["resolver"] = resolver;
   }
-  const methods = useForm(formConfig);
+  const internalMethods = methods || useForm(formConfig);
   const {
     handleSubmit,
     reset,
     formState: { errors },
-  } = methods;
+  } = internalMethods;
 
   useEffect(() => {
     if (defaultValues) {
@@ -42,7 +44,7 @@ const DEForm = ({
   }, [defaultValues, reset]);
 
   return (
-    <FormProvider {...methods}>
+    <FormProvider {...internalMethods}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className={`w-full ${className}`}

@@ -8,11 +8,21 @@ import { Button } from "@heroui/button";
 import { TMedication } from "@/src/types/medicalReport.type";
 import { toast } from "sonner";
 import { Divider } from "@heroui/divider";
-import { PlusIcon } from "@/src/components/ui/icons";
+import { PlusIcon, XMarkIcon } from "@/src/components/ui/icons";
 import { MinusOutlined } from "@ant-design/icons";
 import { useCreateMedicalReport } from "@/src/hooks/medicalReport.hook";
 import { TAppointment } from "@/src/types/appointment";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm, useFormContext } from "react-hook-form";
+import { Input } from "@heroui/input";
+
+type FormValues = {
+  medications: TMedication[];
+  problems: string[];
+  advices: string[];
+  tests: string[];
+  diagnosis?: string;
+  followUpDate?: string;
+};
 
 const CompleteAppointmentsModal = ({
   isOpen,
@@ -38,17 +48,55 @@ const CompleteAppointmentsModal = ({
     isPending: isLoadingCompleteAppointmentAndCreateMedicalReport,
   } = useCreateMedicalReport();
 
+  const formMethods = useForm<FormValues>({
+    // resolver: zodResolver(
+    //   medicalReportValidationSchema.createMedicalReportZodSchema
+    // ),
+    defaultValues: {
+      medications: [{ name: "", dosage: "", frequency: "", duration: "" }],
+      problems: [""],
+      advices: [""],
+      tests: [""],
+    },
+  });
+
+  const { control } = formMethods;
+  const {
+    fields: medicationFields,
+    append: appendMedication,
+    remove: removeMedication,
+  } = useFieldArray({
+    control,
+    name: "medications",
+  });
+  const {
+    fields: problemFields,
+    append: appendProblem,
+    remove: removeProblem,
+  } = useFieldArray({ control, name: "problems" });
+
+  const {
+    fields: adviceFields,
+    append: appendAdvice,
+    remove: removeAdvice,
+  } = useFieldArray({ control, name: "advices" });
+
+  const {
+    fields: testFields,
+    append: appendTest,
+    remove: removeTest,
+  } = useFieldArray({ control, name: "tests" });
+
   const handleSubmit = (data: any) => {
     const payload = {
       ...data,
       appointment: appointmentForModal?._id,
       doctor: appointmentForModal?.doctor?._id,
       patient: appointmentForModal?.patient?._id,
-      problems,
-      advices,
-      tests,
     };
 
+    console.log({ payload });
+    return;
     completeAppointmentAndCreateMedicalReport(payload, {
       onSuccess: (data) => {
         toast.success("Medical report submitted successfully!");
@@ -56,6 +104,83 @@ const CompleteAppointmentsModal = ({
       onError: (e) => toast.error(e.message),
     });
   };
+
+  console.log({ medications });
+
+  const StringArrayField = ({
+    label,
+    placeholder,
+    name,
+    append,
+    remove,
+    fields,
+    error,
+  }: {
+    label: string;
+    placeholder?: string;
+    name: string;
+    fields: { id: string }[];
+    append: (value: string) => void;
+    remove: (index: number) => void;
+    error?: string;
+  }) => {
+    const [inputValue, setInputValue] = useState("");
+
+    const handleAdd = () => {
+      const value = inputValue.trim();
+      if (value) {
+        append(value);
+        setInputValue("");
+      }
+    };
+
+    return (
+      <div className="shadow p-4 rounded-md">
+        <div className="relative">
+          <Input
+            id={name}
+            name={name}
+            label={label}
+            placeholder={placeholder}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleAdd();
+              }
+            }}
+            isInvalid={!!error}
+            errorMessage={error}
+          />
+          <PlusIcon
+            onClick={handleAdd}
+            className={`cursor-pointer text-primary text-[12px] absolute right-1 top-1/2 ${
+              !!error ? "-translate-y-[24px]" : "-translate-y-1/2"
+            } translate`}
+          />
+        </div>
+
+        {/* Render Items */}
+        <div className="flex flex-wrap gap-4 mt-3">
+          {fields.map((item, index) => (
+            <div key={item.id || index} className="relative">
+              <span className="text-primary bg-primary bg-opacity-20 pl-2 pr-6 rounded-r-md">
+                {/* Display fallback value */}
+                {formMethods.getValues(name)?.[index] || ""}
+              </span>
+              <XMarkIcon
+                onClick={() => remove(index)}
+                className="text-danger text-[10px] cursor-pointer absolute top-0 right-0 translate-x-[8px] -translate-y-[8px] bg-danger bg-opacity-20 rounded-md p-[2px]"
+                aria-label="remove item"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+  console.log({ problemFields, adviceFields, testFields });
 
   return (
     <div>
@@ -91,13 +216,14 @@ const CompleteAppointmentsModal = ({
           },
         }}
       >
-        <ModalContent className="py-12 px-8 overflow-auto h-[70%]">
+        <ModalContent className="py-12 px-8 overflow-auto h-[70%] w-full">
           <DEForm
             onSubmit={handleSubmit}
             // TODO: should add
             // resolver={zodResolver(
             //   medicalReportValidationSchema.createMedicalReportZodSchema
             // )}
+            methods={formMethods}
             className="space-y-4"
           >
             <h2 className="font-semibold text-xl mb-4 text-center text-primary">
@@ -109,15 +235,16 @@ const CompleteAppointmentsModal = ({
               label="Diagnosis"
               placeholder="Enter diagnosis"
             />
-            <MyInp
-              name="problems"
-              type="array"
+            <StringArrayField
               label="Problems"
-              placeholder="Enter problems and enter"
-              arr={problems}
-              setArr={setProblems}
+              fields={problemFields}
+              name="problems"
+              placeholder="Enter problem and press enter"
+              append={(val) => appendProblem(val)}
+              remove={removeProblem}
             />
-            <div className="shadow p-4 rounded-md">
+
+            {/* <div className="shadow p-4 rounded-md">
               <h2 className="font-semibold">Medications</h2>
               <Divider className="mt-1 mb-6" />
 
@@ -186,23 +313,90 @@ const CompleteAppointmentsModal = ({
               >
                 <PlusIcon />
               </Button>
+            </div> */}
+            <div className="shadow p-4 rounded-md">
+              <h2 className="font-semibold">Medications</h2>
+              <Divider className="mt-1 mb-6" />
+
+              {medicationFields.map((field, index) => (
+                <div className="shadow p-2 rounded-md mb-4" key={field.id}>
+                  <div className="text-right">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="shadow"
+                      className="my-2"
+                      onPress={() => removeMedication(index)}
+                      aria-label="remove medication"
+                    >
+                      <MinusOutlined />
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <MyInp
+                      name={`medications[${index}].name`}
+                      type="text"
+                      label="Name"
+                      placeholder="Enter medication name"
+                    />
+                    <MyInp
+                      name={`medications[${index}].dosage`}
+                      type="text"
+                      label="Dosage"
+                      placeholder="Enter dosage"
+                    />
+                    <MyInp
+                      name={`medications[${index}].frequency`}
+                      type="text"
+                      label="Frequency"
+                      placeholder="Enter frequency"
+                    />
+                    <MyInp
+                      name={`medications[${index}].duration`}
+                      type="text"
+                      label="Duration"
+                      placeholder="Enter duration"
+                    />
+                  </div>
+                </div>
+              ))}
+
+              <Button
+                type="button"
+                size="sm"
+                variant="shadow"
+                className="mt-2"
+                onPress={() =>
+                  appendMedication({
+                    name: "",
+                    dosage: "",
+                    frequency: "",
+                    duration: "",
+                  })
+                }
+              >
+                <PlusIcon />
+              </Button>
             </div>
-            <MyInp
-              name="advices"
-              type="array"
+
+            <StringArrayField
               label="Advices"
-              placeholder="Enter advices and enter"
-              arr={advices}
-              setArr={setAdvices}
+              fields={adviceFields}
+              name="advices"
+              placeholder="Enter advice and press enter"
+              append={(val) => appendAdvice(val)}
+              remove={removeAdvice}
             />
-            <MyInp
-              name="tests"
-              type="array"
+
+            <StringArrayField
               label="Tests"
-              placeholder="Enter tests and enter"
-              arr={tests}
-              setArr={setTests}
+              fields={testFields}
+              name="tests"
+              placeholder="Enter test and press enter"
+              append={(val) => appendTest(val)}
+              remove={removeTest}
             />
+
             <MyInp name="followUpDate" type="date" label="Follow Up Date" />
 
             <Button
