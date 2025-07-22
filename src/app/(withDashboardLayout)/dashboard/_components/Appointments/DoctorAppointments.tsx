@@ -23,6 +23,7 @@ import { toast } from "sonner";
 
 import CompleteAppointmentsModal from "./CompleteAppointmentsModal";
 import { useDisclosure } from "@heroui/modal";
+import { MessageOutlined, VideoCameraOutlined } from "@ant-design/icons";
 
 const DoctorAppointmentsPage = ({
   state = "upcoming",
@@ -40,16 +41,21 @@ const DoctorAppointmentsPage = ({
 
   const { isLoading: isLoadingUser, user } = useUserData();
 
-  const { data: appointments, isLoading: isLoadingAppointments } =
-    useGetAllAppointments([
-      { name: "doctor", value: user?._id },
-      { name: "searchTerm", value: debounceSearch },
-      { name: "page", value: pagination.page },
-      { name: "limit", value: pagination.limit },
-      { name: "state", value: state },
-    ]);
+  const {
+    data: appointments,
+    isLoading: isLoadingAppointments,
+    refetch: refetchAppointments,
+  } = useGetAllAppointments([
+    { name: "doctor", value: user?._id },
+    { name: "searchTerm", value: debounceSearch },
+    { name: "page", value: pagination.page },
+    { name: "limit", value: pagination.limit },
+    { name: "state", value: state },
+  ]);
   const { mutate: updateAppointmentStatus, isPending: isLoadingUpdateStatus } =
     useUpdateAppointmentStatusById();
+
+  console.log({ appointments });
 
   const rows = appointments?.data?.map(
     (appointment: TAppointment, ind: number) => ({
@@ -151,6 +157,31 @@ const DoctorAppointmentsPage = ({
           )}
         </>
       ),
+      action: (
+        <>
+          {appointment.status === "confirmed" ? (
+            <div className="flex gap-1 items-center">
+              <Button
+                isIconOnly
+                startContent={<MessageOutlined />}
+                // isLoading={}
+                color="success"
+                variant="shadow"
+                className="text-white bg-primary bg-opacity-50 text-lg"
+              />
+              <Button
+                isIconOnly
+                startContent={<VideoCameraOutlined />}
+                // isLoading={}
+                variant="shadow"
+                className="text-white bg-primary text-lg"
+              />
+            </div>
+          ) : (
+            ""
+          )}
+        </>
+      ),
       createdAt: moment(appointment?.createdAt).format(
         "DD-MMM-YYYY ⏰ hh:mm A"
       ),
@@ -166,6 +197,7 @@ const DoctorAppointmentsPage = ({
     { key: "schedule", label: "Schedule" },
     { key: "paymentStatus", label: "Payment" },
     { key: "status", label: "Status" },
+    { key: "action", label: "Action" },
     { key: "createdAt", label: "Created At" },
   ];
 
@@ -181,7 +213,14 @@ const DoctorAppointmentsPage = ({
       );
       return;
     }
-    updateAppointmentStatus({ id: appointment?._id, status });
+    updateAppointmentStatus(
+      { id: appointment?._id, status },
+      {
+        onSuccess: () => {
+          refetchAppointments();
+        },
+      }
+    );
   };
 
   return (
@@ -209,95 +248,7 @@ const DoctorAppointmentsPage = ({
         notFoundMessage="No Appointments found"
       />
 
-      {/* Complete appointment modal */}
-      {/* <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        size="lg"
-        className="!max-w-2xl"
-        backdrop="opaque"
-        classNames={{
-          backdrop:
-            "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
-        }}
-        motionProps={{
-          variants: {
-            enter: {
-              y: 0,
-              opacity: 1,
-              transition: {
-                duration: 0.3,
-                ease: "easeOut",
-              },
-            },
-            exit: {
-              y: -20,
-              opacity: 0,
-              transition: {
-                duration: 0.2,
-                ease: "easeIn",
-              },
-            },
-          },
-        }}
-      >
-        <ModalContent className="py-12 px-8 overflow-auto h-[70%]">
-          <DEForm
-            onSubmit={(data) => {
-              console.log(data);
-            }}
-            resolver={zodResolver(
-              medicalReportValidationSchema.createMedicalReportZodSchema
-            )}
-            className="space-y-4"
-          >
-            <h2 className="font-semibold text-xl mb-4 text-center text-primary">
-              Record Medical Report
-            </h2>
-            <MyInp
-              name="diagnosis"
-              type="text"
-              label="Diagnosis"
-              placeholder="Enter diagnosis and enter"
-            />
-            <MyInp
-              name="problems"
-              type="array"
-              label="Problems"
-              placeholder="Enter problems and enter"
-            />
-            <MyInp
-              name="medications"
-              type="array"
-              label="Medications"
-              placeholder="Enter medications and enter"
-            />
-            <MyInp
-              name="advices"
-              type="array"
-              label="Advices"
-              placeholder="Enter advices and enter"
-            />
-            <MyInp
-              name="tests"
-              type="array"
-              label="Tests"
-              placeholder="Enter tests and enter"
-            />
-            <MyInp name="followUpDate" type="date" label="Follow Up Date" />
-
-            <Button
-              // isLoading={}
-              type="submit"
-              color="primary"
-              className="text-white mt-3 w-full"
-              variant="shadow"
-            >
-              Submit
-            </Button>
-          </DEForm>
-        </ModalContent>
-      </Modal> */}
+      {/* Complete appointments modal */}
       <CompleteAppointmentsModal
         isOpen={isOpen}
         onOpen={onOpen}

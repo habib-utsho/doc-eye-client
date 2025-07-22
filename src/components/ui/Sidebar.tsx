@@ -270,10 +270,10 @@ const Sidebar = () => {
       >
         {/* Sidebar Header */}
         <div className="flex items-center justify-between p-4">
-          <div className="flex items-center gap-2">
+          <Link href={"/"} className="flex items-center gap-2 cursor-pointer">
             <Image src={logo} height={40} width={40} alt="logo" />
             {!collapsed && <p className="font-bold text-inherit">DocEye</p>}
-          </div>
+          </Link>
           <span
             onClick={() => setCollapsed(!collapsed)}
             className="text-gray-500 hover:text-gray-800 cursor-pointer text-sm"

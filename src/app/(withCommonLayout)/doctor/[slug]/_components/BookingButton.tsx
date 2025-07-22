@@ -4,7 +4,7 @@ import { Button } from "@heroui/button";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const BookingButton = ({
+const BookingButton = async ({
   params,
   isDoctorAvailableP,
 }: {
@@ -12,6 +12,7 @@ const BookingButton = ({
   isDoctorAvailableP: boolean;
 }) => {
   const router = useRouter();
+  const p = await params;
 
   return (
     <Button
@@ -23,7 +24,7 @@ const BookingButton = ({
       }
       onPress={() =>
         router.push(
-          `/doctor/${params?.slug}/checkout${
+          `/doctor/${p?.slug}/checkout${
             isDoctorAvailableP ? "?isAvailableNow=true" : ""
           }`
         )
