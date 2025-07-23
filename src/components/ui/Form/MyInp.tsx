@@ -43,8 +43,10 @@ type TMyInp = {
   options?: { key: string; label: string }[];
   className?: string;
   selectionMode?: "single" | "multiple";
-  arr?: any[];
+  fields?: any[];
   setArr?: Dispatch<SetStateAction<any[]>>;
+  append?: (e: any) => void;
+  remove?: (e: any) => void;
 };
 
 const MyInp = ({
@@ -61,15 +63,18 @@ const MyInp = ({
   options = [],
   className,
   selectionMode = "single",
-  arr,
-  setArr,
+  fields,
+  append,
+  remove,
 }: TMyInp) => {
   const {
     control,
+    getValues,
     formState: { errors },
   } = useFormContext();
 
   const [isVisible, setIsVisible] = useState<Boolean>(false);
+  const [inputValue, setInputValue] = useState("");
 
   if (type === "file") {
     return (
@@ -89,6 +94,39 @@ const MyInp = ({
     );
   }
 
+  const getErrorMessage = (errors: any, name: string): string | undefined => {
+    if (!errors || !name) return undefined;
+
+    // Handle names like "medications[1].duration"
+    const match = name.match(/^([^\[]+)\[(\d+)\]\.(.+)$/);
+
+    if (match) {
+      const [, arrayKey, indexStr, fieldKey] = match;
+      const index = parseInt(indexStr, 10);
+
+      const arrayErrors = errors[arrayKey];
+      if (Array.isArray(arrayErrors) && arrayErrors[index]) {
+        const fieldError = arrayErrors[index][fieldKey];
+        if (fieldError && typeof fieldError.message === "string") {
+          return fieldError.message;
+        }
+      }
+    }
+
+    // Handle direct field errors like "doctor", "appointment"
+    const error = errors[name] || errors[name?.split("[")?.[0]];
+    if (typeof error?.message === "string") return error.message;
+
+    // Handle array of primitive fields like problems[], advices[], tests[]
+    if (Array.isArray(error)) {
+      for (const item of error) {
+        if (typeof item?.message === "string") return item.message;
+      }
+    }
+
+    return undefined;
+  };
+
   return (
     <Controller
       name={name}
@@ -104,66 +142,55 @@ const MyInp = ({
             field.onChange(e?.target?.value?.split(","));
           }
         };
-        const handleAddArrFunc = () => {
-          if (type === "array" && arr && setArr) {
-            const input = document.getElementById(name) as HTMLInputElement;
-            const inputValue = input?.value?.trim();
-            if (inputValue && !arr.includes(inputValue)) {
-              const updatedArr = [...arr, inputValue];
-              setArr!!(updatedArr);
-              // field.value = "";
-              field.onChange("");
-            }
-          }
-        };
-        const handleRemoveArrFunc = (item: string) => {
-          if (type === "array" && arr && setArr) {
-            const updatedArr = arr.filter((i) => i !== item);
-            setArr!!(updatedArr);
+
+        // Using built in append and remove props from react-hook-form
+        // For array of string
+        const handleAdd = () => {
+          const value = inputValue.trim();
+          if (value && append && !fields?.includes(value)) {
+            append(value);
+            setInputValue("");
           }
         };
 
         if (type === "array") {
           return (
             <div className="shadow p-4 rounded-md">
-              <div className="relative ">
+              <div className="relative">
                 <Input
-                  {...field}
-                  onChange={handleChange}
-                  size={size}
-                  radius={radius}
-                  color={color}
-                  label={label}
                   id={name}
+                  name={name}
+                  label={label}
                   placeholder={placeholder}
-                  isInvalid={!!errors[name]}
-                  disabled={disabled}
-                  errorMessage={errors[name]?.message as string}
-                  className={className}
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
-                      handleAddArrFunc();
+                      handleAdd();
                     }
                   }}
+                  isInvalid={!!getErrorMessage(errors, name)}
+                  errorMessage={getErrorMessage(errors, name)}
                 />
                 <PlusIcon
-                  onClick={() => handleAddArrFunc()}
+                  onClick={handleAdd}
                   className={`cursor-pointer text-primary text-[12px] absolute right-1 top-1/2 ${
-                    !!errors[name] ? "-translate-y-[24px]" : "-translate-y-1/2"
+                    !!errors ? "-translate-y-[24px]" : "-translate-y-1/2"
                   } translate`}
                 />
               </div>
 
-              {/* Arr items */}
+              {/* Render Items */}
               <div className="flex flex-wrap gap-4 mt-3">
-                {arr?.map((item) => (
-                  <div key={item} className="relative">
+                {fields?.map((item, index) => (
+                  <div key={item.id || index} className="relative">
                     <span className="text-primary bg-primary bg-opacity-20 pl-2 pr-6 rounded-r-md">
-                      {item}
+                      {/* Display fallback value */}
+                      {getValues(name)?.[index] || ""}
                     </span>
                     <XMarkIcon
-                      onClick={() => handleRemoveArrFunc(item)}
+                      onClick={() => remove && remove(index)}
                       className="text-danger text-[10px] cursor-pointer absolute top-0 right-0 translate-x-[8px] -translate-y-[8px] bg-danger bg-opacity-20 rounded-md p-[2px]"
                       aria-label="remove item"
                     />
@@ -260,9 +287,11 @@ const MyInp = ({
             color={color}
             label={label}
             placeholder={placeholder}
-            isInvalid={!!errors[name]}
             disabled={disabled}
-            errorMessage={errors[name]?.message as string}
+            // isInvalid={!!errors[name]}
+            isInvalid={!!getErrorMessage(errors, name)}
+            // errorMessage={errors[name]?.message as string}
+            errorMessage={getErrorMessage(errors, name)}
             className={className}
           />
         );

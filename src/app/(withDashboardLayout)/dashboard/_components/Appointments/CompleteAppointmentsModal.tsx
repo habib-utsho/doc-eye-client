@@ -37,21 +37,21 @@ const CompleteAppointmentsModal = ({
   appointmentForModal: TAppointment | null;
   setAppointmentForModal: Dispatch<SetStateAction<TAppointment | null>>;
 }) => {
-  const [problems, setProblems] = useState<string[]>([]);
-  const [advices, setAdvices] = useState<string[]>([]);
-  const [tests, setTests] = useState<string[]>([]);
-  const [medications, setMedications] = useState<TMedication[]>([
-    { name: "", dosage: "", frequency: "", duration: "" },
-  ]);
+  // const [problems, setProblems] = useState<string[]>([]);
+  // const [advices, setAdvices] = useState<string[]>([]);
+  // const [tests, setTests] = useState<string[]>([]);
+  // const [medications, setMedications] = useState<TMedication[]>([
+  //   { name: "", dosage: "", frequency: "", duration: "" },
+  // ]);
   const {
     mutate: completeAppointmentAndCreateMedicalReport,
     isPending: isLoadingCompleteAppointmentAndCreateMedicalReport,
   } = useCreateMedicalReport();
 
   const formMethods = useForm<FormValues>({
-    // resolver: zodResolver(
-    //   medicalReportValidationSchema.createMedicalReportZodSchema
-    // ),
+    resolver: zodResolver(
+      medicalReportValidationSchema.createMedicalReportZodSchema
+    ),
     defaultValues: {
       medications: [{ name: "", dosage: "", frequency: "", duration: "" }],
       problems: [""],
@@ -105,82 +105,80 @@ const CompleteAppointmentsModal = ({
     });
   };
 
-  console.log({ medications });
+  // const StringArrayField = ({
+  //   label,
+  //   placeholder,
+  //   name,
+  //   append,
+  //   remove,
+  //   fields,
+  //   error,
+  // }: {
+  //   label: string;
+  //   placeholder?: string;
+  //   name: string;
+  //   fields: { id: string }[];
+  //   append: (value: string) => void;
+  //   remove: (index: number) => void;
+  //   error?: string;
+  // }) => {
+  //   const [inputValue, setInputValue] = useState("");
 
-  const StringArrayField = ({
-    label,
-    placeholder,
-    name,
-    append,
-    remove,
-    fields,
-    error,
-  }: {
-    label: string;
-    placeholder?: string;
-    name: string;
-    fields: { id: string }[];
-    append: (value: string) => void;
-    remove: (index: number) => void;
-    error?: string;
-  }) => {
-    const [inputValue, setInputValue] = useState("");
+  //   const handleAdd = () => {
+  //     const value = inputValue.trim();
+  //     if (value) {
+  //       append(value);
+  //       setInputValue("");
+  //     }
+  //   };
 
-    const handleAdd = () => {
-      const value = inputValue.trim();
-      if (value) {
-        append(value);
-        setInputValue("");
-      }
-    };
+  //   return (
+  //     <div className="shadow p-4 rounded-md">
+  //       <div className="relative">
+  //         <Input
+  //           id={name}
+  //           name={name}
+  //           label={label}
+  //           placeholder={placeholder}
+  //           value={inputValue}
+  //           onChange={(e) => setInputValue(e.target.value)}
+  //           onKeyDown={(e) => {
+  //             if (e.key === "Enter") {
+  //               e.preventDefault();
+  //               handleAdd();
+  //             }
+  //           }}
+  //           isInvalid={!!error}
+  //           errorMessage={error}
+  //         />
+  //         <PlusIcon
+  //           onClick={handleAdd}
+  //           className={`cursor-pointer text-primary text-[12px] absolute right-1 top-1/2 ${
+  //             !!error ? "-translate-y-[24px]" : "-translate-y-1/2"
+  //           } translate`}
+  //         />
+  //       </div>
 
-    return (
-      <div className="shadow p-4 rounded-md">
-        <div className="relative">
-          <Input
-            id={name}
-            name={name}
-            label={label}
-            placeholder={placeholder}
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleAdd();
-              }
-            }}
-            isInvalid={!!error}
-            errorMessage={error}
-          />
-          <PlusIcon
-            onClick={handleAdd}
-            className={`cursor-pointer text-primary text-[12px] absolute right-1 top-1/2 ${
-              !!error ? "-translate-y-[24px]" : "-translate-y-1/2"
-            } translate`}
-          />
-        </div>
-
-        {/* Render Items */}
-        <div className="flex flex-wrap gap-4 mt-3">
-          {fields.map((item, index) => (
-            <div key={item.id || index} className="relative">
-              <span className="text-primary bg-primary bg-opacity-20 pl-2 pr-6 rounded-r-md">
-                {/* Display fallback value */}
-                {formMethods.getValues(name)?.[index] || ""}
-              </span>
-              <XMarkIcon
-                onClick={() => remove(index)}
-                className="text-danger text-[10px] cursor-pointer absolute top-0 right-0 translate-x-[8px] -translate-y-[8px] bg-danger bg-opacity-20 rounded-md p-[2px]"
-                aria-label="remove item"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
-  console.log({ problemFields, adviceFields, testFields });
+  //       {/* Render Items */}
+  //       <div className="flex flex-wrap gap-4 mt-3">
+  //         {fields.map((item, index) => (
+  //           <div key={item.id || index} className="relative">
+  //             <span className="text-primary bg-primary bg-opacity-20 pl-2 pr-6 rounded-r-md">
+  //               {/* Display fallback value */}
+  //               {formMethods.getValues(name)?.[index] || ""}
+  //             </span>
+  //             <XMarkIcon
+  //               onClick={() => remove(index)}
+  //               className="text-danger text-[10px] cursor-pointer absolute top-0 right-0 translate-x-[8px] -translate-y-[8px] bg-danger bg-opacity-20 rounded-md p-[2px]"
+  //               aria-label="remove item"
+  //             />
+  //           </div>
+  //         ))}
+  //       </div>
+  //     </div>
+  //   );
+  // };
+  // console.log({ medicationFields, problemFields, adviceFields, testFields });
 
   return (
     <div>
@@ -235,10 +233,19 @@ const CompleteAppointmentsModal = ({
               label="Diagnosis"
               placeholder="Enter diagnosis"
             />
-            <StringArrayField
+            {/* <StringArrayField
               label="Problems"
               fields={problemFields}
               name="problems"
+              placeholder="Enter problem and press enter"
+              append={(val) => appendProblem(val)}
+              remove={removeProblem}
+            /> */}
+            <MyInp
+              label="Problems"
+              name="problems"
+              type="array"
+              fields={problemFields}
               placeholder="Enter problem and press enter"
               append={(val) => appendProblem(val)}
               remove={removeProblem}
@@ -379,19 +386,28 @@ const CompleteAppointmentsModal = ({
               </Button>
             </div>
 
-            <StringArrayField
+            {/* <StringArrayField
               label="Advices"
-              fields={adviceFields}
               name="advices"
+              fields={adviceFields}
+              placeholder="Enter advice and press enter"
+              append={(val) => appendAdvice(val)}
+              remove={removeAdvice}
+            /> */}
+            <MyInp
+              label="Advices"
+              name="advices"
+              type="array"
+              fields={adviceFields}
               placeholder="Enter advice and press enter"
               append={(val) => appendAdvice(val)}
               remove={removeAdvice}
             />
-
-            <StringArrayField
+            <MyInp
               label="Tests"
-              fields={testFields}
               name="tests"
+              type="array"
+              fields={testFields}
               placeholder="Enter test and press enter"
               append={(val) => appendTest(val)}
               remove={removeTest}
