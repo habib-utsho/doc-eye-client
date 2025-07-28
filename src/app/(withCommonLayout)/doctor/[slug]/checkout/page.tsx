@@ -231,6 +231,7 @@ const DoctorCheckout = () => {
                     isDisabled={
                       !isAvailableNow && (!activeDate || !activeTime || !user)
                     }
+                    isAvailableNow={isAvailableNow}
                     doctor={doctor}
                     activeDate={activeDate}
                     activeTime={activeTime}

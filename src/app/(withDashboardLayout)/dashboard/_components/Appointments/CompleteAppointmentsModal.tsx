@@ -87,6 +87,7 @@ const CompleteAppointmentsModal = ({
     remove: removeTest,
   } = useFieldArray({ control, name: "tests" });
 
+  // TODO: If first time zod validation is not working, then form is not submitting
   const handleSubmit = (data: any) => {
     const payload = {
       ...data,
@@ -96,7 +97,7 @@ const CompleteAppointmentsModal = ({
     };
 
     console.log({ payload });
-    return;
+    // return;
     completeAppointmentAndCreateMedicalReport(payload, {
       onSuccess: (data) => {
         toast.success("Medical report submitted successfully!");

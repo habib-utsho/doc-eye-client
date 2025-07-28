@@ -67,9 +67,7 @@ const PatientAppointmentsPage = ({
       symptoms: appointment?.symptoms
         ? firstLetterCapital(appointment?.symptoms)
         : "N/A",
-      schedule: moment
-        .utc(appointment?.schedule)
-        .format("DD-MMM-YYYY ⏰ hh:mm A"),
+      schedule: moment(appointment?.schedule).format("DD-MMM-YYYY ⏰ hh:mm A"),
       paymentStatus: firstLetterCapital(appointment?.payment?.status),
       status: (
         <Button

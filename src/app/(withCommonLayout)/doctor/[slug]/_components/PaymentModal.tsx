@@ -12,20 +12,22 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@heroui/modal";
+import moment from "moment";
 import React from "react";
 import { toast } from "sonner";
 
 type TPaymentModalProps = {
   paymentType: "bKash" | "SSLCOMMERZ";
-  amount:  {
-    consultationFee: number
-    vat: number
-    platformFee: number
-    total: number
+  amount: {
+    consultationFee: number;
+    vat: number;
+    platformFee: number;
+    total: number;
   };
   isDisabled?: boolean;
   activeDate: string | null;
   activeTime: string | null;
+  isAvailableNow: boolean;
   user: TDecodedUser | null;
   doctor: TDoctor | null;
   refetchAppointments: () => void;
@@ -39,18 +41,19 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
   user,
   doctor,
   refetchAppointments,
+  isAvailableNow,
 }) => {
   const { mutate: initPayment, isPending: isLoadingInitPayment } =
     useInitPayment();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handlePaymentFunc = () => {
-    if (!activeDate) {
+    if (!isAvailableNow && !activeDate) {
       toast.error("Please select a date");
       return;
     }
 
-    if (!activeTime) {
+    if (!isAvailableNow && !activeTime) {
       toast.error("Please select a time");
       return;
     }
@@ -66,11 +69,21 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
     const payload = {
       doctor: doctor._id,
       patient: user._id,
-      schedule: activeDate + "T" + activeTime + ":00Z",
+      // schedule: isAvailableNow
+      //   ? new Date().toISOString()
+      //   : activeDate + "T" + activeTime + ":00Z",
+      schedule: isAvailableNow
+        ? moment().format() // current time in local timezone as ISO 8601 string
+        : moment(`${activeDate} ${activeTime}`, "YYYY-MM-DD HH:mm").format(),
       appointmentType: "online" as TAppointmentType,
       amount,
       paymentMethod: paymentType,
     };
+
+    console.log({ payload });
+
+    // return;
+
     initPayment(payload, {
       onSuccess: (data) => {
         if (data?.success) {

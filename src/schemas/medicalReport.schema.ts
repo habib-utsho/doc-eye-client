@@ -1,13 +1,13 @@
 import { z } from "zod";
 
 const createMedicalReportZodSchema = z.object({
-  appointment: z.string().min(1, "Appointment ID is required"),
-  doctor: z.string().min(1, "Doctor ID is required"),
-  patient: z.string().min(1, "Patient ID is required"),
+  // appointment: z.string().min(1, "Appointment ID is required"),
+  // doctor: z.string().min(1, "Doctor ID is required"),
+  // patient: z.string().min(1, "Patient ID is required"),
+  diagnosis: z.string().min(1, "Diagnosis is required"),
   problems: z
     .array(z.string().min(1, "Problem cannot be empty"))
     .nonempty("At least one problem is required"),
-  diagnosis: z.string().min(1, "Diagnosis is required"),
   medications: z
     .array(
       z.object({
@@ -18,8 +18,12 @@ const createMedicalReportZodSchema = z.object({
       })
     )
     .optional(),
-  advices: z.array(z.string().min(1)).optional(),
-  tests: z.array(z.string().min(1)).optional(),
+  advices: z
+    .array(z.string().min(1, "Advices cannot be empty"))
+    .nonempty("At least one advice is required").optional(),
+  tests: z
+    .array(z.string().min(1, "Tests cannot be empty"))
+    .nonempty("At least one test is required").optional(),
   followUpDate: z.coerce.date().optional(),
 });
 

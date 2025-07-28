@@ -56,7 +56,7 @@ const MedicalReportDetailsPage = () => {
               history
             </Link>
             <h2 className="text-paragraph">
-              {moment(medicalReport.createdAt).format("DD-MMM-YYYY ⏰ hh:mm A")}
+              {moment(medicalReport.appointment?.schedule).format("DD-MMM-YYYY ⏰ hh:mm A")}
             </h2>
           </div>
 

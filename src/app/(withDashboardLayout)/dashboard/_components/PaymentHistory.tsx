@@ -138,9 +138,9 @@ const PaymentHistory = () => {
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-300">
                     Scheduled on{" "}
-                    {moment
-                      .utc(selectedAppointment?.schedule)
-                      .format("DD-MMM-YYYY hh:mm A")}
+                    {moment(selectedAppointment?.schedule).format(
+                      "DD-MMM-YYYY hh:mm A"
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center justify-between bg-white dark:bg-black p-4 rounded-md shadow-sm">

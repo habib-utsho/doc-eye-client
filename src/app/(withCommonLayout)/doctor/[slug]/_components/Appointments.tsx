@@ -5,12 +5,10 @@ import isDoctorAvailableByDay from "@/src/utils/isDoctorAvailableByDay";
 import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
 import React, { useEffect } from "react";
 import { getNext15DaysFunc } from "@/src/utils/getNext15DaysFunc";
-import { useGetAllAppointments } from "@/src/hooks/appointment.hook";
 import { TAppointment } from "@/src/types/appointment";
 import { Skeleton } from "@heroui/skeleton";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { availableTimeSlotsFunc } from "@/src/utils/availableTimeSlots";
-import { TResponse } from "@/src/types";
 
 const CategorizeTimeSlotsCompo = ({
   period,

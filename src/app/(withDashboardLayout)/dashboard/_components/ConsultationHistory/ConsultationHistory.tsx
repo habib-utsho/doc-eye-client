@@ -70,9 +70,9 @@ const ConsultationHistory = () => {
       followUp: history?.followUpDate
         ? moment(history?.followUpDate).format("DD-MMM-YYYY")
         : "N/A",
-      schedule: moment
-        .utc(history?.appointment?.schedule)
-        .format("DD-MMM-YYYY ⏰ hh:mm A"),
+      schedule: moment(history?.appointment?.schedule).format(
+        "DD-MMM-YYYY ⏰ hh:mm A"
+      ),
       createdAt: moment(history?.createdAt).format("DD-MMM-YYYY ⏰ hh:mm A"),
     })
   );
