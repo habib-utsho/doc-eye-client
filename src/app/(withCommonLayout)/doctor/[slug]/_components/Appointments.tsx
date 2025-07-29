@@ -9,6 +9,7 @@ import { TAppointment } from "@/src/types/appointment";
 import { Skeleton } from "@heroui/skeleton";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { availableTimeSlotsFunc } from "@/src/utils/availableTimeSlots";
+import moment from "moment";
 
 const CategorizeTimeSlotsCompo = ({
   period,
@@ -119,8 +120,8 @@ const Appointments = ({
 
   const appointmentsSchedule = appointments?.map(
     (appointment: TAppointment) => {
-      const date = new Date(appointment.schedule);
-      const time = date.toISOString().slice(11, 16);
+      const date = moment(appointment.schedule).format("YYYY-MM-DD HH:mm:ss");
+      const time = date.slice(11, 16);
       return time;
     }
   );

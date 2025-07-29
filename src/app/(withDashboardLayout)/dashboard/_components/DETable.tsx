@@ -79,8 +79,7 @@ const DETable = ({
             className={`
               ${
                 redirectByRowClick
-                  ? `cursor-pointer border-b border-slate-300 
-                   `
+                  ? `cursor-pointer border-b border-slate-300 hover:scale-[1.01] hover:opacity-80 transition-all`
                   : item.isDeleted || user?._id === item?.user?._id
                   ? "bg-red-50 pointer-events-none blur-[.5px]"
                   : ""

@@ -48,7 +48,7 @@ const DoctorCheckout = () => {
   } = useGetAllAppointments([
     { name: "doctor", value: doctor?._id },
     { name: "date", value: activeDate },
-    { name: "limit", value: 250 },
+    { name: "limit", value: 250 }, //TODO: change this limit
   ]);
 
   // console.log({

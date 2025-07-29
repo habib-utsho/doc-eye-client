@@ -79,7 +79,7 @@ const ManagePatientsPage = () => {
       appointment: (
         <div>
           {appointment.symptoms}
-          {moment(appointment?.schedule).format("DD MMM YYYY")}
+          {moment(appointment?.schedule).format("DD MMM YYYY ⏰ hh:mm A")}
           <br />
           <span className="font-semibold">
             {firstLetterCapital(appointment.appointmentType)}

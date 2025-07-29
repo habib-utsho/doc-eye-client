@@ -176,7 +176,7 @@ const DoctorAppointmentsPage = ({
               />
             </div>
           ) : (
-            ""
+            "-"
           )}
         </>
       ),
@@ -253,6 +253,7 @@ const DoctorAppointmentsPage = ({
         onOpenChange={onOpenChange}
         appointmentForModal={appointmentForModal}
         setAppointmentForModal={setAppointmentForModal}
+        refetchAppointments={refetchAppointments}
       />
     </div>
   );

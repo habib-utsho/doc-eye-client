@@ -15,23 +15,32 @@ const BookingButton = async ({
   const p = await params;
 
   return (
-    <Button
-      color={isDoctorAvailableP ? "success" : "primary"}
-      className="text-white animate-pulse"
-      size="lg"
-      startContent={
-        isDoctorAvailableP ? <VideoCameraOutlined /> : <CalendarOutlined />
-      }
-      onPress={() =>
-        router.push(
-          `/doctor/${p?.slug}/checkout${
-            isDoctorAvailableP ? "?isAvailableNow=true" : ""
-          }`
-        )
-      }
-    >
-      {isDoctorAvailableP ? "Book now" : "Appointment"}
-    </Button>
+    <div className="flex justify-end items-center gap-2 mt-2">
+      {isDoctorAvailableP && (
+        <Button
+          color={"success"}
+          className="text-white animate-pulse"
+          size="lg"
+          startContent={<VideoCameraOutlined />}
+          onPress={() =>
+            router.push(`/doctor/${p?.slug}/checkout?isAvailableNow=true`)
+          }
+        >
+          Book now
+        </Button>
+      )}
+      <Button
+        color={"primary"}
+        className="text-white"
+        size="lg"
+        startContent={<CalendarOutlined />}
+        onPress={() =>
+          router.push(`/doctor/${p?.slug}/checkout?isAvailableNow=false`)
+        }
+      >
+        Appointment
+      </Button>
+    </div>
   );
 };
 

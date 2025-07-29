@@ -12,8 +12,7 @@ import { PlusIcon, XMarkIcon } from "@/src/components/ui/icons";
 import { MinusOutlined } from "@ant-design/icons";
 import { useCreateMedicalReport } from "@/src/hooks/medicalReport.hook";
 import { TAppointment } from "@/src/types/appointment";
-import { useFieldArray, useForm, useFormContext } from "react-hook-form";
-import { Input } from "@heroui/input";
+import { useFieldArray, useForm } from "react-hook-form";
 
 type FormValues = {
   medications: TMedication[];
@@ -30,12 +29,14 @@ const CompleteAppointmentsModal = ({
   onOpenChange,
   appointmentForModal,
   setAppointmentForModal,
+  refetchAppointments,
 }: {
   isOpen: boolean;
   onOpen: Dispatch<SetStateAction<boolean>>;
   onOpenChange: (isOpen: boolean) => void;
   appointmentForModal: TAppointment | null;
   setAppointmentForModal: Dispatch<SetStateAction<TAppointment | null>>;
+  refetchAppointments: () => void;
 }) => {
   // const [problems, setProblems] = useState<string[]>([]);
   // const [advices, setAdvices] = useState<string[]>([]);
@@ -61,6 +62,7 @@ const CompleteAppointmentsModal = ({
   });
 
   const { control } = formMethods;
+  console.log({ control });
   const {
     fields: medicationFields,
     append: appendMedication,
@@ -73,18 +75,21 @@ const CompleteAppointmentsModal = ({
     fields: problemFields,
     append: appendProblem,
     remove: removeProblem,
+    // @ts-ignore
   } = useFieldArray({ control, name: "problems" });
 
   const {
     fields: adviceFields,
     append: appendAdvice,
     remove: removeAdvice,
+    // @ts-ignore
   } = useFieldArray({ control, name: "advices" });
 
   const {
     fields: testFields,
     append: appendTest,
     remove: removeTest,
+    // @ts-ignore
   } = useFieldArray({ control, name: "tests" });
 
   // TODO: If first time zod validation is not working, then form is not submitting
@@ -96,89 +101,19 @@ const CompleteAppointmentsModal = ({
       patient: appointmentForModal?.patient?._id,
     };
 
-    console.log({ payload });
+    // console.log({ payload });
     // return;
     completeAppointmentAndCreateMedicalReport(payload, {
       onSuccess: (data) => {
+        refetchAppointments();
         toast.success("Medical report submitted successfully!");
+        onOpenChange(false);
+        setAppointmentForModal(null);
       },
       onError: (e) => toast.error(e.message),
     });
   };
 
-  // const StringArrayField = ({
-  //   label,
-  //   placeholder,
-  //   name,
-  //   append,
-  //   remove,
-  //   fields,
-  //   error,
-  // }: {
-  //   label: string;
-  //   placeholder?: string;
-  //   name: string;
-  //   fields: { id: string }[];
-  //   append: (value: string) => void;
-  //   remove: (index: number) => void;
-  //   error?: string;
-  // }) => {
-  //   const [inputValue, setInputValue] = useState("");
-
-  //   const handleAdd = () => {
-  //     const value = inputValue.trim();
-  //     if (value) {
-  //       append(value);
-  //       setInputValue("");
-  //     }
-  //   };
-
-  //   return (
-  //     <div className="shadow p-4 rounded-md">
-  //       <div className="relative">
-  //         <Input
-  //           id={name}
-  //           name={name}
-  //           label={label}
-  //           placeholder={placeholder}
-  //           value={inputValue}
-  //           onChange={(e) => setInputValue(e.target.value)}
-  //           onKeyDown={(e) => {
-  //             if (e.key === "Enter") {
-  //               e.preventDefault();
-  //               handleAdd();
-  //             }
-  //           }}
-  //           isInvalid={!!error}
-  //           errorMessage={error}
-  //         />
-  //         <PlusIcon
-  //           onClick={handleAdd}
-  //           className={`cursor-pointer text-primary text-[12px] absolute right-1 top-1/2 ${
-  //             !!error ? "-translate-y-[24px]" : "-translate-y-1/2"
-  //           } translate`}
-  //         />
-  //       </div>
-
-  //       {/* Render Items */}
-  //       <div className="flex flex-wrap gap-4 mt-3">
-  //         {fields.map((item, index) => (
-  //           <div key={item.id || index} className="relative">
-  //             <span className="text-primary bg-primary bg-opacity-20 pl-2 pr-6 rounded-r-md">
-  //               {/* Display fallback value */}
-  //               {formMethods.getValues(name)?.[index] || ""}
-  //             </span>
-  //             <XMarkIcon
-  //               onClick={() => remove(index)}
-  //               className="text-danger text-[10px] cursor-pointer absolute top-0 right-0 translate-x-[8px] -translate-y-[8px] bg-danger bg-opacity-20 rounded-md p-[2px]"
-  //               aria-label="remove item"
-  //             />
-  //           </div>
-  //         ))}
-  //       </div>
-  //     </div>
-  //   );
-  // };
   // console.log({ medicationFields, problemFields, adviceFields, testFields });
 
   return (
@@ -234,14 +169,7 @@ const CompleteAppointmentsModal = ({
               label="Diagnosis"
               placeholder="Enter diagnosis"
             />
-            {/* <StringArrayField
-              label="Problems"
-              fields={problemFields}
-              name="problems"
-              placeholder="Enter problem and press enter"
-              append={(val) => appendProblem(val)}
-              remove={removeProblem}
-            /> */}
+
             <MyInp
               label="Problems"
               name="problems"
@@ -252,76 +180,6 @@ const CompleteAppointmentsModal = ({
               remove={removeProblem}
             />
 
-            {/* <div className="shadow p-4 rounded-md">
-              <h2 className="font-semibold">Medications</h2>
-              <Divider className="mt-1 mb-6" />
-
-              {medications.map((medication, index) => {
-                return (
-                  <div className="shadow  p-2 rounded-md mb-4" key={index}>
-                    <div className="text-right">
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="shadow"
-                        className="my-2"
-                        onPress={() =>
-                          setMedications((prev) => {
-                            return prev.filter((_, i) => {
-                              // console.log({ prev, index, i });
-                              return i != index;
-                            });
-                          })
-                        }
-                        aria-label="remove medication"
-                      >
-                        <MinusOutlined />
-                      </Button>
-                    </div>
-                    <div key={index} className="grid grid-cols-2 gap-4 ">
-                      <MyInp
-                        name={`medications[${index}].name`}
-                        type="text"
-                        label="Name"
-                        placeholder="Enter medication name"
-                      />
-                      <MyInp
-                        name={`medications[${index}].dosage`}
-                        type="text"
-                        label="Dosage"
-                        placeholder="Enter medication dosage"
-                      />
-                      <MyInp
-                        name={`medications[${index}].frequency`}
-                        type="text"
-                        label="Frequency"
-                        placeholder="Enter medication frequency"
-                      />
-                      <MyInp
-                        name={`medications[${index}].duration`}
-                        type="text"
-                        label="Duration"
-                        placeholder="Enter medication duration"
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-              <Button
-                type="button"
-                size="sm"
-                variant="shadow"
-                className="mt-2"
-                onPress={() =>
-                  setMedications([
-                    ...medications,
-                    { name: "", dosage: "", frequency: "", duration: "" },
-                  ])
-                }
-              >
-                <PlusIcon />
-              </Button>
-            </div> */}
             <div className="shadow p-4 rounded-md">
               <h2 className="font-semibold">Medications</h2>
               <Divider className="mt-1 mb-6" />
@@ -387,14 +245,6 @@ const CompleteAppointmentsModal = ({
               </Button>
             </div>
 
-            {/* <StringArrayField
-              label="Advices"
-              name="advices"
-              fields={adviceFields}
-              placeholder="Enter advice and press enter"
-              append={(val) => appendAdvice(val)}
-              remove={removeAdvice}
-            /> */}
             <MyInp
               label="Advices"
               name="advices"

@@ -12,16 +12,16 @@ export const createMedicalReport = async (payload: TCreateMedicalReport) => {
       payload
     );
     revalidateTag("medicalReport");
+    revalidateTag("appointment");
     return response.data;
   } catch (e: any) {
     throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to init payment!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to init payment!"
     );
   }
 };
