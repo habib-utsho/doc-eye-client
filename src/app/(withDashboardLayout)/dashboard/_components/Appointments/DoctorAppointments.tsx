@@ -55,7 +55,7 @@ const DoctorAppointmentsPage = ({
   const { mutate: updateAppointmentStatus, isPending: isLoadingUpdateStatus } =
     useUpdateAppointmentStatusById();
 
-  console.log({ appointments });
+  // console.log({ appointments });
 
   const rows = appointments?.data?.map(
     (appointment: TAppointment, ind: number) => ({

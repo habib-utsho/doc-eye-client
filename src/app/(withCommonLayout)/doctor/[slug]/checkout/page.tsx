@@ -48,7 +48,7 @@ const DoctorCheckout = () => {
   } = useGetAllAppointments([
     { name: "doctor", value: doctor?._id },
     { name: "date", value: activeDate },
-    { name: "limit", value: 250 }, //TODO: change this limit
+    { name: "limit", value: 250 }, //TODO: change this limit - break paginate or separate API
   ]);
 
   // console.log({
@@ -203,7 +203,7 @@ const DoctorCheckout = () => {
                   </Radio>
                 </RadioGroup>
 
-                <div className="flex justify-between items-center pt-2 border-t-4 border-dotted font-[500]">
+                <div className="flex justify-between items-center pt-2 border-t-4 border-dotted font-[500] !my-2">
                   <p className="text-md">Payable Amount</p>
                   <p className="text-md">৳{totalAmount}</p>
                 </div>
@@ -214,7 +214,8 @@ const DoctorCheckout = () => {
                     className="w-full"
                   >
                     <Button color="primary" className="w-full text-white">
-                      Signin
+                      You need to login to pay
+                      <UserAddOutlined className="ml-1" />
                     </Button>{" "}
                   </Link>
                 ) : (
