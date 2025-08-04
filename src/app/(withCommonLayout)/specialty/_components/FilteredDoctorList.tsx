@@ -1,4 +1,3 @@
-// app/specialty/[slug]/_components/FilteredDoctorList.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -16,6 +15,7 @@ const FilteredDoctorList = ({ initialDoctors, specialtySlug }: Props) => {
   const [doctors, setDoctors] = useState<TDoctor[]>(initialDoctors);
   const [selectedGender, setSelectedGender] = useState<string[]>([]);
   const [availability, setAvailability] = useState<string>("default");
+  const [sort, setSort] = useState<string>("default");
 
   useEffect(() => {
     const fetchFilteredDoctors = async () => {
@@ -27,15 +27,15 @@ const FilteredDoctorList = ({ initialDoctors, specialtySlug }: Props) => {
         ...(availability != "default"
           ? [{ name: "availability", value: availability }]
           : []),
+        ...(sort != "default" ? [{ name: "sort", value: sort }] : []),
       ];
-
 
       const res = await getAllDoctors(filters);
       setDoctors(res?.data || []);
     };
 
     fetchFilteredDoctors();
-  }, [selectedGender, availability, specialtySlug]);
+  }, [selectedGender, availability, sort, specialtySlug]);
 
   return (
     <div className="grid grid-cols-12 gap-4">
@@ -44,6 +44,8 @@ const FilteredDoctorList = ({ initialDoctors, specialtySlug }: Props) => {
         setSelectedGender={setSelectedGender}
         availability={availability}
         setAvailability={setAvailability}
+        sort={sort}
+        setSort={setSort}
       />
       <div className="col-span-12 sm:col-span-8 lg:col-span-9 flex flex-col gap-4">
         {doctors?.length === 0 ? (

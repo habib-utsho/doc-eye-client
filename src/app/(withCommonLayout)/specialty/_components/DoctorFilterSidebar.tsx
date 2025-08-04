@@ -9,12 +9,16 @@ type TDoctorFilterSidebar = {
   setSelectedGender: React.Dispatch<React.SetStateAction<string[]>>;
   availability: string;
   setAvailability: React.Dispatch<React.SetStateAction<string>>;
+  sort: string;
+  setSort: React.Dispatch<React.SetStateAction<string>>;
 };
 const DoctorFilerSidebar = ({
   selectedGender,
   setSelectedGender,
   availability,
   setAvailability,
+  sort,
+  setSort,
 }: TDoctorFilterSidebar) => {
   return (
     <div className="col-span-12 sm:col-span-4 lg:col-span-3 bg-slate-100 dark:bg-slate-900 p-4 rounded-md space-y-3 md:space-y-4">
@@ -75,13 +79,17 @@ const DoctorFilerSidebar = ({
         </Checkbox>
       </CheckboxGroup>
 
-      <RadioGroup label="Sort By" defaultValue="relevance">
-        <Radio value="relevance">Relevance (Default)</Radio>
-        <Radio value="popularity">Popularity</Radio>
-        <Radio value="low_to_high">Low to High (Fees)</Radio>
-        <Radio value="high_to_low">High to Low (Fees)</Radio>
-        <Radio value="rating">Rating</Radio>
-        <Radio value="experience">Experience</Radio>
+      <RadioGroup
+        label="Sort By"
+        onChange={(e) => setSort(e.target.value)}
+        value={sort}
+        defaultValue="default"
+      >
+        <Radio value="default">Relevance (Default)</Radio>
+        <Radio value="-patientAttended">Popularity</Radio>
+        <Radio value="consultationFee">Low to High (Fees)</Radio>
+        <Radio value="-consultationFee">High to Low (Fees)</Radio>
+        <Radio value="-totalExperienceYear">Experience</Radio>
       </RadioGroup>
     </div>
   );
