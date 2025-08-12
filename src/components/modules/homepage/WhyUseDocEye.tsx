@@ -17,8 +17,17 @@ import {
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
 import { GithubIcon } from "../../ui/icons";
+import {
+  FaCalendarCheck,
+  FaLock,
+  FaFileMedical,
+  FaUserDoctor,
+  FaBell,
+  FaPrescription,
+} from "react-icons/fa6";
 import Container from "../../ui/Container";
 import { useTheme } from "next-themes";
+import MyMotion from "../../ui/MyMotion";
 const WhyUseDocEye = () => {
   const { theme } = useTheme();
   const timelines = [
@@ -29,7 +38,7 @@ const WhyUseDocEye = () => {
         "Effortlessly book appointments with your preferred doctors at your convenience.",
       benefit: "Save time and avoid long waiting periods.",
       iconBg: "#09528C",
-      icon: <GithubIcon />,
+      icon: <FaCalendarCheck />,
     },
     {
       id: 2,
@@ -38,7 +47,7 @@ const WhyUseDocEye = () => {
         "Your medical data is kept confidential and secure with advanced encryption.",
       benefit: "Ensure the privacy of your health information.",
       iconBg: "#E57373",
-      icon: <GithubIcon />,
+      icon: <FaLock />,
     },
     {
       id: 3,
@@ -47,7 +56,7 @@ const WhyUseDocEye = () => {
         "View and manage your medical records online, anytime, anywhere.",
       benefit: "Have easy access to your complete medical history.",
       iconBg: "#8B008B",
-      icon: <GithubIcon />,
+      icon: <FaFileMedical />,
     },
     {
       id: 4,
@@ -56,7 +65,7 @@ const WhyUseDocEye = () => {
         "Check real-time availability of doctors and make last-minute appointments.",
       benefit: "Get prompt medical care when you need it most.",
       iconBg: "#00008B",
-      icon: <GithubIcon />,
+      icon: <FaUserDoctor />,
     },
     {
       id: 5,
@@ -65,7 +74,7 @@ const WhyUseDocEye = () => {
         "Request prescription refills quickly and conveniently through the portal.",
       benefit: "Avoid running out of essential medications.",
       iconBg: "#07332F",
-      icon: <GithubIcon />,
+      icon: <FaPrescription />,
     },
     {
       id: 6,
@@ -75,7 +84,7 @@ const WhyUseDocEye = () => {
       benefit:
         "Stay on top of your health and never miss an important appointment.",
       iconBg: "#F7A582",
-      icon: <GithubIcon />,
+      icon: <FaBell />,
     },
   ];
 
@@ -100,15 +109,14 @@ const WhyUseDocEye = () => {
                 iconStyle={{ background: `${iconBg}`, color: "#fff" }}
                 icon={icon}
               >
-                <h3 className="font-bold text-lg md:text-xl">{title}</h3>
-                <p>{description}</p>
-                <p className="flex gap-2 items-center text-slate-500 ">
-                  {" "}
-                  <span className="text-xl">
-                    <GithubIcon />
-                  </span>{" "}
-                  {benefit}
-                </p>
+                <MyMotion y={60}>
+                  <h3 className="font-bold text-lg md:text-xl">{title}</h3>
+                  <p>{description}</p>
+                  <p className="flex gap-2 items-center text-slate-500 ">
+                    {" "}
+                    <span className="text-xl">{icon}</span> {benefit}
+                  </p>
+                </MyMotion>
               </VerticalTimelineElement>
             );
           })}

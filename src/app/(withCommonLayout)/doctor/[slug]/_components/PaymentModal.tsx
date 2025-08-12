@@ -13,6 +13,7 @@ import {
   useDisclosure,
 } from "@heroui/modal";
 import moment from "moment";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "sonner";
 
@@ -43,9 +44,15 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
   refetchAppointments,
   isAvailableNow,
 }) => {
+  const router = useRouter();
   const { mutate: initPayment, isPending: isLoadingInitPayment } =
     useInitPayment();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    isOpen: isRedirectModalOpen,
+    onOpen: openRedirectModal,
+    onClose: closeRedirectModal,
+  } = useDisclosure();
 
   const handlePaymentFunc = () => {
     if (!isAvailableNow && !activeDate) {
@@ -90,6 +97,9 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
           toast.success(data?.message || "Payment successful!");
           refetchAppointments();
           onOpenChange();
+
+          // Open redirect confirmation modal
+          openRedirectModal();
         } else {
           toast.error(data?.message || "Failed to payment!");
         }
@@ -171,6 +181,48 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
                   className="text-white"
                 >
                   Pay {amount.total} BDT
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
+      {/* Redirect modal */}
+      <Modal isOpen={isRedirectModalOpen} onOpenChange={closeRedirectModal}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex items-center justify-center flex-col gap-2 text-center">
+                <span className="text-green-500 text-5xl">✅</span>
+                <span className="text-xl font-bold text-gray-900">
+                  Payment Successful!
+                </span>
+              </ModalHeader>
+
+              <ModalBody className="text-center text-gray-700">
+                <p className="text-sm">
+                  Your appointment has been confirmed. Would you like to view
+                  your upcoming appointments now?
+                </p>
+              </ModalBody>
+
+              <ModalFooter className="flex justify-center gap-4">
+                <Button color="secondary" variant="light" onPress={onClose}>
+                  Stay Here
+                </Button>
+                <Button
+                  color="primary"
+                  className="text-white"
+                  onPress={() => {
+                    router.push(
+                      isAvailableNow
+                        ? "/dashboard/patient/expired-appointments"
+                        : "/dashboard/patient/upcoming-appointments"
+                    );
+                  }}
+                >
+                  Go to Appointments
                 </Button>
               </ModalFooter>
             </>

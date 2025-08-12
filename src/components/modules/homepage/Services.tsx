@@ -12,6 +12,7 @@ import { Button } from "@heroui/button";
 import Container from "../../ui/Container";
 import { subtitle } from "../../primitives";
 import MyMotion from "../../ui/MyMotion";
+import Link from "next/link";
 
 const Services = () => {
   const servicesData = [
@@ -59,14 +60,16 @@ const Services = () => {
               with the help of advanced tools and the experience of pioneer
               cardiology team
             </p>
-            <Button
-              color="primary"
-              variant="flat"
-              className="text-primary dark:text-white"
-              size="lg"
-            >
-              All services
-            </Button>
+            <Link href="/specialty">
+              <Button
+                color="primary"
+                variant="flat"
+                className="text-primary dark:text-white mt-5"
+                size="lg"
+              >
+                All services
+              </Button>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 space-y-6 md:space-y-0 py-14">

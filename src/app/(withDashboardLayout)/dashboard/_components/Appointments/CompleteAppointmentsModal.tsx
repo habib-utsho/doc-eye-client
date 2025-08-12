@@ -62,7 +62,7 @@ const CompleteAppointmentsModal = ({
   });
 
   const { control } = formMethods;
-  console.log({ control });
+  // console.log({ control });
   const {
     fields: medicationFields,
     append: appendMedication,

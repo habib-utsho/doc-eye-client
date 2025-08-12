@@ -11,7 +11,13 @@ import { TAppointment } from "@/src/types/appointment";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { Button } from "@heroui/button";
 import useUserData from "@/src/hooks/user.hook";
-import { CheckCircleFilled, CheckCircleOutlined } from "@ant-design/icons";
+import {
+  CheckCircleFilled,
+  CheckCircleOutlined,
+  MessageOutlined,
+  VideoCameraOutlined,
+} from "@ant-design/icons";
+import Chat from "../Chat";
 
 const PatientAppointmentsPage = ({
   state = "upcoming",
@@ -95,6 +101,29 @@ const PatientAppointmentsPage = ({
           {firstLetterCapital(appointment.status)}
         </Button>
       ),
+      action: (
+        <>
+          {appointment.status === "confirmed" ? (
+            <div className="flex gap-1 items-center">
+              <Chat
+                from={"patient"}
+                appointmentId={appointment?._id}
+                doctor={appointment.doctor}
+                patient={appointment.patient}
+              />
+              <Button
+                isIconOnly
+                startContent={<VideoCameraOutlined />}
+                // isLoading={}
+                variant="shadow"
+                className="text-white bg-primary text-lg"
+              />
+            </div>
+          ) : (
+            "-"
+          )}
+        </>
+      ),
       createdAt: moment(appointment?.createdAt).format(
         "DD-MMM-YYYY ⏰ hh:mm A"
       ),
@@ -110,6 +139,7 @@ const PatientAppointmentsPage = ({
     { key: "schedule", label: "Schedule" },
     { key: "paymentStatus", label: "Payment" },
     { key: "status", label: "Status" },
+    { key: "action", label: "Action" },
     { key: "createdAt", label: "Created At" },
   ];
 

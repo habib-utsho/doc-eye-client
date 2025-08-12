@@ -11,16 +11,16 @@ export const makePaymentInit = async (payload: TCreateAppointment) => {
     const response = await axiosInstance.post(`/payment`, payload);
     revalidateTag("payment");
     revalidateTag("appointment");
+    revalidateTag("doctor");
     return response.data;
   } catch (e: any) {
     throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to init payment!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to init payment!"
     );
   }
 };

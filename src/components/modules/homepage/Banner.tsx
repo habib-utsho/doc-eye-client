@@ -10,6 +10,7 @@ import Image from "next/image";
 import Container from "../../ui/Container";
 import { subtitle, title } from "../../primitives";
 import { useTheme } from "next-themes";
+import MyMotion from "../../ui/MyMotion";
 
 const Banner = () => {
   const services = [
@@ -70,9 +71,10 @@ const Banner = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 py-10">
             {services.map((service, ind) => (
-              <div
+              <MyMotion
+                scale={1.1}
                 key={ind}
-                className="py-7 px-3 rounded-md bg-background border space-y-4 text-center cursor-pointer hover:scale-105 hover:-translate-y-5 transition duration-500"
+                className="py-7 px-3 rounded-md bg-background border space-y-4 text-center cursor-pointer hover:!scale-105 hover:!-translate-y-5 transition duration-500"
               >
                 <Image
                   alt="videoConsultation"
@@ -83,7 +85,7 @@ const Banner = () => {
                 ></Image>
                 <h2 className="font-semibold text-xl">{service.title}</h2>
                 <p className="text-paragraph">{service.subTitle}</p>
-              </div>
+              </MyMotion>
             ))}
           </div>
         </div>

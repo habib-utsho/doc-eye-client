@@ -3,6 +3,7 @@ import { Checkbox, CheckboxGroup } from "@heroui/checkbox";
 import { Radio, RadioGroup } from "@heroui/radio";
 import { Slider } from "@heroui/slider";
 import React from "react";
+import { Sidebar } from "react-pro-sidebar";
 
 type TDoctorFilterSidebar = {
   selectedGender: string[];
@@ -27,12 +28,19 @@ const DoctorFilerSidebar = ({
         <Button
           variant="flat"
           className="text-primary-500 dark:text-white font-semibold"
+          onPress={() => {
+            setSelectedGender([]);
+            setAvailability("default");
+            setSort("default");
+          }}
         >
           RESET
         </Button>
       </div>
 
-      <Slider />
+      {/* TODO: Add price slider */}
+      {/* <Slider /> */}
+
       <RadioGroup
         label="Availability"
         defaultValue="default"
@@ -40,7 +48,6 @@ const DoctorFilerSidebar = ({
         value={availability}
       >
         <Radio value="default"> All Time (Default)</Radio>
-        <Radio value="online_now">Online Now</Radio>
         <Radio value="available_today">Available Today</Radio>
         <Radio value="available_in_next_three_days">
           Available in next 3 days
@@ -48,12 +55,15 @@ const DoctorFilerSidebar = ({
         <Radio value="available_in_next_seven_days">
           Available in next 7 days
         </Radio>
+        <Radio value="online_now" isDisabled>
+          Online Now <span className="text-primary font-bold">[upcoming]</span>
+        </Radio>
       </RadioGroup>
 
-      <CheckboxGroup label="Filter by Doctor Gender">
+      <CheckboxGroup label="Filter by Doctor Gender" value={selectedGender}>
         <Checkbox
           value="Female"
-          isSelected={selectedGender?.includes("Female")}
+          // isSelected={selectedGender?.includes("Female")}
           onChange={(e) =>
             selectedGender.includes(e.target.value)
               ? setSelectedGender(
@@ -66,7 +76,7 @@ const DoctorFilerSidebar = ({
         </Checkbox>
         <Checkbox
           value="Male"
-          isSelected={selectedGender?.includes("Male")}
+          // isSelected={selectedGender?.includes("Male")}
           onChange={(e) =>
             selectedGender.includes(e.target.value)
               ? setSelectedGender(

@@ -24,6 +24,7 @@ import { toast } from "sonner";
 import CompleteAppointmentsModal from "./CompleteAppointmentsModal";
 import { useDisclosure } from "@heroui/modal";
 import { MessageOutlined, VideoCameraOutlined } from "@ant-design/icons";
+import Chat from "../Chat";
 
 const DoctorAppointmentsPage = ({
   state = "upcoming",
@@ -159,13 +160,11 @@ const DoctorAppointmentsPage = ({
         <>
           {appointment.status === "confirmed" ? (
             <div className="flex gap-1 items-center">
-              <Button
-                isIconOnly
-                startContent={<MessageOutlined />}
-                // isLoading={}
-                color="success"
-                variant="shadow"
-                className="text-white bg-primary bg-opacity-50 text-lg"
+              <Chat
+                from={"doctor"}
+                appointmentId={appointment?._id}
+                doctor={appointment.doctor}
+                patient={appointment.patient}
               />
               <Button
                 isIconOnly
