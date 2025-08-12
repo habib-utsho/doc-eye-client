@@ -162,7 +162,7 @@ const DoctorAppointmentsPage = ({
             <div className="flex gap-1 items-center">
               <Chat
                 from={"doctor"}
-                appointmentId={appointment?._id}
+                appointment={appointment}
                 doctor={appointment.doctor}
                 patient={appointment.patient}
               />
