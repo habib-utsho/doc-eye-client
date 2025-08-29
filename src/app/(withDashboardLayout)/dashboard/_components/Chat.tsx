@@ -21,14 +21,8 @@ import moment from "moment";
 import { TAppointment } from "@/src/types/appointment";
 import { TDoctor, TPatient, TUserRole } from "@/src/types/user";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
-
-type TMessage = {
-  appointmentId: string;
-  text: string;
-  from: TUserRole;
-  fromUserId: string;
-  timestamp: number;
-};
+import { TMessage } from "@/src/types/message";
+import { useGetAllMessages } from "@/src/hooks/message.hook";
 
 type ChatProps = {
   from: TUserRole;
@@ -45,6 +39,15 @@ const ChatDrawer: React.FC<ChatProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const chatId = `${appointment._id}-${doctor._id}-${patient._id}-${new Date(
+    appointment.schedule
+  ).getTime()}`;
+
+  const { data: chats, isLoading: isLoadingChats } = useGetAllMessages([
+    { name: "chatId", value: chatId },
+    { name: "limit", value: 500 },
+  ]);
+
   const [messages, setMessages] = useState<TMessage[]>([]);
   const [message, setMessage] = useState("");
   const socketRef = useRef<Socket | null>(null);
@@ -52,6 +55,13 @@ const ChatDrawer: React.FC<ChatProps> = ({
 
   const senderInfo = from === "doctor" ? doctor : patient;
   const receiverInfo = from === "doctor" ? patient : doctor;
+
+  // Populate messages state initially from DB
+  useEffect(() => {
+    if (chats?.data) {
+      setMessages(chats.data);
+    }
+  }, [chats]);
 
   // Socket connection
   useEffect(() => {
@@ -66,7 +76,8 @@ const ChatDrawer: React.FC<ChatProps> = ({
     });
 
     socket.on("receive_message", (data: TMessage) => {
-      if (data.appointmentId === appointment._id) {
+      console.log({ data, chatId });
+      if (data.chatId === chatId) {
         setMessages((prev) => [...prev, data]);
       }
     });
@@ -85,22 +96,30 @@ const ChatDrawer: React.FC<ChatProps> = ({
         behavior: "smooth",
       });
     }
-  }, [messages]);
+  });
+  // }, [messages]);
 
   const sendMessage = useCallback(() => {
     if (!message.trim() || !socketRef.current) return;
+    const chatId = `${appointment._id}-${doctor._id}-${patient._id}-${new Date(
+      appointment.schedule
+    ).getTime()}`;
+
     const msg: TMessage = {
+      chatId,
       appointmentId: appointment._id,
       text: message.trim(),
       from,
-      fromUserId: senderInfo._id,
+      senderId: senderInfo._id,
+      receiverId: receiverInfo._id,
       timestamp: Date.now(),
     };
     socketRef.current.emit("send_message", msg);
     setMessage("");
   }, [message, from, senderInfo._id, appointment._id]);
 
-  console.log({ isOpen });
+  // console.log({ senderInfo, receiverInfo, patient, doctor });
+  console.log({ messages });
 
   return (
     <>
