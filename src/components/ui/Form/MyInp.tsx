@@ -130,7 +130,6 @@ const MyInp = ({
     return undefined;
   };
 
-  console.log({ errors, getProblems: getValues("problems") });
   return (
     <Controller
       name={name}
@@ -186,7 +185,7 @@ const MyInp = ({
                 />
                 <PlusIcon
                   onClick={handleAdd}
-                  className={`cursor-pointer text-primary text-[12px] absolute right-1 top-1/2 ${
+                  className={`cursor-pointer text-primary text-[12px] absolute right-[7px] top-[40px] ${
                     !!errors ? "-translate-y-[24px]" : "-translate-y-1/2"
                   } translate`}
                 />

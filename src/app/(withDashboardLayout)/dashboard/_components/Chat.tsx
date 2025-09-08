@@ -34,7 +34,7 @@ type ChatProps = {
   patient: TPatient;
 };
 
-const Chat: React.FC<ChatProps> = ({ from, doctor, patient, appointment }) => {
+const Chat = ({ from, doctor, patient, appointment }: ChatProps) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const chatId = `${appointment._id}-${doctor._id}-${patient._id}-${new Date(
@@ -69,12 +69,12 @@ const Chat: React.FC<ChatProps> = ({ from, doctor, patient, appointment }) => {
     socketRef.current = socket;
 
     socket.on("connect", () => {
-      console.log("Socket connected:", socket.id);
+      // console.log("Socket connected:", socket.id);
       socket.emit("join_room", appointment._id);
     });
 
     socket.on("receive_message", (data: TMessage) => {
-      console.log({ data, chatId });
+      // console.log({ data, chatId });
       if (data.chatId === chatId) {
         setMessages((prev) => [...prev, data]);
       }

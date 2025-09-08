@@ -106,14 +106,19 @@ const PatientAppointmentsPage = ({
         <>
           {appointment.status === "confirmed" ||
           appointment.status === "completed" ? (
-            <div className="flex gap-1 items-center">
+            <div className="flex  items-center rounded-md shadow shadow-primary">
               <Chat
                 from={"patient"}
                 appointment={appointment}
                 doctor={appointment.doctor}
                 patient={appointment.patient}
               />
-              <VideoCall />
+              <VideoCall
+                from={"patient"}
+                appointment={appointment}
+                doctor={appointment.doctor}
+                patient={appointment.patient}
+              />
             </div>
           ) : (
             "-"

@@ -68,7 +68,12 @@ const ConsultationHistoryDetailsPage = ({ from }: { from: TUserRole }) => {
                 doctor={medicalReport?.doctor}
                 patient={medicalReport?.patient}
               />
-              <VideoCall />
+              <VideoCall
+                from={from}
+                appointment={medicalReport?.appointment}
+                doctor={medicalReport?.doctor}
+                patient={medicalReport?.patient}
+              />
             </div>
 
             <h2 className="text-paragraph">

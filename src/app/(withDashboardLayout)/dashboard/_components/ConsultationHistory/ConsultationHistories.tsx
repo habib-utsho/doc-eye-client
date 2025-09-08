@@ -64,10 +64,6 @@ const ConsultationHistories = ({ from }: { from: TUserRole }) => {
       ),
       problems: history?.problems?.join(", ") || "N/A",
       diagnosis: history?.diagnosis || "N/A",
-      medications:
-        history?.medications
-          ?.map((med: any) => `${med.name} (${med.dosage})`)
-          .join(", ") || "N/A",
       followUp: history?.followUpDate
         ? moment(history?.followUpDate).format("DD-MMM-YYYY")
         : "N/A",
@@ -85,9 +81,8 @@ const ConsultationHistories = ({ from }: { from: TUserRole }) => {
     { key: "appointmentType", label: "Type" },
     { key: "problems", label: "Problems" },
     { key: "diagnosis", label: "Diagnosis" },
-    { key: "medications", label: "Medications" },
-    { key: "followUp", label: "Follow-up Date" },
     { key: "schedule", label: "Schedule" },
+    { key: "followUp", label: "Follow-up Date" },
     { key: "createdAt", label: "Created At" },
   ];
 

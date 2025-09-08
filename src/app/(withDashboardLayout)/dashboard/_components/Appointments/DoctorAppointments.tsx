@@ -168,7 +168,12 @@ const DoctorAppointmentsPage = ({
                 doctor={appointment.doctor}
                 patient={appointment.patient}
               />
-              <VideoCall />
+              <VideoCall
+                from={"doctor"}
+                appointment={appointment}
+                doctor={appointment.doctor}
+                patient={appointment.patient}
+              />
             </div>
           ) : (
             "-"
