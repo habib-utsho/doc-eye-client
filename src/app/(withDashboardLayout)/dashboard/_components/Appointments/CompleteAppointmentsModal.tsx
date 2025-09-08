@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { Modal, ModalContent } from "@heroui/modal";
+import { Modal, ModalContent, ModalFooter } from "@heroui/modal";
 import DEForm from "@/src/components/ui/Form/DEForm";
 import { medicalReportValidationSchema } from "@/src/schemas/medicalReport.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,7 +8,7 @@ import { Button } from "@heroui/button";
 import { TMedication } from "@/src/types/medicalReport.type";
 import { toast } from "sonner";
 import { Divider } from "@heroui/divider";
-import { PlusIcon, XMarkIcon } from "@/src/components/ui/icons";
+import { PlusIcon } from "@/src/components/ui/icons";
 import { MinusOutlined } from "@ant-design/icons";
 import { useCreateMedicalReport } from "@/src/hooks/medicalReport.hook";
 import { TAppointment } from "@/src/types/appointment";
@@ -61,8 +61,11 @@ const CompleteAppointmentsModal = ({
     },
   });
 
-  const { control } = formMethods;
-  // console.log({ control });
+  const {
+    control,
+    formState: { errors },
+  } = formMethods;
+  console.log({ control, errors });
   const {
     fields: medicationFields,
     append: appendMedication,
@@ -151,132 +154,136 @@ const CompleteAppointmentsModal = ({
         }}
       >
         <ModalContent className="py-12 px-8 overflow-auto h-[70%] w-full">
-          <DEForm
-            onSubmit={handleSubmit}
-            // TODO: should add
-            // resolver={zodResolver(
-            //   medicalReportValidationSchema.createMedicalReportZodSchema
-            // )}
-            methods={formMethods}
-            className="space-y-4"
-          >
-            <h2 className="font-semibold text-xl mb-4 text-center text-primary">
-              Record Medical Report
-            </h2>
-            <MyInp
-              name="diagnosis"
-              type="text"
-              label="Diagnosis"
-              placeholder="Enter diagnosis"
-            />
-
-            <MyInp
-              label="Problems"
-              name="problems"
-              type="array"
-              fields={problemFields}
-              placeholder="Enter problem and press enter"
-              append={(val) => appendProblem(val)}
-              remove={removeProblem}
-            />
-
-            <div className="shadow p-4 rounded-md">
-              <h2 className="font-semibold">Medications</h2>
-              <Divider className="mt-1 mb-6" />
-
-              {medicationFields.map((field, index) => (
-                <div className="shadow p-2 rounded-md mb-4" key={field.id}>
-                  <div className="text-right">
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="shadow"
-                      className="my-2"
-                      onPress={() => removeMedication(index)}
-                      aria-label="remove medication"
-                    >
-                      <MinusOutlined />
-                    </Button>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <MyInp
-                      name={`medications[${index}].name`}
-                      type="text"
-                      label="Name"
-                      placeholder="Enter medication name"
-                    />
-                    <MyInp
-                      name={`medications[${index}].dosage`}
-                      type="text"
-                      label="Dosage"
-                      placeholder="Enter dosage"
-                    />
-                    <MyInp
-                      name={`medications[${index}].frequency`}
-                      type="text"
-                      label="Frequency"
-                      placeholder="Enter frequency"
-                    />
-                    <MyInp
-                      name={`medications[${index}].duration`}
-                      type="text"
-                      label="Duration"
-                      placeholder="Enter duration"
-                    />
-                  </div>
-                </div>
-              ))}
-
-              <Button
-                type="button"
-                size="sm"
-                variant="shadow"
-                className="mt-2"
-                onPress={() =>
-                  appendMedication({
-                    name: "",
-                    dosage: "",
-                    frequency: "",
-                    duration: "",
-                  })
-                }
+          {(onClose) => (
+            <>
+              <DEForm
+                onSubmit={handleSubmit}
+                // TODO: should add
+                // resolver={zodResolver(
+                //   medicalReportValidationSchema.createMedicalReportZodSchema
+                // )}
+                methods={formMethods}
+                className="space-y-4"
               >
-                <PlusIcon />
-              </Button>
-            </div>
+                <h2 className="font-semibold text-xl mb-4 text-center text-primary">
+                  Record Medical Report
+                </h2>
+                <MyInp
+                  name="diagnosis"
+                  type="text"
+                  label="Diagnosis"
+                  placeholder="Enter diagnosis"
+                />
 
-            <MyInp
-              label="Advices"
-              name="advices"
-              type="array"
-              fields={adviceFields}
-              placeholder="Enter advice and press enter"
-              append={(val) => appendAdvice(val)}
-              remove={removeAdvice}
-            />
-            <MyInp
-              label="Tests"
-              name="tests"
-              type="array"
-              fields={testFields}
-              placeholder="Enter test and press enter"
-              append={(val) => appendTest(val)}
-              remove={removeTest}
-            />
+                <MyInp
+                  label="Problems"
+                  name="problems"
+                  type="array"
+                  fields={problemFields}
+                  placeholder="Enter problem and press enter"
+                  append={(val) => appendProblem(val)}
+                  remove={removeProblem}
+                />
 
-            <MyInp name="followUpDate" type="date" label="Follow Up Date" />
+                <div className="shadow p-4 rounded-md">
+                  <h2 className="font-semibold">Medications</h2>
+                  <Divider className="mt-1 mb-6" />
 
-            <Button
-              isLoading={isLoadingCompleteAppointmentAndCreateMedicalReport}
-              disabled={isLoadingCompleteAppointmentAndCreateMedicalReport}
-              type="submit"
-              color="primary"
-              className="text-white mt-3 w-full"
-              variant="shadow"
-            >
-              Submit
-            </Button>
-          </DEForm>
+                  {medicationFields.map((field, index) => (
+                    <div className="shadow p-2 rounded-md mb-4" key={field.id}>
+                      <div className="text-right">
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="shadow"
+                          className="my-2"
+                          onPress={() => removeMedication(index)}
+                          aria-label="remove medication"
+                        >
+                          <MinusOutlined />
+                        </Button>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <MyInp
+                          name={`medications[${index}].name`}
+                          type="text"
+                          label="Name"
+                          placeholder="Enter medication name"
+                        />
+                        <MyInp
+                          name={`medications[${index}].dosage`}
+                          type="text"
+                          label="Dosage"
+                          placeholder="Enter dosage"
+                        />
+                        <MyInp
+                          name={`medications[${index}].frequency`}
+                          type="text"
+                          label="Frequency"
+                          placeholder="Enter frequency"
+                        />
+                        <MyInp
+                          name={`medications[${index}].duration`}
+                          type="text"
+                          label="Duration"
+                          placeholder="Enter duration"
+                        />
+                      </div>
+                    </div>
+                  ))}
+
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="shadow"
+                    className="mt-2"
+                    onPress={() =>
+                      appendMedication({
+                        name: "",
+                        dosage: "",
+                        frequency: "",
+                        duration: "",
+                      })
+                    }
+                  >
+                    <PlusIcon />
+                  </Button>
+                </div>
+
+                <MyInp
+                  label="Advices"
+                  name="advices"
+                  type="array"
+                  fields={adviceFields}
+                  placeholder="Enter advice and press enter"
+                  append={(val) => appendAdvice(val)}
+                  remove={removeAdvice}
+                />
+                <MyInp
+                  label="Tests"
+                  name="tests"
+                  type="array"
+                  fields={testFields}
+                  placeholder="Enter test and press enter"
+                  append={(val) => appendTest(val)}
+                  remove={removeTest}
+                />
+
+                <MyInp name="followUpDate" type="date" label="Follow Up Date" />
+
+                <Button
+                  isLoading={isLoadingCompleteAppointmentAndCreateMedicalReport}
+                  disabled={isLoadingCompleteAppointmentAndCreateMedicalReport}
+                  type="submit"
+                  color="primary"
+                  className="text-white mt-3 w-full"
+                  variant="shadow"
+                >
+                  Submit
+                </Button>
+              </DEForm>
+            </>
+          )}
         </ModalContent>
       </Modal>
     </div>

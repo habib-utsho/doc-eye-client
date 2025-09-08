@@ -9,6 +9,8 @@ import {
   PlusIcon,
   XMarkIcon,
 } from "../icons";
+import { toast } from "sonner";
+import { get } from "http";
 
 type TMyInp = {
   name: string;
@@ -71,6 +73,7 @@ const MyInp = ({
     control,
     getValues,
     formState: { errors },
+    trigger,
   } = useFormContext();
 
   const [isVisible, setIsVisible] = useState<Boolean>(false);
@@ -127,6 +130,7 @@ const MyInp = ({
     return undefined;
   };
 
+  console.log({ errors, getProblems: getValues("problems") });
   return (
     <Controller
       name={name}
@@ -145,11 +149,18 @@ const MyInp = ({
 
         // Using built in append and remove props from react-hook-form
         // For array of string
-        const handleAdd = () => {
+        const handleAdd = async () => {
           const value = inputValue.trim();
+          if (getValues(name)?.find((f: string) => f === value)) {
+            toast.error("Item already added", {
+              description: "You cannot add duplicate items.",
+            });
+            return;
+          }
           if (value && append && !fields?.includes(value)) {
             append(value);
             setInputValue("");
+            await trigger(name);
           }
         };
 

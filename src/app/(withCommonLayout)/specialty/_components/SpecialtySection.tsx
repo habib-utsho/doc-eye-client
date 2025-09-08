@@ -1,5 +1,5 @@
 import Empty from "@/src/components/shared/Empty";
-import { getSpecialties } from "@/src/services/message";
+import { getSpecialties } from "@/src/services/specialty";
 import { TSpecialty } from "@/src/types/specialty";
 import { Image } from "@heroui/image";
 import { Tooltip } from "@heroui/tooltip";

@@ -5,8 +5,10 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerBody,
+  DrawerFooter,
 } from "@heroui/drawer";
 import { useDisclosure } from "@heroui/modal";
+
 import { Button } from "@heroui/button";
 import { Avatar } from "@heroui/avatar";
 import { Textarea } from "@heroui/input";
@@ -23,6 +25,7 @@ import { TDoctor, TPatient, TUserRole } from "@/src/types/user";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { TMessage } from "@/src/types/message";
 import { useGetAllMessages } from "@/src/hooks/message.hook";
+import { Skeleton } from "@heroui/skeleton";
 
 type ChatProps = {
   from: TUserRole;
@@ -31,13 +34,8 @@ type ChatProps = {
   patient: TPatient;
 };
 
-const ChatDrawer: React.FC<ChatProps> = ({
-  from,
-  doctor,
-  patient,
-  appointment,
-}) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+const Chat: React.FC<ChatProps> = ({ from, doctor, patient, appointment }) => {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const chatId = `${appointment._id}-${doctor._id}-${patient._id}-${new Date(
     appointment.schedule
@@ -119,7 +117,7 @@ const ChatDrawer: React.FC<ChatProps> = ({
   }, [message, from, senderInfo._id, appointment._id]);
 
   // console.log({ senderInfo, receiverInfo, patient, doctor });
-  console.log({ messages });
+  // console.log({ messages, from, doctor, patient, appointment });
 
   return (
     <>
@@ -128,146 +126,161 @@ const ChatDrawer: React.FC<ChatProps> = ({
         onPress={onOpen}
         startContent={<MessageOutlined />}
         color="success"
-        className="text-white bg-primary bg-opacity-60 text-lg"
+        className="text-white bg-primary bg-opacity-60 text-lg flex-1 rounded-r-none"
       />
-      <Drawer isOpen={isOpen} onClose={onClose} placement="right" size="lg">
+      <Drawer
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        placement="right"
+        size="lg"
+      >
         <DrawerContent className="h-full">
-          <DrawerHeader className="flex justify-between items-center gap-4 border-b">
-            {/* Left: Appointment Time */}
-            <div className="flex flex-col text-left text-sm text-gray-600">
-              <span className="text-xs font-medium">Appointment</span>
-              <span title={moment(appointment.schedule).format("LLLL")}>
-                {moment(appointment.createdAt).format("DD-MMM-YYYY ⏰ hh:mm A")}
-              </span>
-              <span className="text-xs text-gray-400">
-                {moment(appointment.schedule).fromNow()}
-              </span>
-            </div>
+          {(onClose) => (
+            <>
+              <DrawerHeader className="flex justify-between items-center gap-4 border-b">
+                {/* Left: Appointment Time */}
+                <div className="flex flex-col text-left text-sm text-gray-600">
+                  <span className="text-xs font-medium">Appointment</span>
+                  <span title={moment(appointment.schedule).format("LLLL")}>
+                    {moment(appointment.schedule).format(
+                      "DD-MMM-YYYY ⏰ hh:mm A"
+                    )}
+                  </span>
+                  <span className="text-xs text-gray-400">
+                    {moment(appointment.schedule).fromNow()}
+                  </span>
+                </div>
 
-            {/* Center: Receiver Info */}
-            <div className="flex flex-col items-center text-center">
-              <Avatar
-                showFallback
-                size="lg"
-                src={receiverInfo?.profileImg}
-                name={receiverInfo?.name}
-              />
-              <div className="font-semibold text-lg">
-                Chat with{" "}
-                {from === "doctor"
-                  ? receiverInfo.name
-                  : `${doctor.doctorTitle} ${receiverInfo.name}`}
-              </div>
-              {from === "patient" && (
-                <span className="text-xs text-gray-500">
-                  {doctor?.currentWorkplace?.designation},{" "}
-                  {doctor?.currentWorkplace?.department}
-                </span>
-              )}
-            </div>
+                {/* Center: Receiver Info */}
+                <div className="flex flex-col items-center text-center">
+                  <Avatar
+                    showFallback
+                    size="lg"
+                    src={receiverInfo?.profileImg}
+                    name={receiverInfo?.name}
+                  />
+                  <div className="font-semibold text-lg">
+                    Chat with{" "}
+                    {from === "doctor"
+                      ? receiverInfo.name
+                      : `${doctor.doctorTitle} ${receiverInfo.name}`}
+                  </div>
+                  {from === "patient" && (
+                    <span className="text-xs text-gray-500">
+                      {doctor?.currentWorkplace?.designation},{" "}
+                      {doctor?.currentWorkplace?.department}
+                    </span>
+                  )}
+                </div>
 
-            {/* Right: Payment Info */}
-            <div className="flex flex-col text-right text-sm text-gray-600">
-              <span className="font-medium flex items-center gap-1">
-                <CreditCardOutlined /> {appointment.payment?.amount?.total} BDT
-              </span>
-              <span className="text-xs capitalize">
-                {appointment.payment?.paymentMethod || "N/A"}
-              </span>
-              <span
-                className={`text-xs font-bold ${
-                  appointment.status === "confirmed"
-                    ? "text-green-600"
-                    : appointment.status === "pending"
-                    ? "text-yellow-500"
-                    : "text-gray-500"
-                }`}
-              >
-                {firstLetterCapital(appointment.status)}
-              </span>
-            </div>
-          </DrawerHeader>
+                {/* Right: Payment Info */}
+                <div className="flex flex-col text-right text-sm text-gray-600">
+                  <span className="font-medium flex items-center gap-1">
+                    <CreditCardOutlined /> {appointment.payment?.amount?.total}{" "}
+                    BDT
+                  </span>
+                  <span className="text-xs capitalize">
+                    {appointment.payment?.paymentMethod || "N/A"}
+                  </span>
+                  <span
+                    className={`text-xs font-bold ${
+                      appointment.status === "confirmed" ||
+                      appointment.status == "completed"
+                        ? "text-green-600"
+                        : appointment.status === "pending"
+                        ? "text-yellow-500"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    {firstLetterCapital(appointment.status)}
+                  </span>
+                </div>
+              </DrawerHeader>
 
-          <DrawerBody className="h-[calc(100%-80px)]  overflow-hidden flex flex-col p-4">
-            <div className="flex-1 overflow-hidden flex flex-col ">
-              {/* Messages */}
-              <Card
-                className="flex-1 overflow-y-auto space-y-2 pr-2 p-2 border mb-6"
-                ref={messagesEndRef}
-              >
-                {messages.length === 0 ? (
-                  <p className="text-gray-400 text-center my-5">
-                    No messages yet <MessageOutlined />
-                  </p>
-                ) : (
-                  messages.map((msg, idx) => (
-                    <div
-                      key={idx}
-                      className={`flex items-end w-fit max-w-[75%] gap-2 ${
-                        msg.from === from
-                          ? "ml-auto"
-                          : "mr-auto flex-row-reverse"
-                      }`}
-                    >
-                      <div
-                        className={`px-4 py-2 rounded shadow-sm break-words ${
-                          msg.from === from
-                            ? "bg-green-500 text-white"
-                            : "bg-gray-200 text-black"
-                        }`}
-                      >
-                        <div className="text-sm">{msg.text}</div>
-                        <div className="text-[10px] mt-1 text-right text-opacity-70">
-                          {moment(msg.timestamp).fromNow()}
+              <DrawerBody className="h-[calc(100%-80px)]  overflow-hidden flex flex-col p-4">
+                <div className="flex-1 overflow-hidden flex flex-col ">
+                  {/* Messages */}
+                  <Card
+                    className="flex-1 overflow-y-auto space-y-2 pr-2 p-2 border mb-6"
+                    ref={messagesEndRef}
+                  >
+                    {isLoadingChats ? (
+                      <Skeleton className="w-full h-full rounded-md" />
+                    ) : messages.length === 0 ? (
+                      <p className="text-gray-400 text-center my-5">
+                        No messages yet <MessageOutlined />
+                      </p>
+                    ) : (
+                      messages.map((msg, idx) => (
+                        <div
+                          key={idx}
+                          className={`flex items-end w-fit max-w-[75%] gap-2 ${
+                            msg.from === from
+                              ? "ml-auto"
+                              : "mr-auto flex-row-reverse"
+                          }`}
+                        >
+                          <div
+                            className={`px-4 py-2 rounded shadow-sm break-words ${
+                              msg.from === from
+                                ? "bg-green-500 text-white"
+                                : "bg-gray-200 text-black"
+                            }`}
+                          >
+                            <div className="text-sm">{msg.text}</div>
+                            <div className="text-[10px] mt-1 text-right text-opacity-70">
+                              {moment(msg.timestamp).fromNow()}
+                            </div>
+                          </div>
+                          <Avatar
+                            size="sm"
+                            src={
+                              msg.from === from
+                                ? senderInfo?.profileImg
+                                : receiverInfo?.profileImg
+                            }
+                          />
                         </div>
-                      </div>
-                      <Avatar
-                        size="sm"
-                        src={
-                          msg.from === from
-                            ? senderInfo?.profileImg
-                            : receiverInfo?.profileImg
-                        }
-                      />
-                    </div>
-                  ))
-                )}
-              </Card>
+                      ))
+                    )}
+                  </Card>
 
-              {/* Footer Controls */}
-              <div className="">
-                <Textarea
-                  fullWidth
-                  placeholder="Type your message…"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      sendMessage();
-                    }
-                  }}
-                  className="mb-2 "
-                />
-                <Button
-                  onPress={sendMessage}
-                  disabled={!message.trim()}
-                  fullWidth
-                  color="primary"
-                  className={`text-white font-bold ${
-                    !message.trim() ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-                  endContent={<SendOutlined />}
-                >
-                  Send
-                </Button>
-              </div>
-            </div>
-          </DrawerBody>
+                  {/* Footer Controls */}
+                  <div className="">
+                    <Textarea
+                      fullWidth
+                      placeholder="Type your message…"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
+                          sendMessage();
+                        }
+                      }}
+                      className="mb-2 "
+                    />
+                    <Button
+                      onPress={sendMessage}
+                      disabled={!message.trim() || isLoadingChats}
+                      fullWidth
+                      color="primary"
+                      className={`text-white font-bold ${
+                        !message.trim() ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
+                      endContent={<SendOutlined />}
+                    >
+                      Send
+                    </Button>
+                  </div>
+                </div>
+              </DrawerBody>
+            </>
+          )}
         </DrawerContent>
       </Drawer>
     </>
   );
 };
 
-export default ChatDrawer;
+export default Chat;

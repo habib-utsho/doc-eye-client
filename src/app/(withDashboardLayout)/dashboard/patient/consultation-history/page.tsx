@@ -1,10 +1,10 @@
 "use client";
-import ConsultationHistory from "../../_components/ConsultationHistory/ConsultationHistory";
+import ConsultationHistories from "../../_components/ConsultationHistory/ConsultationHistories";
 
 const ConsultationHistoryPage = () => {
   return (
     <div>
-      <ConsultationHistory />
+      <ConsultationHistories from="patient" />
     </div>
   );
 };

@@ -18,6 +18,7 @@ import {
   VideoCameraOutlined,
 } from "@ant-design/icons";
 import Chat from "../Chat";
+import VideoCall from "../VideoCall";
 
 const PatientAppointmentsPage = ({
   state = "upcoming",
@@ -103,7 +104,8 @@ const PatientAppointmentsPage = ({
       ),
       action: (
         <>
-          {appointment.status === "confirmed" ? (
+          {appointment.status === "confirmed" ||
+          appointment.status === "completed" ? (
             <div className="flex gap-1 items-center">
               <Chat
                 from={"patient"}
@@ -111,13 +113,7 @@ const PatientAppointmentsPage = ({
                 doctor={appointment.doctor}
                 patient={appointment.patient}
               />
-              <Button
-                isIconOnly
-                startContent={<VideoCameraOutlined />}
-                // isLoading={}
-                variant="shadow"
-                className="text-white bg-primary text-lg"
-              />
+              <VideoCall />
             </div>
           ) : (
             "-"

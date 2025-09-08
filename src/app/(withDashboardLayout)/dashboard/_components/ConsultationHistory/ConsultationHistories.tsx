@@ -4,13 +4,14 @@ import { Input } from "@heroui/input";
 import Image from "next/image";
 import moment from "moment";
 import { SearchIcon } from "@/src/components/ui/icons";
-import DETable from "../../_components/DETable";
+import DETable from "../DETable";
 import useDebounce from "@/src/hooks/useDebounce";
 import useUserData from "@/src/hooks/user.hook";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { useGetAllMedicalReport } from "@/src/hooks/medicalReport.hook";
+import { TUserRole } from "@/src/types/user";
 
-const ConsultationHistory = () => {
+const ConsultationHistories = ({ from }: { from: TUserRole }) => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
@@ -115,10 +116,10 @@ const ConsultationHistory = () => {
         pagination={pagination}
         setPagination={setPagination}
         notFoundMessage="No consultation history found"
-        redirectByRowClick={`/dashboard/doctor/consultation-history`}
+        redirectByRowClick={`/dashboard/${from}/consultation-history`}
       />
     </div>
   );
 };
 
-export default ConsultationHistory;
+export default ConsultationHistories;

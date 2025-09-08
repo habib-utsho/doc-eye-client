@@ -23,8 +23,9 @@ import { toast } from "sonner";
 
 import CompleteAppointmentsModal from "./CompleteAppointmentsModal";
 import { useDisclosure } from "@heroui/modal";
-import { MessageOutlined, VideoCameraOutlined } from "@ant-design/icons";
+import { VideoCameraOutlined } from "@ant-design/icons";
 import Chat from "../Chat";
+import VideoCall from "../VideoCall";
 
 const DoctorAppointmentsPage = ({
   state = "upcoming",
@@ -158,21 +159,16 @@ const DoctorAppointmentsPage = ({
       ),
       action: (
         <>
-          {appointment.status === "confirmed" ? (
-            <div className="flex gap-1 items-center">
+          {appointment.status === "confirmed" ||
+          appointment.status === "completed" ? (
+            <div className="flex  items-center rounded-md shadow shadow-primary">
               <Chat
                 from={"doctor"}
                 appointment={appointment}
                 doctor={appointment.doctor}
                 patient={appointment.patient}
               />
-              <Button
-                isIconOnly
-                startContent={<VideoCameraOutlined />}
-                // isLoading={}
-                variant="shadow"
-                className="text-white bg-primary text-lg"
-              />
+              <VideoCall />
             </div>
           ) : (
             "-"
@@ -206,8 +202,9 @@ const DoctorAppointmentsPage = ({
       onOpen();
       setAppointmentForModal(appointment);
       toast.error(
-        "You need to make the appointment completed from the appointment history page."
+        "Please complete the appointment by adding a medical report."
       );
+
       return;
     }
     updateAppointmentStatus(

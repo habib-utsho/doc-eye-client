@@ -8,7 +8,6 @@ export const getMessages = async (query: TFilterQuery[] | undefined) => {
         next: {
             tags: ["message"],
             revalidate: 0,
-            // cache: "no-store"
         },
     };
     const params = new URLSearchParams();
