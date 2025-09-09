@@ -5,76 +5,131 @@ import {
   GridLayout,
   ParticipantTile,
   RoomAudioRenderer,
-  useTracks,
   RoomContext,
+  useParticipants,
+  useTracks,
+  MicIcon,
+  MicDisabledIcon,
 } from "@livekit/components-react";
 import { Room, Track } from "livekit-client";
 import "@livekit/components-styles";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Button } from "@heroui/button";
 
-export default function Page() {
-  // TODO: get user input for room and name
-  const room = "quickstart-room";
-  const name = "quickstart-user";
+export default function RoomPage() {
+  const params = useSearchParams();
+  const role = params?.get("role")?.trim();
+  const name = params?.get("name") ?? "User";
+  const room = params?.get("room") ?? "quickstart-room";
+  const isDoctor = role === "doctor";
+
   const [roomInstance] = useState(
-    () =>
-      new Room({
-        // Optimize video quality for each participant's screen
-        adaptiveStream: true,
-        // Enable automatic audio/video quality optimization
-        dynacast: true,
-      })
+    () => new Room({ adaptiveStream: true, dynacast: true })
   );
+  const [loading, setLoading] = useState(true);
+  const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    let mounted = true;
-    (async () => {
+    const init = async () => {
       try {
-        const resp = await fetch(`/api/token?room=${room}&username=${name}`);
-        const data = await resp.json();
-        if (!mounted) return;
+        if (isDoctor) {
+          // ➕ Doctor connects immediately with publish permissions
+          const res = await fetch(
+            `/api/token?room=${room}&username=${name}&role=doctor`
+          );
+          const data = await res.json();
+          if (!data.token) throw new Error("No token");
 
-        if (data.token) {
           await roomInstance.connect(
             process.env.NEXT_PUBLIC_LIVEKIT_URL!,
             data.token
           );
-
-          // ✅ Enable camera + mic after join
           await roomInstance.localParticipant.setCameraEnabled(true);
           await roomInstance.localParticipant.setMicrophoneEnabled(true);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    })();
+          setConnected(true);
+          setLoading(false);
+        } else {
+          // ➕ Patient sends request first
+          await fetch("/api/join-request", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ room, username: name }),
+          });
 
+          // 🌀 Polling for approval...
+          const interval = setInterval(async () => {
+            const check = await fetch("/api/check-approved", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ room, username: name }),
+            });
+
+            const { approved } = await check.json();
+
+            if (approved) {
+              clearInterval(interval);
+
+              // Get full token
+              const tRes = await fetch(
+                `/api/token?room=${room}&username=${name}&role=patient`
+              );
+              const tData = await tRes.json();
+              if (!tData.token) return;
+
+              await roomInstance.connect(
+                process.env.NEXT_PUBLIC_LIVEKIT_URL!,
+                tData.token
+              );
+              await roomInstance.localParticipant.setCameraEnabled(true);
+              await roomInstance.localParticipant.setMicrophoneEnabled(true);
+              setConnected(true);
+              setLoading(false);
+            }
+          }, 3000);
+        }
+      } catch (error) {
+        console.error("Room connection error:", error);
+      }
+    };
+
+    init();
     return () => {
-      mounted = false;
       roomInstance.disconnect();
     };
-  }, [roomInstance]);
-  //   if (token === "") {
-  //     return <div>Getting token...</div>;
-  //   }
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen text-lg">
+        {isDoctor
+          ? "Doctor: Joining room..."
+          : "Patient: Waiting for doctor approval..."}
+      </div>
+    );
+  }
 
   return (
     <RoomContext.Provider value={roomInstance}>
       <div data-lk-theme="default" style={{ height: "100dvh" }}>
-        {/* Your custom component with basic video conferencing functionality. */}
-        <MyVideoConference />
-        {/* The RoomAudioRenderer takes care of room-wide audio for you. */}
+        <VideoConference isDoctor={isDoctor} room={room} />
         <RoomAudioRenderer />
-        {/* Controls for the user to start/stop audio, video, and screen share tracks */}
         <ControlBar />
       </div>
     </RoomContext.Provider>
   );
 }
 
-function MyVideoConference() {
-  // `useTracks` returns all camera and screen share tracks. If a user
-  // joins without a published camera track, a placeholder track is returned.
+function VideoConference({
+  isDoctor,
+  room,
+}: {
+  isDoctor: boolean;
+  room: string;
+}) {
+  const participants = useParticipants();
+  const [waitingList, setWaitingList] = useState<string[]>([]);
+
   const tracks = useTracks(
     [
       { source: Track.Source.Camera, withPlaceholder: true },
@@ -82,14 +137,77 @@ function MyVideoConference() {
     ],
     { onlySubscribed: false }
   );
+
+  // ↩️ For doctor: fetch actual waiting list from backend every few seconds
+  useEffect(() => {
+    if (!isDoctor) return;
+
+    const fetchWaiters = async () => {
+      const res = await fetch(`/api/join-request?room=${room}`);
+      const data = await res.json();
+      setWaitingList(data.usernames || []);
+    };
+
+    const interval = setInterval(fetchWaiters, 4000);
+    fetchWaiters();
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <GridLayout
-      tracks={tracks}
-      style={{ height: "calc(100vh - var(--lk-control-bar-height))" }}
-    >
-      {/* The GridLayout accepts zero or one child. The child is used
-      as a template to render all passed in tracks. */}
-      <ParticipantTile />
-    </GridLayout>
+    <>
+      {isDoctor && waitingList.length > 0 && (
+        <div className="bg-white text-black shadow rounded p-4 my-2 mx-4">
+          <h3 className="font-bold text-lg mb-2">👥 Waiting Patients</h3>
+          {waitingList.map((p, i) => (
+            <div
+              key={i}
+              className="flex justify-between items-center border-b py-2"
+            >
+              <span className="font-semibold">{p}</span>
+              <Button
+                color="success"
+                onPress={async () => {
+                  const res = await fetch("/api/approve", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ room, username: p }),
+                  });
+                  if (res.ok) alert("✅ Approved");
+                  else alert("❌ Approval failed");
+                }}
+              >
+                ✅ Approve
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {participants.length > 0 && (
+        <div className="bg-white text-black shadow rounded p-4 my-2 mx-4">
+          <h3 className="font-bold mb-2">👥 Participants</h3>
+          <div className="flex flex-wrap gap-3 bg-primary text-white p-3 rounded-lg">
+            {participants.map((p) => (
+              <div
+                key={p.identity}
+                className="p-2 flex gap-2 items-center border-r pr-3"
+              >
+                <span className="font-semibold">{p.name || p.identity}</span>
+                {p.isMicrophoneEnabled ? <MicIcon /> : <MicDisabledIcon />}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <GridLayout
+        tracks={tracks}
+        style={{
+          height: "calc(100vh - var(--lk-control-bar-height) - 100px)",
+        }}
+      >
+        <ParticipantTile />
+      </GridLayout>
+    </>
   );
 }

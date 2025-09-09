@@ -9,6 +9,8 @@ import { TAppointment } from "@/src/types/appointment";
 import { io, Socket } from "socket.io-client";
 import { toast } from "sonner";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 // WebRTC ICE server configuration
 const iceServers = {
@@ -32,13 +34,16 @@ const VideoCall = ({
   const localStreamRef = useRef<MediaStream | null>(null);
   const socketRef = useRef<Socket | null>(null);
 
+  const router = useRouter();
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isCalling, setIsCalling] = useState(false);
   const [incomingCaller, setIncomingCaller] = useState<any>(null);
 
-  const roomId = `${appointment._id}-${doctor._id}-${patient._id}-${new Date(
-    appointment.schedule
-  ).getTime()}`;
+  // const roomId = `${appointment._id}-${doctor._id}-${patient._id}-${new Date(
+  //   appointment.schedule
+  // ).getTime()}`;
+  const roomId = doctor._id; // Using doctor ID as room ID for handle all patients of a doctor in one room , patient join by approval only
 
   const senderInfo = from === "doctor" ? doctor : patient;
   const receiverInfo = from === "doctor" ? patient : doctor;
@@ -178,12 +183,23 @@ const VideoCall = ({
   return (
     <>
       {/* Outgoing Call Button */}
-      <Button
+      {/* <Button
         isIconOnly
         startContent={<VideoCameraOutlined />}
         title="Start Video Call"
         onPress={startCall}
         className="text-white bg-primary rounded-l-none flex-1"
+      /> */}
+      <Button
+        isIconOnly
+        startContent={<VideoCameraOutlined />}
+        title="Start Video Call"
+        className="text-white bg-primary rounded-l-none flex-1"
+        onPress={() =>
+          router.push(
+            `/dashboard/livekit?room=${roomId}&role=${from}&name=${senderInfo.name}`
+          )
+        }
       />
 
       {/* Incoming call popup */}
