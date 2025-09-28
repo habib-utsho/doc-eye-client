@@ -86,6 +86,12 @@ const ConsultationHistories = ({ from }: { from: TUserRole }) => {
     { key: "createdAt", label: "Created At" },
   ];
 
+  console.log({
+    consultationHistory,
+    isLoadingConsultationHistory,
+    isLoadingUser,
+  });
+
   return (
     <div className="w-full p-4">
       <div className="flex justify-between items-center mb-4 xl:mb-6 gap-4">

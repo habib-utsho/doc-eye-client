@@ -23,7 +23,6 @@ import { toast } from "sonner";
 
 import CompleteAppointmentsModal from "./CompleteAppointmentsModal";
 import { useDisclosure } from "@heroui/modal";
-import { VideoCameraOutlined } from "@ant-design/icons";
 import Chat from "../Chat";
 import VideoCall from "../VideoCall";
 
@@ -222,10 +221,15 @@ const DoctorAppointmentsPage = ({
     );
   };
 
+  console.log({ appointments });
+
   return (
     <div className="w-full p-4">
       <div className="flex justify-between items-center mb-4 xl:mb-6 gap-4">
-        <div className="flex items-center gap-2">
+        <div className="flex justify-between w-full items-center gap-2 ">
+          <h2 className="whitespace-nowrap font-semibold text-xl">
+            {firstLetterCapital(state)} Appointments
+          </h2>
           <Input
             name="search"
             startContent={<SearchIcon />}
@@ -233,6 +237,7 @@ const DoctorAppointmentsPage = ({
             onChange={(e) => setSearchTerm(e.target.value)}
             isClearable
             onClear={() => setSearchTerm("")}
+            className="max-w-sm"
           />
         </div>
       </div>

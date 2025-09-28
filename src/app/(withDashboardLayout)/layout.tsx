@@ -10,7 +10,9 @@ const layout = ({ children }: { children: React.ReactNode }) => {
         <Sidebar />
         <main className="flex-1 overflow-x-auto">
           <DashboardNavbar />
-          {children}
+          <div className="bg-background shadow m-2 md:m-4 rounded-md">
+            {children}
+          </div>
         </main>
       </div>
     </>

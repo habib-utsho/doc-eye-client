@@ -2,7 +2,6 @@
 
 import axiosInstance from "@/src/lib/axiosInstance";
 import { TFilterQuery } from "@/src/types";
-import { TCreateAppointment } from "@/src/types/appointment";
 import { revalidateTag } from "next/cache";
 
 export const getAppointments = async (query: TFilterQuery[] | undefined) => {
@@ -51,16 +50,16 @@ export const updateAppointmentStatusById = async ({
       { status }
     );
     revalidateTag("appointment");
+    revalidateTag("stats");
     return response.data;
   } catch (e: any) {
     throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to update appointment status!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to update appointment status!"
     );
   }
 };

@@ -37,7 +37,7 @@ const DETable = ({
   const { isLoading: isLoadingUser, user } = useUserData();
   const router = useRouter();
 
-  console.log({ data, rows, notFoundMessage });
+  // console.log({ data, rows, notFoundMessage });
 
   return (
     <Table

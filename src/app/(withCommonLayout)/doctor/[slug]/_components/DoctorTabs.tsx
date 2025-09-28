@@ -8,8 +8,6 @@ import {
   InfoCircleOutlined,
   ShopOutlined,
   StarOutlined,
-  VideoCameraAddOutlined,
-  VideoCameraFilled,
   VideoCameraOutlined,
 } from "@ant-design/icons";
 import { Card, CardBody, CardHeader } from "@heroui/card";

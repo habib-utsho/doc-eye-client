@@ -13,6 +13,7 @@ export const createMedicalReport = async (payload: TCreateMedicalReport) => {
     );
     revalidateTag("medicalReport");
     revalidateTag("appointment");
+    revalidateTag("stats");
     return response.data;
   } catch (e: any) {
     throw new Error(
