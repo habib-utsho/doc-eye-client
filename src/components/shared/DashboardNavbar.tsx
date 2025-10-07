@@ -19,10 +19,19 @@ import {
 } from "@/src/components/ui/icons";
 import Image from "next/image";
 import NavbarProfileDropdown from "./NavbarProfileDropdown";
-import useUserData from "@/src/hooks/user.hook";
+import { TUser } from "@/src/types/user";
+import { useRouter } from "next/navigation";
 
-export const DashboardNavbar = () => {
-
+export const DashboardNavbar = ({
+  isLoading,
+  user,
+}: {
+  isLoading: boolean;
+  user: TUser;
+}) => {
+  const role = user?.role;
+  const router = useRouter();
+  console.log({ isLoading, user });
 
   return (
     <NextUINavbar
@@ -46,9 +55,14 @@ export const DashboardNavbar = () => {
         <NavbarItem className="hidden sm:flex gap-2">
           <MessageIcon className="text-xl cursor-pointer" />
         </NavbarItem>
-        <NavbarItem className="hidden sm:flex gap-2">
-          <NotificationIcon className="text-xl cursor-pointer" />
-        </NavbarItem>
+        {!isLoading && (
+          <NavbarItem className="hidden sm:flex gap-2">
+            <NotificationIcon
+              className="text-xl cursor-pointer"
+              onClick={() => router.push(`/dashboard/${role}/notification`)}
+            />
+          </NavbarItem>
+        )}
         <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
         </NavbarItem>

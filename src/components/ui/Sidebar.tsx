@@ -25,9 +25,8 @@ import {
   SubMenu,
 } from "react-pro-sidebar";
 import { useTheme } from "next-themes";
-import { signOut } from "@/src/services/auth";
-import { protectedRoutes } from "@/src/constant";
 import { useSignOut } from "@/src/hooks/useSignOut.hook";
+import { TUser } from "@/src/types/user";
 
 // Dashboard routes
 type TSidebarRoute = {
@@ -188,30 +187,24 @@ const patientRoutes: TSidebarRoute[] = [
     icon: <UserOutlined />,
   },
   {
-    name: "Change Password",
-    path: "/dashboard/patient/change-password",
-    icon: <LockOutlined />,
-  },
-  {
     name: "Settings",
     icon: <SettingOutlined />,
     children: [
       {
         name: "Notification",
-        path: "/dashboard/patient/settings/notification",
+        path: "/dashboard/patient/notification",
         icon: <BellOutlined />,
       },
       {
-        name: "Language",
-        path: "/dashboard/patient/settings/language",
-        icon: <GlobalOutlined />,
+        name: "Change Password",
+        path: "/dashboard/patient/change-password",
+        icon: <LockOutlined />,
       },
     ],
   },
 ];
 
-const Sidebar = () => {
-  const { isLoading, user } = useUserData();
+const Sidebar = ({ isLoading, user }: { isLoading: boolean; user: TUser }) => {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const { handleSignOut } = useSignOut();
