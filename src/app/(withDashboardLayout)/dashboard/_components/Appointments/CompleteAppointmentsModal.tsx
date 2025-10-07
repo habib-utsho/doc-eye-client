@@ -65,7 +65,7 @@ const CompleteAppointmentsModal = ({
     control,
     formState: { errors },
   } = formMethods;
-  console.log({ control, errors });
+  // console.log({ control, errors });
   const {
     fields: medicationFields,
     append: appendMedication,

@@ -5,7 +5,7 @@ import {
 } from "@/src/hooks/appointment.hook";
 import useDebounce from "@/src/hooks/useDebounce";
 import React, { useState } from "react";
-import DETable from "../../_components/DETable";
+import DETable from "../DETable";
 import Image from "next/image";
 import moment from "moment";
 import { Input } from "@heroui/input";
@@ -18,21 +18,44 @@ import {
 import { TAppointment } from "@/src/types/appointment";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { Button } from "@heroui/button";
-import { CheckCircleFilled, CheckCircleOutlined } from "@ant-design/icons";
+import useUserData from "@/src/hooks/user.hook";
+import { toast } from "sonner";
 
-const AppointmentsPage = () => {
+import CompleteAppointmentsModal from "./CompleteAppointmentsModal";
+import { useDisclosure } from "@heroui/modal";
+import Chat from "../Chat";
+import VideoCall from "../VideoCall";
+
+const AdminAppointmentsPage = ({
+  state = "upcoming",
+}: {
+  state: "upcoming" | "expired";
+}) => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
 
-  const { data: appointments, isLoading: isLoadingAppointments } =
-    useGetAllAppointments([
-      { name: "searchTerm", value: debounceSearch },
-      { name: "page", value: pagination.page },
-      { name: "limit", value: pagination.limit },
-    ]);
+  // complete appointment and create medical report
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [appointmentForModal, setAppointmentForModal] =
+    useState<TAppointment | null>(null);
+
+  const { isLoading: isLoadingUser, user } = useUserData();
+
+  const {
+    data: appointments,
+    isLoading: isLoadingAppointments,
+    refetch: refetchAppointments,
+  } = useGetAllAppointments([
+    { name: "searchTerm", value: debounceSearch },
+    { name: "page", value: pagination.page },
+    { name: "limit", value: pagination.limit },
+    { name: "state", value: state },
+  ]);
   const { mutate: updateAppointmentStatus, isPending: isLoadingUpdateStatus } =
     useUpdateAppointmentStatusById();
+
+  // console.log({ appointments });
 
   const rows = appointments?.data?.map(
     (appointment: TAppointment, ind: number) => ({
@@ -68,7 +91,7 @@ const AppointmentsPage = () => {
       symptoms: appointment?.symptoms
         ? firstLetterCapital(appointment?.symptoms)
         : "N/A",
-      schedule: moment.utc(appointment?.schedule).format("DD-MMM-YYYY hh:mm A"),
+      schedule: moment(appointment?.schedule).format("DD-MMM-YYYY ⏰ hh:mm A"),
       paymentStatus: firstLetterCapital(appointment?.payment?.status),
       // status: firstLetterCapital(appointment?.status),
       status: (
@@ -107,7 +130,7 @@ const AppointmentsPage = () => {
             </div>
           ) : (
             <Button
-              disabled
+              disabled={appointment.status === "canceled"}
               isIconOnly
               onPress={() =>
                 handleAppointmentApproval(appointment, "completed")
@@ -132,7 +155,32 @@ const AppointmentsPage = () => {
           )}
         </>
       ),
-      createdAt: moment(appointment?.createdAt).format("DD-MMM-YYYY"),
+      action: (
+        <>
+          {appointment.status === "confirmed" ||
+          appointment.status === "completed" ? (
+            <div className="flex  items-center rounded-md shadow shadow-primary">
+              <Chat
+                from={"doctor"}
+                appointment={appointment}
+                doctor={appointment.doctor}
+                patient={appointment.patient}
+              />
+              <VideoCall
+                from={"doctor"}
+                appointment={appointment}
+                doctor={appointment.doctor}
+                patient={appointment.patient}
+              />
+            </div>
+          ) : (
+            "-"
+          )}
+        </>
+      ),
+      createdAt: moment(appointment?.createdAt).format(
+        "DD-MMM-YYYY ⏰ hh:mm A"
+      ),
     })
   );
 
@@ -145,6 +193,7 @@ const AppointmentsPage = () => {
     { key: "schedule", label: "Schedule" },
     { key: "paymentStatus", label: "Payment" },
     { key: "status", label: "Status" },
+    { key: "action", label: "Action" },
     { key: "createdAt", label: "Created At" },
   ];
 
@@ -152,13 +201,35 @@ const AppointmentsPage = () => {
     appointment: TAppointment,
     status: "confirmed" | "canceled" | "completed"
   ) => {
-    updateAppointmentStatus({ id: appointment?._id, status });
+    if (appointment.status === "confirmed" && status === "completed") {
+      onOpen();
+      setAppointmentForModal(appointment);
+      toast.error(
+        "Please complete the appointment by adding a medical report."
+      );
+
+      return;
+    }
+    updateAppointmentStatus(
+      { id: appointment?._id, status },
+      {
+        onSuccess: () => {
+          refetchAppointments();
+        },
+      }
+    );
   };
+
+  console.log({ appointments });
 
   return (
     <div className="w-full p-4">
       <div className="flex justify-between items-center mb-4 xl:mb-6 gap-4">
-        <div className="flex items-center gap-2">
+        <div className="flex justify-between w-full items-center gap-2 ">
+          <h2 className="whitespace-nowrap font-semibold text-xl">
+            {firstLetterCapital(state)} Appointments{" "}
+            {appointments?.meta?.total && `(${appointments?.meta?.total})`}
+          </h2>
           <Input
             name="search"
             startContent={<SearchIcon />}
@@ -166,21 +237,32 @@ const AppointmentsPage = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             isClearable
             onClear={() => setSearchTerm("")}
+            className="max-w-sm"
           />
         </div>
       </div>
 
       <DETable
         data={appointments}
-        isLoading={isLoadingAppointments}
+        isLoading={isLoadingAppointments || isLoadingUser}
         columns={columns}
         rows={rows}
         pagination={pagination}
         setPagination={setPagination}
         notFoundMessage="No Appointments found"
       />
+
+      {/* Complete appointments modal */}
+      <CompleteAppointmentsModal
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onOpenChange={onOpenChange}
+        appointmentForModal={appointmentForModal}
+        setAppointmentForModal={setAppointmentForModal}
+        refetchAppointments={refetchAppointments}
+      />
     </div>
   );
 };
 
-export default AppointmentsPage;
+export default AdminAppointmentsPage;

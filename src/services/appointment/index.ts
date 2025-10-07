@@ -3,9 +3,15 @@
 import axiosInstance from "@/src/lib/axiosInstance";
 import { TFilterQuery } from "@/src/types";
 import { revalidateTag } from "next/cache";
+import { cookies } from "next/headers";
 
 export const getAppointments = async (query: TFilterQuery[] | undefined) => {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("DEaccessToken")?.value;
   const fetchOption = {
+    headers: {
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    },
     next: {
       tags: ["appointment"],
       revalidate: 60,
@@ -24,7 +30,12 @@ export const getAppointments = async (query: TFilterQuery[] | undefined) => {
   return response.json();
 };
 export const getAppointmentById = async (id: string | undefined) => {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("DEaccessToken")?.value;
   const fetchOption = {
+    headers: {
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    },
     next: {
       tags: ["appointment"],
       revalidate: 60,

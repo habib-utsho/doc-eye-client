@@ -67,8 +67,19 @@ const adminRoutes: TSidebarRoute[] = [
   },
   {
     name: "Appointments",
-    path: "/dashboard/admin/appointments",
-    icon: <HistoryOutlined />,
+    icon: <DashboardOutlined />,
+    children: [
+      {
+        name: "Upcoming Appointments",
+        path: "/dashboard/admin/upcoming-appointments",
+        icon: <HistoryOutlined />,
+      },
+      {
+        name: "Expired Appointments",
+        path: "/dashboard/admin/expired-appointments",
+        icon: <HistoryOutlined />,
+      },
+    ],
   },
   {
     name: "Consultation History",

@@ -1,11 +1,8 @@
 import React from "react";
+import DashboardHome from "../_components/DashboardHome/DashboardHome";
 
 const page = () => {
-  return (
-    <div className="h-[3000px] bg-primary text-white font-bold">
-      This is patient home
-    </div>
-  );
+  return <DashboardHome role="patient" />;
 };
 
 export default page;

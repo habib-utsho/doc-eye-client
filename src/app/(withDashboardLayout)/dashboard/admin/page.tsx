@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
+import DashboardHome from "../_components/DashboardHome/DashboardHome";
 
 const page = () => {
-  return <div>This is admin dashboard home</div>;
+  return <DashboardHome role="admin" />;
 };
 
 export default page;

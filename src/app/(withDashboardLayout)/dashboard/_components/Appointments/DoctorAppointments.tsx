@@ -228,7 +228,8 @@ const DoctorAppointmentsPage = ({
       <div className="flex justify-between items-center mb-4 xl:mb-6 gap-4">
         <div className="flex justify-between w-full items-center gap-2 ">
           <h2 className="whitespace-nowrap font-semibold text-xl">
-            {firstLetterCapital(state)} Appointments
+            {firstLetterCapital(state)} Appointments{" "}
+            {appointments?.meta?.total && `(${appointments?.meta?.total})`}
           </h2>
           <Input
             name="search"

@@ -7,8 +7,11 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(
-  function (config) {
-    const token = cookies().get("DEaccessToken")?.value;
+  async function (config) {
+    // const token = cookies().get("DEaccessToken")?.value;
+    const cookieStore = await cookies();
+    const token = cookieStore.get("DEaccessToken")?.value;
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

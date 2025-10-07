@@ -11,12 +11,7 @@ import { TAppointment } from "@/src/types/appointment";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { Button } from "@heroui/button";
 import useUserData from "@/src/hooks/user.hook";
-import {
-  CheckCircleFilled,
-  CheckCircleOutlined,
-  MessageOutlined,
-  VideoCameraOutlined,
-} from "@ant-design/icons";
+import { CheckCircleFilled, CheckCircleOutlined } from "@ant-design/icons";
 import Chat from "../Chat";
 import VideoCall from "../VideoCall";
 
@@ -147,7 +142,11 @@ const PatientAppointmentsPage = ({
   return (
     <div className="w-full p-4">
       <div className="flex justify-between items-center mb-4 xl:mb-6 gap-4">
-        <div className="flex items-center gap-2">
+        <div className="flex justify-between w-full items-center gap-2 ">
+          <h2 className="whitespace-nowrap font-semibold text-xl">
+            {firstLetterCapital(state)} Appointments{" "}
+            {appointments?.meta?.total && `(${appointments?.meta?.total})`}
+          </h2>
           <Input
             name="search"
             startContent={<SearchIcon />}
@@ -155,6 +154,7 @@ const PatientAppointmentsPage = ({
             onChange={(e) => setSearchTerm(e.target.value)}
             isClearable
             onClear={() => setSearchTerm("")}
+            className="max-w-sm"
           />
         </div>
       </div>
