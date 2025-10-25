@@ -5,7 +5,8 @@ import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 export const getAllPatient = async (query: TFilterQuery[] | undefined) => {
-  const accessToken = cookies().get("DEaccessToken")?.value;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("DEaccessToken")?.value;
   try {
     const fetchOption: RequestInit = {
       headers: {
@@ -32,22 +33,91 @@ export const getAllPatient = async (query: TFilterQuery[] | undefined) => {
     return res.json();
   } catch (e: any) {
     throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to get all patient!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to get all patient!"
+    );
+  }
+};
+export const getSinglePatient = async (id: string | null) => {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("DEaccessToken")?.value;
+  try {
+    const fetchOption: RequestInit = {
+      headers: {
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      },
+      next: {
+        tags: ["patient"],
+        revalidate: 60,
+      },
+    };
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/patient/${id}`,
+      fetchOption
+    );
+    if (!res.ok) {
+      throw new Error("Failed to get single patient!");
+    }
+    return res.json();
+  } catch (e: any) {
+    throw new Error(
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
+      } ${e.response?.data?.errorSources?.[0]?.message}` ||
+      e?.response?.data ||
+      e.message ||
+      "Failed to get single patient!"
     );
   }
 };
 
+export const updateFavoriteDoctors = async (
+  payload: { doctorId: string }
+) => {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("DEaccessToken")?.value;
+  try {
+    const fetchOption: RequestInit = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      },
+      body: JSON.stringify(payload),
+    };
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/patient/favorite-doctors`,
+      fetchOption);
+    console.log({ res });
+    // if (!res.ok) {
+    //   console.log('res not ok');
+    //   throw new Error("Failed to update favorite doctors!");
+    // }
+    revalidateTag("doctor");
+    revalidateTag("patient");
+    return res.json();
+  } catch (e: any) {
+    console.log(e);
+    throw new Error(
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
+      } ${e.response?.data?.errorSources?.[0]?.message}` ||
+      e?.response?.data ||
+      e.message ||
+      "Failed to update favorite doctors!"
+    );
+  }
+};
 export const updatePatientById = async (
   id: string | undefined,
   payload: FormData
 ) => {
-  const accessToken = cookies().get("DEaccessToken")?.value;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("DEaccessToken")?.value;
   try {
     const fetchOption: RequestInit = {
       method: "PATCH",
@@ -67,19 +137,19 @@ export const updatePatientById = async (
     return res.json();
   } catch (e: any) {
     throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to update a patient!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to update a patient!"
     );
   }
 };
 
 export const deletePatientById = async (id: string | undefined) => {
-  const accessToken = cookies().get("DEaccessToken")?.value;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("DEaccessToken")?.value;
   try {
     const fetchOption: RequestInit = {
       method: "DELETE",
@@ -98,13 +168,12 @@ export const deletePatientById = async (id: string | undefined) => {
     return res.json();
   } catch (e: any) {
     throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to delete a patient!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to delete a patient!"
     );
   }
 };

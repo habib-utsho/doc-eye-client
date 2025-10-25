@@ -7,6 +7,7 @@ import DoctorTabs from "./_components/DoctorTabs";
 import isDoctorAvailable from "@/src/utils/isDoctorAvailable";
 import { Badge } from "@heroui/badge";
 import BookingButton from "./_components/BookingButton";
+import FavoriteDoctorHeart from "../../specialty/_components/FavoriteDoctorHeart";
 
 const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
   // console.log(params.slug, "slug");
@@ -30,6 +31,10 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
                     height={200}
                     className="border-2 rounded-md"
                   />
+                  <FavoriteDoctorHeart
+                    doctor={doctor}
+                    className="absolute top-1 right-1 z-10"
+                  />
                   <span className="flex justify-center items-center ">
                     <Badge
                       color={isDoctorAvailableP ? "success" : "primary"}
@@ -46,7 +51,7 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
               )}
               <div>
                 <h1 className="font-semibold text-lg">
-                  {doctor?.doctorTitle} {doctor?.name}
+                  {doctor?.doctorTitle} {doctor?.name}{" "}
                 </h1>
                 <p className="text-sm text-gray-500">{doctor?.doctorType}</p>
                 <p className="text-sm text-primary-500 font-bold">

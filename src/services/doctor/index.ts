@@ -5,7 +5,8 @@ import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 export const getAllDoctors = async (query: TFilterQuery[] | undefined) => {
-  const accessToken = cookies().get("DEaccessToken")?.value;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("DEaccessToken")?.value;
   try {
     const fetchOption: RequestInit = {
       headers: {
@@ -33,18 +34,18 @@ export const getAllDoctors = async (query: TFilterQuery[] | undefined) => {
   } catch (e: any) {
     console.log(e.message, "from server action");
     throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to get all doctors!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to get all doctors!"
     );
   }
 };
 export const getDoctorById = async (id: string | undefined) => {
-  const accessToken = cookies().get("DEaccessToken")?.value;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("DEaccessToken")?.value;
   try {
     const fetchOption: RequestInit = {
       headers: {
@@ -65,18 +66,18 @@ export const getDoctorById = async (id: string | undefined) => {
     return res.json();
   } catch (e: any) {
     throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to get doctor!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to get doctor!"
     );
   }
 };
 export const getDoctorByDoctorCode = async (id: string | undefined) => {
-  const accessToken = cookies().get("DEaccessToken")?.value;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("DEaccessToken")?.value;
   try {
     const fetchOption: RequestInit = {
       headers: {
@@ -97,13 +98,12 @@ export const getDoctorByDoctorCode = async (id: string | undefined) => {
     return res.json();
   } catch (e: any) {
     throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to get doctor!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to get doctor!"
     );
   }
 };
@@ -112,7 +112,8 @@ export const updateDoctorById = async (
   id: string | undefined,
   payload: FormData
 ) => {
-  const accessToken = cookies().get("DEaccessToken")?.value;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("DEaccessToken")?.value;
   try {
     const fetchOption: RequestInit = {
       method: "PATCH",
@@ -132,19 +133,19 @@ export const updateDoctorById = async (
     return res.json();
   } catch (e: any) {
     throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to update a doctor!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to update a doctor!"
     );
   }
 };
 
 export const deleteDoctorById = async (id: string | undefined) => {
-  const accessToken = cookies().get("DEaccessToken")?.value;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("DEaccessToken")?.value;
   try {
     const fetchOption: RequestInit = {
       method: "DELETE",
@@ -163,13 +164,12 @@ export const deleteDoctorById = async (id: string | undefined) => {
     return res.json();
   } catch (e: any) {
     throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to delete a doctor!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to delete a doctor!"
     );
   }
 };

@@ -1,5 +1,4 @@
 import { NextResponse, NextRequest } from "next/server";
-import path from "path";
 import { getCurrentUser } from "./services/auth";
 import { TDecodedUser } from "./types/user";
 

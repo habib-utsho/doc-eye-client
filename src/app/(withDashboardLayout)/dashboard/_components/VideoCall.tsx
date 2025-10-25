@@ -17,8 +17,6 @@ const VideoCall = ({
   doctor: TDoctor;
   patient: TPatient;
 }) => {
-
-
   // const roomId = `${appointment._id}-${doctor._id}-${patient._id}-${new Date(
   //   appointment.schedule
   // ).getTime()}`;
@@ -40,7 +38,7 @@ const VideoCall = ({
       <Button
         isIconOnly
         startContent={<VideoCameraOutlined />}
-        title="Start Video Call"
+        title="This will open Jitsi Meet in a new tab for demo purposes. Must be doctor to start the call. Don't worry, different rooms for different doctors."
         className="text-white bg-primary rounded-l-none flex-1"
         onPress={() =>
           window.open(
@@ -54,7 +52,6 @@ const VideoCall = ({
         //   )
         // }
       />
-
     </>
   );
 };

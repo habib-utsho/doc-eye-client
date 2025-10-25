@@ -5,7 +5,6 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerBody,
-  DrawerFooter,
 } from "@heroui/drawer";
 import { useDisclosure } from "@heroui/modal";
 
@@ -23,7 +22,7 @@ import moment from "moment";
 import { TAppointment } from "@/src/types/appointment";
 import { TDoctor, TPatient, TUserRole } from "@/src/types/user";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
-import { TMessage } from "@/src/types/message";
+import { TCreateMessage, TMessage } from "@/src/types/message";
 import { useGetAllMessages } from "@/src/hooks/message.hook";
 import { Skeleton } from "@heroui/skeleton";
 
@@ -97,20 +96,21 @@ const Chat = ({ from, doctor, patient, appointment }: ChatProps) => {
   });
   // }, [messages]);
 
+  console.log(chats);
+
   const sendMessage = useCallback(() => {
     if (!message.trim() || !socketRef.current) return;
     const chatId = `${appointment._id}-${doctor._id}-${patient._id}-${new Date(
       appointment.schedule
     ).getTime()}`;
 
-    const msg: TMessage = {
+    const msg: TCreateMessage = {
       chatId,
       appointmentId: appointment._id,
       text: message.trim(),
       from,
       senderId: senderInfo._id,
       receiverId: receiverInfo._id,
-      timestamp: Date.now(),
     };
     socketRef.current.emit("send_message", msg);
     setMessage("");
@@ -229,7 +229,7 @@ const Chat = ({ from, doctor, patient, appointment }: ChatProps) => {
                           >
                             <div className="text-sm">{msg.text}</div>
                             <div className="text-[10px] mt-1 text-right text-opacity-70">
-                              {moment(msg.timestamp).fromNow()}
+                              {moment(msg.createdAt).fromNow()}
                             </div>
                           </div>
                           <Avatar

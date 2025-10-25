@@ -14,9 +14,9 @@ const registerAdmin = async (payload: FormData) => {
   } catch (e: any) {
     throw new Error(
       `${e?.response?.data?.errorSources?.[0]?.path}: ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to register admin!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to register admin!"
     );
   }
 };
@@ -28,9 +28,9 @@ const registerPatient = async (payload: FormData) => {
   } catch (e: any) {
     throw new Error(
       `${e?.response?.data?.errorSources?.[0]?.path}: ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to register patient!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to register patient!"
     );
   }
 };
@@ -49,13 +49,12 @@ const registerDoctor = async (payload: FormData) => {
     return response.data;
   } catch (e: any) {
     throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to register doctor!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to register doctor!"
     );
   }
 };
@@ -70,13 +69,12 @@ const signinUser = async (payload: TSignin) => {
     return response.data;
   } catch (e: any) {
     throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to register doctor!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to register doctor!"
     );
   }
 };
@@ -88,13 +86,12 @@ const toggleUserStatus = async (id: string) => {
     return response.data;
   } catch (e: any) {
     throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to toggle user status!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to toggle user status!"
     );
   }
 };
@@ -105,7 +102,8 @@ const signOut = () => {
 };
 
 const getCurrentUser = async () => {
-  const accessToken = cookies().get("DEaccessToken")?.value;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("DEaccessToken")?.value;
   let decodedToken = null;
   if (accessToken) {
     decodedToken = await jwtDecode(accessToken);

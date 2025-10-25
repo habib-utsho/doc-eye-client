@@ -1,15 +1,23 @@
-import { AngleRightIcon, ArrowRightIcon } from "@/src/components/ui/icons";
+"use client";
+import {
+  AngleRightIcon,
+} from "@/src/components/ui/icons";
 import { TDoctor } from "@/src/types/user";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import FavoriteDoctorHeart from "./FavoriteDoctorHeart";
 
 const DoctorCard = ({ doctor }: { doctor: TDoctor }) => {
   return (
     <Link
       href={`/doctor/${doctor.doctorCode}`}
-      className="grid grid-cols-12 gap-4 justify-between items-center p-4 bg-white dark:bg-slate-800  rounded-md shadow hover:shadow-sm"
+      className="grid grid-cols-12 gap-4 justify-between items-center p-4 bg-white dark:bg-slate-800  rounded-md shadow hover:shadow-sm relative"
     >
+      <FavoriteDoctorHeart
+        doctor={doctor}
+        className="absolute top-2 right-3 z-10"
+      />
       <div className="flex items-center gap-2 col-span-8 border-r  dark:border-gray-700">
         {doctor?.profileImg ? (
           <Image
