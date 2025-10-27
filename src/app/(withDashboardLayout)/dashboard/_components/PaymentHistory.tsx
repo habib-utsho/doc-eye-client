@@ -114,6 +114,8 @@ const PaymentHistory = () => {
 
   return (
     <div className="w-full p-4">
+      <h2 className="text-2xl font-bold py-2">Payment History</h2>
+
       <DETable
         data={payments}
         isLoading={isLoadingPayments}

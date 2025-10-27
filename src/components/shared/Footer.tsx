@@ -9,14 +9,13 @@ import {
   DiscordIcon,
   GithubIcon,
   Logo,
-  NextUILogo,
   TwitterIcon,
 } from "@/src/components/ui/icons";
 import Container from "../ui/Container";
 
 const Footer = () => {
   const footerLink = [
-    { link: "about", text: "About us" },
+    { link: "about-us", text: "About us" },
     { link: "services", text: "Services" },
     { link: "appointment", text: "Appointment" },
     { link: "blogs", text: "Blogs" },

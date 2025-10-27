@@ -1,7 +1,5 @@
 "use client";
-import {
-  AngleRightIcon,
-} from "@/src/components/ui/icons";
+import { AngleRightIcon } from "@/src/components/ui/icons";
 import { TDoctor } from "@/src/types/user";
 import Image from "next/image";
 import Link from "next/link";

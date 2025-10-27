@@ -94,19 +94,21 @@ const ConsultationHistories = ({ from }: { from: TUserRole }) => {
 
   return (
     <div className="w-full p-4">
-      <div className="flex justify-between items-center mb-4 xl:mb-6 gap-4">
-        <div className="flex items-center gap-2">
-          <Input
-            name="search"
-            startContent={<SearchIcon />}
-            placeholder="Search consultation history..."
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setSearchTerm(e.target.value)
-            }
-            isClearable
-            onClear={() => setSearchTerm("")}
-          />
-        </div>
+      <div className="flex flex-wrap justify-between items-center mb-4 xl:mb-6 gap-4">
+        <h2 className="text-2xl font-semibold py-2 mb-2">
+          Consultation Histories
+        </h2>
+        <Input
+          name="search"
+          startContent={<SearchIcon />}
+          placeholder="Search consultation history..."
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setSearchTerm(e.target.value)
+          }
+          isClearable
+          onClear={() => setSearchTerm("")}
+          className="w-[280px]"
+        />
       </div>
 
       <DETable

@@ -92,16 +92,10 @@ export const updateFavoriteDoctors = async (
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/patient/favorite-doctors`,
       fetchOption);
-    console.log({ res });
-    // if (!res.ok) {
-    //   console.log('res not ok');
-    //   throw new Error("Failed to update favorite doctors!");
-    // }
     revalidateTag("doctor");
     revalidateTag("patient");
     return res.json();
   } catch (e: any) {
-    console.log(e);
     throw new Error(
       `${e?.response?.data?.errorSources?.[0]?.path &&
       `${e?.response?.data?.errorSources?.[0]?.path}:`

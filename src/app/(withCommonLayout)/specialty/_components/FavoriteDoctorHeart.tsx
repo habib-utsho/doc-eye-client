@@ -17,7 +17,7 @@ const FavoriteDoctorHeart = ({
   doctor: TDoctor;
   className?: string;
 }) => {
-  const { user, isLoading, setIsLoading } = useUserData();
+  const { user, isLoading: isUserLoading } = useUserData();
 
   const {
     data: patient,
@@ -30,11 +30,10 @@ const FavoriteDoctorHeart = ({
     isPending: isHandleFavoriteDoctorsLoading,
   } = useUpdateFavoriteDoctors();
 
-  //   console.log({ user, isLoading, setIsLoading, patient, isPatientLoading });
+  // console.log({ user, isLoading, setIsLoading, patient, isPatientLoading });
 
   const handleFavDoctorsFunc = (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log("test");
     handleFavoriteDoctors(
       { doctorId: doctor?._id },
       {
@@ -45,10 +44,14 @@ const FavoriteDoctorHeart = ({
     );
   };
 
+  if (user?.role !== "patient") {
+    return null;
+  }
+
   return (
     <div className={`${className}`}>
-      {isPatientLoading || isHandleFavoriteDoctorsLoading ? (
-        <Spinner className="" color="current" />
+      {isPatientLoading || isUserLoading || isHandleFavoriteDoctorsLoading ? (
+        <Spinner className="" color="current" size="sm" />
       ) : (
         user?.role === "patient" && (
           <div
@@ -60,7 +63,7 @@ const FavoriteDoctorHeart = ({
             ) ? (
               <HeartFilledIcon />
             ) : (
-              <HeartOutlined className="text-2xl" />
+              <HeartOutlined className="text-xl" />
             )}
           </div>
         )

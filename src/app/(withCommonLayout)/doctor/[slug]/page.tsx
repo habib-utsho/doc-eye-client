@@ -31,10 +31,6 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
                     height={200}
                     className="border-2 rounded-md"
                   />
-                  <FavoriteDoctorHeart
-                    doctor={doctor}
-                    className="absolute top-1 right-1 z-10"
-                  />
                   <span className="flex justify-center items-center ">
                     <Badge
                       color={isDoctorAvailableP ? "success" : "primary"}
@@ -50,8 +46,12 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
                 <div className="rounded-lg w-14 h-16 bg-primary-500 bg-opacity-20 mr-2" />
               )}
               <div>
-                <h1 className="font-semibold text-lg">
+                <h1 className="font-semibold text-lg flex items-center gap-2">
                   {doctor?.doctorTitle} {doctor?.name}{" "}
+                  <FavoriteDoctorHeart
+                    doctor={doctor}
+                    // className="absolute top-1 right-1 z-10"
+                  />
                 </h1>
                 <p className="text-sm text-gray-500">{doctor?.doctorType}</p>
                 <p className="text-sm text-primary-500 font-bold">

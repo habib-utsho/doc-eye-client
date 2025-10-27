@@ -147,7 +147,6 @@ const DashboardHome = ({ role }: { role: TUserRole }) => {
     },
   ];
 
-
   const appointmentsData = [
     {
       name: "Pending",
