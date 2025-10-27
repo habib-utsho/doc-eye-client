@@ -10,7 +10,9 @@ const SpecialtyPage = async () => {
   return (
     <div className="py-8">
       <Container className="space-y-8">
-        <h2 className={`${title({ size: "xs" })}`}>Select a specialty</h2>
+        <h2 className="text-2xl md:text-3xl font-extrabold text-primary drop-shadow-lg md:mb-4">
+          Select a specialty
+        </h2>
         <ErrorBoundary fallback={<SpecialtyErrorCard />}>
           <Suspense fallback={<SpecialtyLoadingCard />}>
             <SpecialtySection />

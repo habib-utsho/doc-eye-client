@@ -11,6 +11,7 @@ import about2 from "@/src/assets/img/Homepage/About/About2.jpg";
 import about3 from "@/src/assets/img/Homepage/About/About3.jpg";
 import WhyChooseUs from "@/src/components/modules/homepage/WhyChooseUs";
 import { Button } from "@heroui/button";
+import Link from "next/link";
 
 const AboutUs = () => {
   const features = [
@@ -34,7 +35,7 @@ const AboutUs = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white to-blue-50 dark:from-slate-900 dark:to-slate-800 py-12">
+    <div className="min-h-screen py-12">
       {/* Intro */}
       <Container>
         <div className="text-center mb-12">
@@ -114,17 +115,6 @@ const AboutUs = () => {
           symptoms so the patient can function better. This treatment involves a
           talking relationship between a therapist & patient.
         </p>
-
-        <h3 className="text-xl md:text-2xl font-semibold mb-4 text-primary-600">
-          Why Choose DocEye?
-        </h3>
-        <ul className="text-left list-disc ml-6 text-gray-700 dark:text-gray-400 space-y-3 text-[16px]">
-          <li>Verified & Licensed Medical Experts</li>
-          <li>Encrypted Patient-Doctor Communication</li>
-          <li>Instant Appointment Booking System</li>
-          <li>Free Access to Medical Records & Prescriptions</li>
-          <li>Personalized Health Insights (Coming Soon!)</li>
-        </ul>
       </section>
 
       <WhyChooseUs />
@@ -139,20 +129,25 @@ const AboutUs = () => {
           simplify health — DocEye is for you.
         </p>
         <div className="flex justify-center gap-4 flex-wrap">
-          <Button
-            variant="flat"
-            className="text-white dark:text-white mt-5"
-            size="lg"
-          >
-            Join as Doctor
-          </Button>
-          <Button
-            variant="ghost"
-            className="text-white dark:text-white mt-5"
-            size="lg"
-          >
-            Book your Appointment
-          </Button>
+          <Link href="/signup">
+            <Button
+              variant="ghost"
+              className="text-white dark:text-white mt-5 hover:text-black"
+              size="lg"
+            >
+              Join as Doctor
+            </Button>
+          </Link>
+          <Link href="/specialty">
+            <Button
+              variant="solid"
+              className="text-primary dark:text-white mt-5"
+              size="lg"
+              href="/specialty"
+            >
+              Book your Appointment
+            </Button>
+          </Link>
         </div>
       </section>
     </div>
