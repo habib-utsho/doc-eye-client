@@ -3,9 +3,9 @@ import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 
 import { siteConfig } from "@/src/config/site";
-import { fontSans, poppins } from "@/src/config/fonts";
+import { poppins } from "@/src/config/fonts";
 import { Providers } from "../lib/providers";
-import { Toaster } from "sonner";
+import { SonnerToasterContainer } from "../components/ui/SonnerToasterContainer";
 
 export const metadata: Metadata = {
   title: {
@@ -46,7 +46,7 @@ export default function RootLayout({
       </body>
 
       {/* Sonner toast */}
-      <Toaster />
+      <SonnerToasterContainer />
     </html>
   );
 }

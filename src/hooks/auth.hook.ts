@@ -20,22 +20,18 @@ export const useUserSignin = ({ redirect }: { redirect: string | null }) => {
     mutationFn: async (payload: TSignin) => await signinUser(payload),
     async onSuccess(data) {
       if (data?.success) {
-        toast.success(data?.message || "User signin successfully!");
         const user = (await getCurrentUser()) as TDecodedUser;
         setUser(user);
         router.push(
           redirect ||
-            (user?.role === "admin" || user?.role === "doctor"
-              ? `dashboard/${user?.role}`
-              : "/")
+          (user?.role === "admin" || user?.role === "doctor"
+            ? `dashboard/${user?.role}`
+            : "/")
         );
       } else {
         toast.error(data?.message || "Failed to signin user!");
       }
-    },
-    onError(error) {
-      toast.error(error?.message || "Failed to signin user!");
-    },
+    }
   });
 };
 
@@ -46,15 +42,12 @@ export const useUserRegister = () => {
     mutationFn: async (payload: FormData) => await registerPatient(payload),
     onSuccess(data) {
       if (data?.success) {
-        toast.success(data?.message || "User registered successfully!");
+        // toast.success(data?.message || "User registered successfully!");
         router.push("/signin");
       } else {
         toast.error(data?.message || "Failed to register user!");
       }
-    },
-    onError(error) {
-      toast.error(error?.message || "Failed to register user!");
-    },
+    }
   });
 };
 export const useDoctorRegister = () => {
@@ -64,18 +57,15 @@ export const useDoctorRegister = () => {
     mutationFn: async (payload: FormData) => await registerDoctor(payload),
     onSuccess(data) {
       if (data?.success) {
-        toast.success(
-          data?.message ||
-            "Doctor registered successfully. Wait for admin approval!"
-        );
+        // toast.success(
+        //   data?.message ||
+        //   "Doctor registered successfully. Wait for admin approval!"
+        // );
         router.push("/signin");
       } else {
         toast.error(data?.message || "Failed to register doctor!");
       }
-    },
-    onError(error: any) {
-      toast.error(error?.message || "Failed to register doctor!");
-    },
+    }
   });
 };
 export const useAdminRegister = () => {

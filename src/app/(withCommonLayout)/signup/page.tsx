@@ -415,23 +415,29 @@ const SignupPage = () => {
       dateOfBirth: new Date(payload?.dateOfBirth),
     };
 
-    // console.log(
-    //   {
-    //     ...updatedValues,
-    //     profileImg: selectedFile,
-    //   },
-    //   "updatedValues, experiences"
-    // );
-
     // return;
     formData.append("file", selectedFile as Blob);
     formData.append("data", JSON.stringify(updatedValues));
 
-    if (activeTab === "doctor") {
-      handleRegisterDoctor(formData);
-    } else {
-      handleRegisterUser(formData);
-    }
+    const registerFunc =
+      activeTab === "doctor" ? handleRegisterDoctor : handleRegisterUser;
+    const loadingToastId = toast.loading("Signing up...");
+    registerFunc(formData, {
+      onSuccess: (data) => {
+        console.log({ data, activeTab });
+        toast.dismiss(loadingToastId);
+        toast.success(
+          data?.message ||
+            (activeTab === "doctor"
+              ? "Doctor registered successfully. Wait for admin approval!"
+              : "User registered successfully!")
+        );
+      },
+      onError: (error) => {
+        toast.dismiss(loadingToastId);
+        toast.error(error?.message || "Sign-up failed!");
+      },
+    });
   };
 
   return (

@@ -27,6 +27,7 @@ import {
 import { useTheme } from "next-themes";
 import { useSignOut } from "@/src/hooks/useSignOut.hook";
 import { TUser } from "@/src/types/user";
+import { FaUserMd } from "react-icons/fa";
 
 // Dashboard routes
 type TSidebarRoute = {
@@ -50,7 +51,7 @@ const adminRoutes: TSidebarRoute[] = [
       {
         name: "Doctor",
         path: "/dashboard/admin/doctors",
-        icon: <UserOutlined />,
+        icon: <FaUserMd />,
       },
       {
         name: "Patient",

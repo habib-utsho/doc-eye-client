@@ -20,7 +20,7 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
     <div className="py-8 space-y-4 md:space-y-8 bg-slate-50 dark:bg-gray-900">
       <div className=" py-4">
         <Container>
-          <div className="grid grid-cols-12 ">
+          <div className="grid grid-cols-12 bg-white dark:bg-gray-800 p-4 rounded-lg shadow gap-4">
             <div className="flex items-center gap-4 col-span-8">
               {doctor?.profileImg ? (
                 <div className="relative">

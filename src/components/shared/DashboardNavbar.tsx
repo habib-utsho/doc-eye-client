@@ -42,8 +42,7 @@ export const DashboardNavbar = ({
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Image src={logo} height={40} width={40} alt="logo" />
-            <p className="font-bold text-inherit">DocEye</p>
+            <p className="font-bold text-inherit">Something new here</p>
           </NextLink>
         </NavbarBrand>
       </NavbarContent>

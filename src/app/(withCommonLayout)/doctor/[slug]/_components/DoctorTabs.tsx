@@ -1,5 +1,4 @@
 "use client";
-import { MessageIcon } from "@/src/components/ui/icons";
 import MyMotion from "@/src/components/ui/MyMotion";
 import { TDoctor, TWorkingExperience } from "@/src/types/user";
 import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
@@ -29,14 +28,14 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
           }
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card className="p-2">
+            <Card className="p-2 bg-white dark:bg-gray-800">
               <CardHeader className="pb-0 font-semibold text-lg md:text-xl">
                 About {doctor.doctorTitle} {doctor.name}
               </CardHeader>
               <CardBody>{doctor.bio}</CardBody>
             </Card>
             <div className="space-y-4">
-              <Card className="p-2">
+              <Card className="p-2 bg-white dark:bg-gray-800">
                 <CardHeader className="pb-0 font-semibold text-lg md:text-xl">
                   Availability
                 </CardHeader>
@@ -62,7 +61,7 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
                   </div>
                 </CardBody>
               </Card>
-              <Card className="p-2">
+              <Card className="p-2 bg-white dark:bg-gray-800">
                 <CardHeader className="pb-0 font-semibold text-lg md:text-xl">
                   General Information
                 </CardHeader>
@@ -130,7 +129,7 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
             </div>
           }
         >
-          <Card className="!shadow hover:!shadow-sm mb-4 md:mb-6 bg-primary-500 bg-opacity-10 w-full !flex-1">
+          <Card className="!shadow hover:!shadow-sm mb-4 md:mb-6 bg-white dark:bg-gray-800 bg-opacity-10 w-full !flex-1">
             <CardHeader className="pb-0 font-semibold text-lg md:text-xl">
               {doctor.currentWorkplace?.workPlace}
             </CardHeader>
@@ -166,11 +165,11 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
             </CardBody>
           </Card>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 ">
             {doctor?.workingExperiences?.map(
               (experience: TWorkingExperience) => {
                 return (
-                  <Card className="shadow-sm">
+                  <Card className="shadow-sm bg-white dark:bg-gray-800">
                     <CardHeader className="pb-0 font-semibold text-lg md:text-xl">
                       {experience.workPlace}
                     </CardHeader>
@@ -224,7 +223,7 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
             </div>
           }
         >
-          <Card className="p-2">
+          <Card className="p-2 bg-white dark:bg-gray-800">
             <CardBody>
               Reviews and ratings will be available soon. Stay tuned.
             </CardBody>

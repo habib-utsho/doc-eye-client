@@ -41,6 +41,7 @@
       "@heroui/table": "^2.2.9",
       "@heroui/tabs": "^2.2.8",
       "@heroui/theme": "2.4.5",
+      "@heroui/toast": "^2.0.17",
       "@heroui/tooltip": "2.2.7",
       "@hookform/resolvers": "^3.9.0",
       "@livekit/components-react": "^2.9.14",

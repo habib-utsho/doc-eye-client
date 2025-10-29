@@ -11,7 +11,7 @@ import {
 } from "@heroui/modal";
 import React, { useEffect } from "react";
 
-const DeleteModal = ({
+const DeleteUserModal = ({
   id,
   handler,
   isLoading,
@@ -74,4 +74,4 @@ const DeleteModal = ({
   );
 };
 
-export default DeleteModal;
+export default DeleteUserModal;

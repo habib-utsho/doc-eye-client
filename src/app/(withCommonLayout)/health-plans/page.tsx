@@ -5,6 +5,7 @@ import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Divider } from "@heroui/divider";
 import { Tooltip } from "@heroui/tooltip";
 import React from "react";
+import SubscribeButton from "./_components/SubscribeButton";
 
 const HealthPlansPage = () => {
   const healthPlans = [
@@ -137,12 +138,7 @@ const HealthPlansPage = () => {
                     ))}
                   </ul>
                 </CardBody>
-                <Button
-                  color="primary"
-                  className="absolute bottom-2 left-0 right-0 mx-5 text-white"
-                >
-                  Subscribe Now
-                </Button>
+                <SubscribeButton />
               </Card>
             );
           })}

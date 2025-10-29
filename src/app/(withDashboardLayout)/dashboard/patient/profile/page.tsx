@@ -1,13 +1,8 @@
 import React from "react";
+import Profile from "../../_components/Profile";
 
 const ProfilePage = () => {
-  return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="shadow bg-primary text-white font-bold rounded text-2xl p-4">
-        <h2>Profile is coming soon</h2>
-      </div>
-    </div>
-  );
+  return <Profile />;
 };
 
 export default ProfilePage;

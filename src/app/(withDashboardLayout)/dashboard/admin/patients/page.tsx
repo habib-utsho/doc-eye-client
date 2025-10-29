@@ -12,10 +12,13 @@ import moment from "moment";
 import { Switch } from "@heroui/switch";
 import { Input } from "@heroui/input";
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
-import DeleteModal from "../../_components/DeleteModal";
+import DeleteUserModal from "../../_components/DeleteUserModal";
 import { useToggleUserStatus } from "@/src/hooks/auth.hook";
 import PatientDetailsModal from "./_components/modal/PatientDetailsModal";
 import { SearchIcon } from "@/src/components/ui/icons";
+import { Button } from "@heroui/button";
+import { FaShield } from "react-icons/fa6";
+import MakeAdminModal from "../../_components/MakeAdminModal";
 
 const PatientsPage = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
@@ -85,15 +88,16 @@ const PatientsPage = () => {
       />
     ),
     actions: (
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2">
         <PatientDetailsModal patient={patient} />
-        <DeleteModal
+        <DeleteUserModal
           id={patient?._id}
           handler={deletePatientMutate}
           isLoading={isLoadingDeletePatient}
           isSuccess={isSuccessDeletePatient}
           deleteType="patient"
         />
+        <MakeAdminModal patient={patient} refetch={refetchPatients} />
       </div>
     ),
   }));

@@ -106,6 +106,38 @@ export const updateFavoriteDoctors = async (
     );
   }
 };
+export const makePatientAdmin = async (
+  id: string | undefined,
+) => {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("DEaccessToken")?.value;
+  try {
+    const fetchOption: RequestInit = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application / json",
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      },
+    };
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/patient/make-patient-admin/${id}`,
+      fetchOption
+    );
+
+    revalidateTag("patient");
+    revalidateTag("admin");
+    return res.json();
+  } catch (e: any) {
+    throw new Error(
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
+      } ${e.response?.data?.errorSources?.[0]?.message}` ||
+      e?.response?.data ||
+      e.message ||
+      "Failed to update a patient!"
+    );
+  }
+};
 export const updatePatientById = async (
   id: string | undefined,
   payload: FormData

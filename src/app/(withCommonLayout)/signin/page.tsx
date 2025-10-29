@@ -22,6 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@heroui/table";
+import { toast } from "sonner";
 
 // Need to change password
 const SigninPage = () => {
@@ -38,7 +39,19 @@ const SigninPage = () => {
 
   const onSubmit: SubmitHandler<TSignin> = (payload: TSignin) => {
     console.log(payload);
-    handleSignin(payload);
+
+    const loadingToastId = toast.loading("Signing in...");
+
+    handleSignin(payload, {
+      onSuccess: (data) => {
+        toast.dismiss(loadingToastId);
+        toast.success(data?.message || "Signed in successfully!");
+      },
+      onError: (error) => {
+        toast.dismiss(loadingToastId);
+        toast.error(error?.message || "Sign-in failed!");
+      },
+    });
   };
 
   const [defaultValues, setDefaultValues] = useState<TSignin>({

@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { TFilterQuery } from "../types";
 import {
   deleteAdminById,
+  getAdminById,
   getAllAdmin,
   updateAdminById,
 } from "../services/admin";
@@ -11,6 +12,11 @@ export const useGetAllAdmin = (query: TFilterQuery[] | undefined) =>
   useQuery({
     queryKey: ["admin", query],
     queryFn: () => getAllAdmin(query),
+  });
+export const useGetAdminById = (id: string | null) =>
+  useQuery({
+    queryKey: ["admin", id],
+    queryFn: () => getAdminById(id),
   });
 
 export const useUpdateAdminById = () =>

@@ -4,6 +4,7 @@ import {
   deletePatientById,
   getAllPatient,
   getSinglePatient,
+  makePatientAdmin,
   updateFavoriteDoctors,
   updatePatientById,
 } from "../services/patient";
@@ -19,6 +20,23 @@ export const useGetPatientById = (id: string | null) =>
   useQuery({
     queryKey: ["patient", id],
     queryFn: () => getSinglePatient(id),
+  });
+
+export const useMakePatientAdmin = () =>
+  useMutation({
+    mutationKey: ["patient"],
+    mutationFn: (id: string) =>
+      makePatientAdmin(id),
+    // onSuccess(data) {
+    //   if (data?.success) {
+    //     toast.success(data?.message || "Patient promoted to admin successfully!");
+    //   } else {
+    //     toast.error(data?.message || "Failed to update patient!");
+    //   }
+    // },
+    // onError(error) {
+    //   toast.error(error?.message || "Failed to update patient!");
+    // },
   });
 
 export const useUpdatePatientById = () =>

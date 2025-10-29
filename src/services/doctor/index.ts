@@ -75,7 +75,7 @@ export const getDoctorById = async (id: string | undefined) => {
     );
   }
 };
-export const getDoctorByDoctorCode = async (id: string | undefined) => {
+export const getDoctorByDoctorCode = async (id: string | null) => {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("DEaccessToken")?.value;
   try {

@@ -10,7 +10,7 @@ import { Switch } from "@heroui/switch";
 import { toast } from "sonner";
 import { Input } from "@heroui/input";
 import { SearchIcon } from "@/src/components/ui/icons";
-import DeleteModal from "../../_components/DeleteModal";
+import DeleteUserModal from "../../_components/DeleteUserModal";
 import { useToggleUserStatus } from "@/src/hooks/auth.hook";
 
 const AdminsPage = () => {
@@ -82,7 +82,7 @@ const AdminsPage = () => {
     ),
     actions: (
       <div className="flex items-center gap-1">
-        <DeleteModal
+        <DeleteUserModal
           id={admin?._id}
           handler={deleteAdminMutate}
           isLoading={isLoadingDeleteAdmin}

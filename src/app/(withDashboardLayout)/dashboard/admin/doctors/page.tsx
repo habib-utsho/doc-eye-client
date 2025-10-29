@@ -13,7 +13,7 @@ import moment from "moment";
 import { Switch } from "@heroui/switch";
 import { Input } from "@heroui/input";
 import { CheckIcon, SearchIcon, XMarkIcon } from "@/src/components/ui/icons";
-import DeleteModal from "../../_components/DeleteModal";
+import DeleteUserModal from "../../_components/DeleteUserModal";
 import { useToggleUserStatus } from "@/src/hooks/auth.hook";
 import { TSpecialty } from "@/src/types/specialty";
 import WorkingExperiencesModal from "./_components/modal/WorkingExperiencesModal";
@@ -219,7 +219,7 @@ const DoctorsPage = () => {
     actions: (
       <div className="flex items-center gap-1">
         <DoctorDetailsModal doctor={doctor} />
-        <DeleteModal
+        <DeleteUserModal
           id={doctor?._id}
           handler={deleteDoctorMutate}
           isLoading={isLoadingDeleteDoctor}

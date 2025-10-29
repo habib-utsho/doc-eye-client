@@ -12,7 +12,7 @@ import moment from "moment";
 import { Switch } from "@heroui/switch";
 import { Input } from "@heroui/input";
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
-import DeleteModal from "../../_components/DeleteModal";
+import DeleteUserModal from "../../_components/DeleteUserModal";
 import { useToggleUserStatus } from "@/src/hooks/auth.hook";
 import { SearchIcon } from "@/src/components/ui/icons";
 import PatientDetailsModal from "../../admin/patients/_components/modal/PatientDetailsModal";
