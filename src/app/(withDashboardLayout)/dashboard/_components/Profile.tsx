@@ -1,15 +1,22 @@
 "use client";
 
+import DEForm from "@/src/components/ui/Form/DEForm";
+import MyInp from "@/src/components/ui/Form/MyInp";
 import Loading from "@/src/components/ui/Loading";
+import { bloodGroups, districts } from "@/src/constant/user.constant";
 import { useGetAdminById } from "@/src/hooks/admin.hook";
 import { useGetDoctorById } from "@/src/hooks/doctor.hook";
 import { useGetPatientById } from "@/src/hooks/patient.hook";
 import useUserData from "@/src/hooks/user.hook";
 import { TAdmin, TDoctor, TPatient, TUserRole } from "@/src/types/user";
+import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
+import { Button } from "@heroui/button";
 import { Divider } from "@heroui/divider";
+import { zodResolver } from "@hookform/resolvers/zod";
 import moment from "moment";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { Form, SubmitHandler, useForm } from "react-hook-form";
 import {
   FaUserMd,
   FaUser,
@@ -20,30 +27,20 @@ import {
   FaEnvelope,
   FaPhone,
   FaStethoscope,
-  FaAward,
-  FaClock,
   FaCamera,
 } from "react-icons/fa";
 
-const mockUser = {
-  role: "doctor" as TUserRole,
-  name: "Dr. Sarah Johnson",
-  email: "sarah.johnson@citymed.com",
-  phone: "+1 (555) 123-4567",
-  avatar: "/doctor-avatar.jpg",
-  specialty: "Cardiologist",
-  hospital: "City Medical Center",
-  experience: "12+ years",
-  bio: "Passionate cardiologist dedicated to providing comprehensive heart care with empathy and precision. Specializing in preventive cardiology and advanced cardiac imaging.",
-  available: "Mon-Fri, 9 AM – 5 PM",
-  // patient
-  // dob: '1985-03-12',
-  // gender: 'female',
-  // admin
-  // department: 'IT',
+type FormValues = {
+  name: string;
 };
 
 export default function ProfilePage() {
+  const formMethods = useForm<FormValues>({
+    // resolver: zodResolver(
+    //   medicalReportValidationSchema.createMedicalReportZodSchema
+    // ),
+  });
+
   const { user } = useUserData();
   const userRole = user?.role as TUserRole;
 
@@ -59,14 +56,19 @@ export default function ProfilePage() {
   const doctorData =
     userRole === "doctor" ? (data?.data as TDoctor) : undefined;
   const adminData = userRole === "admin" ? (data?.data as TAdmin) : undefined;
-  const myData = patientData || doctorData || adminData;
+  const myData = (patientData || doctorData || adminData) as Partial<
+    TPatient & TDoctor & TAdmin
+  >;
 
   const [isEditing, setIsEditing] = useState(false);
   const [preview, setPreview] = useState(user?.profileImg);
 
-  const role = mockUser.role;
   const RoleIcon =
-    role === "doctor" ? FaUserMd : role === "patient" ? FaUser : FaShieldAlt;
+    userRole === "doctor"
+      ? FaUserMd
+      : userRole === "patient"
+      ? FaUser
+      : FaShieldAlt;
 
   // set profile img
   useEffect(() => {
@@ -79,8 +81,11 @@ export default function ProfilePage() {
 
   console.log({ myData, patientData, doctorData, adminData });
 
+  const onSubmit: SubmitHandler<TPatient> = async (payload: TPatient) => {};
+
   return (
     <div className="min-h-screen p-4">
+      {/* Banner */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-700 text-white flex flex-col md:flex-row items-center gap-8 p-5 rounded-md shadow">
         {/* Avatar */}
         <div className="relative group">
@@ -124,13 +129,14 @@ export default function ProfilePage() {
 
         {/* Edit Button */}
         {!isEditing && (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-white/20 backdrop-blur-sm text-white font-medium rounded-lg hover:bg-white/30 transition"
+          <Button
+            onPress={() => setIsEditing(true)}
+            variant="solid"
+            className=" bg-white/20 text-white hover:bg-white/30 transition"
           >
             <FaEdit className="w-4 h-4" />
             Edit Profile
-          </button>
+          </Button>
         )}
       </div>
 
@@ -181,81 +187,208 @@ export default function ProfilePage() {
                       {moment(myData?.dateOfBirth).format("MMMM D, YYYY")}
                     </p>
                   </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Blood Group</p>
+                    <p className="font-medium flex items-center gap-2">
+                      {myData?.bloodGroup}
+                    </p>
+                  </div>
+                  {userRole != "doctor" && (
+                    <div>
+                      <p className="text-sm text-gray-600">Weight</p>
+                      <p className="font-medium flex items-center gap-2">
+                        {myData?.weight ? `${myData.weight} kg` : "N/A"}
+                      </p>
+                    </div>
+                  )}
+                  {userRole != "doctor" && (
+                    <div>
+                      <p className="text-sm text-gray-600">Height</p>
+                      <p className="font-medium flex items-center gap-2">
+                        {myData?.height ? `${myData.height} kg` : "N/A"}
+                      </p>
+                    </div>
+                  )}
+                  {userRole != "doctor" && (
+                    <div>
+                      <p className="text-sm text-gray-600">Allergies</p>
+                      <p className="font-medium flex items-center gap-2">
+                        {myData?.allergies ? `${myData.allergies} kg` : "N/A"}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* Doctor View */}
-              {role === "doctor" && (
-                <div className="bg-white rounded-xl shadow p-6">
-                  <h2 className="flex items-center gap-2 text-xl font-semibold text-blue-700 mb-4">
+              {/* Doctor Details */}
+              {userRole === "doctor" && doctorData && (
+                <div className="bg-white rounded-xl shadow p-6 space-y-6">
+                  {/* Section Header */}
+                  <h2 className="flex items-center gap-2 text-xl font-semibold text-blue-700">
                     <FaStethoscope className="w-5 h-5" />
                     Professional Details
                   </h2>
-                  <Divider className="mb-4" />
+                  <Divider className="mb-2" />
+
+                  {/* Top Summary */}
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <p className="text-sm text-gray-600">Specialty</p>
-                      <p className="font-medium">{mockUser.specialty}</p>
+                      <p className="text-sm text-gray-500">Doctor Code</p>
+                      <p className="font-medium">{doctorData.doctorCode}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Hospital</p>
-                      <p className="font-medium">{mockUser.hospital}</p>
+                      <p className="text-sm text-gray-500">Doctor Type</p>
+                      <p className="font-medium">{doctorData.doctorType}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Experience</p>
-                      <p className="font-medium flex items-center gap-2">
-                        <FaAward className="w-4 h-4 text-amber-600" />
-                        {mockUser.experience}
+                      <p className="text-sm text-gray-500">Title</p>
+                      <p className="font-medium">{doctorData.doctorTitle}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">BMDC No.</p>
+                      <p className="font-medium">{doctorData.bmdc}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Total Experience</p>
+                      <p className="font-medium">
+                        {doctorData.totalExperienceYear} years
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Availability</p>
-                      <p className="font-medium flex items-center gap-2">
-                        <FaClock className="w-4 h-4 text-purple-600" />
-                        {mockUser.available}
+                      <p className="text-sm text-gray-500">Medical Degree</p>
+                      <p className="font-medium">{doctorData.medicalDegree}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Consultation Fee</p>
+                      <p className="font-medium">
+                        ৳{doctorData.consultationFee}
                       </p>
                     </div>
-                  </div>
-                  <div className="mt-6">
-                    <p className="text-sm text-gray-600">Bio</p>
-                    <p className="mt-1 text-gray-800 leading-relaxed">
-                      {mockUser.bio}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* Patient View */}
-              {role === "patient" && (
-                <div className="bg-white rounded-xl shadow p-6">
-                  <h2 className="flex items-center gap-2 text-xl font-semibold text-green-700 mb-4">
-                    <FaUser className="w-5 h-5" />
-                    Patient Details
-                  </h2>
-                  <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <p className="text-sm text-gray-600">Date of Birth</p>
-                      <p className="font-medium">March 12, 1985</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Gender</p>
-                      <p className="font-medium">Female</p>
+                      <p className="text-sm text-gray-500">Follow-up Fee</p>
+                      <p className="font-medium">৳{doctorData.followupFee}</p>
                     </div>
                   </div>
-                </div>
-              )}
 
-              {/* Admin View */}
-              {role === "admin" && (
-                <div className="bg-white rounded-xl shadow p-6">
-                  <h2 className="flex items-center gap-2 text-xl font-semibold text-purple-700 mb-4">
-                    <FaShieldAlt className="w-5 h-5" />
-                    Admin Details
-                  </h2>
-                  <div>
-                    <p className="text-sm text-gray-600">Department</p>
-                    <p className="font-medium">IT & Systems</p>
+                  {/* Specialties */}
+                  <div className=" p-3 rounded-md shadow mt-6">
+                    <h3 className="text-lg font-semibold text-gray-800  mb-3">
+                      Medical Specialties
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {doctorData.medicalSpecialties?.map((spec) => (
+                        <div
+                          className="px-3 py-1 rounded-full bg-blue-50 text-primary text-sm font-medium border shadow shadow-primary flex items-center gap-2"
+                          key={spec._id}
+                        >
+                          <Image
+                            height={20}
+                            width={20}
+                            alt={spec.name}
+                            src={spec.icon}
+                          />
+                          <span className="">{spec.name}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
+
+                  {/* Availability */}
+                  <div className=" p-3 rounded-md shadow mt-6">
+                    <h3 className="text-lg font-semibold text-gray-800  mb-3">
+                      Availability
+                    </h3>
+                    <div className="flex items-center gap-1">
+                      <span className="h-2 w-2 rounded-full bg-gray-500 animate-pulse inline-block"></span>
+                      <span className="font-semibold">
+                        {doctorData.availability?.dayStart} -{" "}
+                        {doctorData.availability?.dayEnd}{" "}
+                      </span>
+                      {`(${convertTo12HourTime(
+                        doctorData.availability?.timeStart
+                      )} - ${convertTo12HourTime(
+                        doctorData.availability?.timeEnd
+                      )})`}
+                    </div>
+                  </div>
+
+                  {/* Current Workplace */}
+                  {doctorData.currentWorkplace && (
+                    <div className=" p-3 rounded-md shadow mt-6">
+                      <h3 className="text-lg font-semibold text-gray-800  mb-3">
+                        Current Workplace
+                      </h3>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-sm text-gray-500">Workplace</p>
+                          <p className="font-medium">
+                            {doctorData.currentWorkplace.workPlace}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500">Department</p>
+                          <p className="font-medium">
+                            {doctorData.currentWorkplace.department}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500">Designation</p>
+                          <p className="font-medium">
+                            {doctorData.currentWorkplace.designation}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500">
+                            Working Period
+                          </p>
+                          <p className="font-medium">
+                            {moment(
+                              doctorData.currentWorkplace.workingPeriodStart
+                            ).format("DD MMM, YYYY")}
+                            -{" "}
+                            {doctorData.currentWorkplace.workingPeriodEnd
+                              ? moment(
+                                  doctorData.currentWorkplace.workingPeriodEnd
+                                ).format("DD MMM, YYYY")
+                              : "Present"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Past Experiences */}
+                  {doctorData.workingExperiences?.length > 0 && (
+                    <div className=" p-3 rounded-md shadow mt-6">
+                      <h3 className="text-lg font-semibold text-gray-800  mb-3">
+                        Past Experiences
+                      </h3>
+                      <div className="space-y-4">
+                        {doctorData.workingExperiences.map((exp) => (
+                          <div
+                            key={exp._id}
+                            className="border rounded-lg p-4 bg-gray-50"
+                          >
+                            <p className="font-semibold">{exp.designation}</p>
+                            <p className="text-sm text-gray-600">
+                              {exp.department}, {exp.workPlace}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {moment(exp.workingPeriodStart).format(
+                                "DD MMM, YYYY"
+                              )}{" "}
+                              -{" "}
+                              {exp.workingPeriodEnd
+                                ? moment(exp.workingPeriodEnd).format(
+                                    "DD MMM, YYYY"
+                                  )
+                                : "Present"}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -263,53 +396,103 @@ export default function ProfilePage() {
 
           {/* EDIT MODE – Replace with your <Form> and <Input> */}
           {isEditing && (
-            <div className="space-y-8">
+            <DEForm
+              className="space-y-8"
+              methods={formMethods}
+              onSubmit={onSubmit}
+            >
               {/* Personal Info */}
               <div className="bg-white rounded-xl shadow p-6">
                 <h2 className="text-xl font-semibold mb-4 text-gray-800">
                   Personal Information
                 </h2>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Full Name
-                    </label>
-                    {/* Your custom Input */}
-                    <input
+                  <MyInp
+                    type="text"
+                    name="name"
+                    defaultValue={myData?.name || ""}
+                    label="Full Name"
+                    placeholder="Your name here"
+                  />
+                  <MyInp
+                    type="email"
+                    name="email"
+                    defaultValue={myData?.email || ""}
+                    label="Email"
+                    placeholder="Your email here"
+                    disabled
+                  />
+                  <MyInp
+                    type="text"
+                    name="name"
+                    defaultValue={myData?.phone || ""}
+                    label="Phone"
+                    placeholder="Your phone here"
+                  />
+                  <MyInp
+                    type="text"
+                    name="gender"
+                    defaultValue={myData?.gender || ""}
+                    label="Gender"
+                    placeholder="Your gender here"
+                  />
+                  <MyInp
+                    type="select"
+                    name="district"
+                    label="District"
+                    placeholder="Select District"
+                    options={districts?.map((district) => ({
+                      key: district,
+                      label: district,
+                    }))}
+                  />
+                  <MyInp type="date" name="dateOfBirth" label="Date of Birth" />
+                  <MyInp
+                    type="select"
+                    name="bloodGroup"
+                    label="Blood Group"
+                    placeholder="Select Blood Group"
+                    options={bloodGroups?.map((bg) => ({
+                      key: bg,
+                      label: bg,
+                    }))}
+                  />
+                  {userRole != "doctor" && (
+                    <MyInp
+                      type="number"
+                      name="weight"
+                      defaultValue={myData?.weight?.toString() || ""}
+                      label="Weight (kg)"
+                      placeholder="Your weight here"
+                    />
+                  )}
+                  {userRole != "doctor" && (
+                    <MyInp
+                      type="number"
+                      name="height"
+                      defaultValue={myData?.height?.toString() || ""}
+                      label="Height (cm)"
+                      placeholder="Your height here"
+                    />
+                  )}
+                  {userRole != "doctor" && (
+                    <MyInp
                       type="text"
-                      defaultValue={mockUser.name}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      name="allergies"
+                      defaultValue={myData?.allergies || ""}
+                      label="Allergies"
+                      placeholder="Your allergies here"
                     />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      defaultValue={mockUser.email}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Phone
-                    </label>
-                    <input
-                      type="tel"
-                      defaultValue={mockUser.phone}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
+                  )}
                 </div>
               </div>
 
               {/* Doctor Edit */}
-              {role === "doctor" && (
+              {userRole === "doctor" && doctorData && (
                 <div className="bg-white rounded-xl shadow p-6 space-y-6">
-                  <h2 className="flex items-center gap-2 text-xl font-semibold text-blue-700">
+                  <h2 className="flex items-center gap-2 text-xl font-semibold text-primary">
                     <FaStethoscope className="w-5 h-5" />
-                    Professional Details
+                    Doctor Details Details
                   </h2>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
@@ -317,101 +500,10 @@ export default function ProfilePage() {
                         Specialty
                       </label>
                       <input
-                        defaultValue={mockUser.specialty}
+                        defaultValue={doctorData.medicalSpecialties?.[0]?.name}
                         className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Hospital
-                      </label>
-                      <input
-                        defaultValue={mockUser.hospital}
-                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Experience
-                      </label>
-                      <input
-                        defaultValue={mockUser.experience}
-                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Availability
-                      </label>
-                      <input
-                        defaultValue={mockUser.available}
-                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Bio
-                    </label>
-                    <textarea
-                      defaultValue={mockUser.bio}
-                      rows={4}
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Patient Edit */}
-              {role === "patient" && (
-                <div className="bg-white rounded-xl shadow p-6 space-y-6">
-                  <h2 className="flex items-center gap-2 text-xl font-semibold text-green-700">
-                    <FaUser className="w-5 h-5" />
-                    Patient Details
-                  </h2>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Date of Birth
-                      </label>
-                      <input
-                        type="date"
-                        defaultValue="1985-03-12"
-                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Gender
-                      </label>
-                      <select
-                        defaultValue="female"
-                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
-                      >
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Admin Edit */}
-              {role === "admin" && (
-                <div className="bg-white rounded-xl shadow p-6 space-y-6">
-                  <h2 className="flex items-center gap-2 text-xl font-semibold text-purple-700">
-                    <FaShieldAlt className="w-5 h-5" />
-                    Admin Details
-                  </h2>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Department
-                    </label>
-                    <input
-                      defaultValue="IT & Systems"
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500"
-                    />
                   </div>
                 </div>
               )}
@@ -430,7 +522,7 @@ export default function ProfilePage() {
                   Save Changes
                 </button>
               </div>
-            </div>
+            </DEForm>
           )}
         </div>
       </section>

@@ -302,7 +302,7 @@ const MyInp = ({
             isInvalid={!!getErrorMessage(errors, name)}
             // errorMessage={errors[name]?.message as string}
             errorMessage={getErrorMessage(errors, name)}
-            className={className}
+            className={`${className}`}
           />
         );
       }}

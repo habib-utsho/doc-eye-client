@@ -102,7 +102,7 @@ export type TSignin = {
 
 // admin, doctor, patient
 
-export type TPatient = {
+export type TCommonPatientAdminDoctor = {
   _id: string;
   user: TUser;
   name: string;
@@ -113,24 +113,21 @@ export type TPatient = {
   district: TDistrict;
   dateOfBirth: Date;
   bloodGroup: TBloodGroup;
-  weight?: number;
-  height?: number;
-  allergies?: string;
-  isDeleted: boolean;
-};
-export type TAdmin = {
-  _id: string;
-  user: TUser;
-  name: string;
-  email: string;
-  phone: string;
-  gender: string;
-  profileImg: string;
-  dateOfBirth: string;
-  district: string;
   isDeleted: boolean;
   createdAt?: string;
   updatedAt?: string;
+}
+
+
+export type TPatient = TCommonPatientAdminDoctor & {
+  weight?: number;
+  height?: number;
+  allergies?: string;
+};
+export type TAdmin = TCommonPatientAdminDoctor & {
+  weight?: number;
+  height?: number;
+  allergies?: string;
 };
 
 export type TAvailability = {
@@ -149,16 +146,8 @@ export type TWorkingExperience = {
   _id?: string;
 };
 
-export type TDoctor = {
+export type TDoctor = TCommonPatientAdminDoctor & {
   availability: TAvailability;
-  _id: string;
-  user: TUser;
-  name: string;
-  email: string;
-  phone: string;
-  gender: string;
-  bloodGroup: string;
-  profileImg: string;
   bio: string;
   doctorTitle: string;
   doctorType: string;
@@ -168,15 +157,10 @@ export type TDoctor = {
   consultationFee: number;
   followupFee: number;
   workingExperiences: TWorkingExperience[];
-  dateOfBirth: string;
   currentWorkplace: TWorkingExperience;
-  district: string;
   nid: string;
   bmdc: string;
   patientAttended: number;
   doctorCode: string;
   status: string;
-  isDeleted: boolean;
-  createdAt?: string;
-  updatedAt?: string;
 };

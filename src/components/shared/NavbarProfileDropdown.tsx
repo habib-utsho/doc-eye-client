@@ -67,7 +67,10 @@ const NavbarProfileDropdown = () => {
             >
               Dashboard
             </DropdownItem>
-            <DropdownItem key="profile" href="/dashboard/profile">
+            <DropdownItem
+              key="profile"
+              href={`/dashboard/${user?.role}/profile`}
+            >
               Profile
             </DropdownItem>
             <DropdownItem
