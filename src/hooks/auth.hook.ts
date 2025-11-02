@@ -5,7 +5,6 @@ import {
   registerAdmin,
   registerDoctor,
   registerPatient,
-  signinUser,
   toggleUserStatus,
 } from "../services/auth";
 import { toast } from "sonner";
@@ -17,7 +16,12 @@ export const useUserSignin = ({ redirect }: { redirect: string | null }) => {
   const { setUser } = useUserData();
   return useMutation({
     mutationKey: ["signinUser"],
-    mutationFn: async (payload: TSignin) => await signinUser(payload),
+    mutationFn: async (payload: TSignin) => await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(payload),
+    }).then(res => res.json()),
     async onSuccess(data) {
       if (data?.success) {
         const user = (await getCurrentUser()) as TDecodedUser;
@@ -102,3 +106,5 @@ export const useToggleUserStatus = () => {
     },
   });
 };
+
+

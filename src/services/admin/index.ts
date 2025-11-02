@@ -27,9 +27,6 @@ export const getAllAdmin = async (query: TFilterQuery[] | undefined) => {
       `${process.env.NEXT_PUBLIC_BASE_URL}/admin?${params.toString()}`,
       fetchOption
     );
-    if (!res.ok) {
-      throw new Error("Failed to get all admin!");
-    }
     return res.json();
   } catch (e: any) {
     throw new Error(
@@ -60,9 +57,6 @@ export const getAdminById = async (id: string | null) => {
       `${process.env.NEXT_PUBLIC_BASE_URL}/admin/${id}`,
       fetchOption
     );
-    if (!res.ok) {
-      throw new Error("Failed to get single admin!");
-    }
     return res.json();
   } catch (e: any) {
     throw new Error(
@@ -93,9 +87,6 @@ export const updateAdminById = async (
       `${process.env.NEXT_PUBLIC_BASE_URL}/admin/${id}`,
       fetchOption
     );
-    if (!res.ok) {
-      throw new Error("Failed to update an admin!");
-    }
     revalidateTag("admin");
     return res.json();
   } catch (e: any) {
@@ -123,9 +114,6 @@ export const deleteAdminById = async (id: string | undefined) => {
       `${process.env.NEXT_PUBLIC_BASE_URL}/admin/${id}`,
       fetchOption
     );
-    if (!res.ok) {
-      throw new Error("Failed to delete an admin!");
-    }
     revalidateTag("admin");
     return res.json();
   } catch (e: any) {

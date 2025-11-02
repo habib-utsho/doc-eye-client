@@ -38,8 +38,6 @@ const SigninPage = () => {
   } = useUserSignin({ redirect });
 
   const onSubmit: SubmitHandler<TSignin> = (payload: TSignin) => {
-    console.log(payload);
-
     const loadingToastId = toast.loading("Signing in...");
 
     handleSignin(payload, {

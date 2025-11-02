@@ -1,5 +1,6 @@
 "use server";
 
+import axiosInstance from "@/src/lib/axiosInstance";
 import { TFilterQuery } from "@/src/types";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
@@ -81,20 +82,20 @@ export const updateFavoriteDoctors = async (
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("DEaccessToken")?.value;
   try {
-    const fetchOption: RequestInit = {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-      },
-      body: JSON.stringify(payload),
-    };
-    const res = await fetch(
+    // const fetchOption: RequestInit = {
+    //   method: "PATCH",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    //   },
+    //   body: JSON.stringify(payload),
+    // };
+    const res = await axiosInstance.patch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/patient/favorite-doctors`,
-      fetchOption);
+      payload);
     revalidateTag("doctor");
     revalidateTag("patient");
-    return res.json();
+    return res.data;
   } catch (e: any) {
     throw new Error(
       `${e?.response?.data?.errorSources?.[0]?.path &&

@@ -12,11 +12,10 @@ import { TAdmin, TDoctor, TPatient, TUserRole } from "@/src/types/user";
 import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
 import { Button } from "@heroui/button";
 import { Divider } from "@heroui/divider";
-import { zodResolver } from "@hookform/resolvers/zod";
 import moment from "moment";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { Form, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import {
   FaUserMd,
   FaUser,
