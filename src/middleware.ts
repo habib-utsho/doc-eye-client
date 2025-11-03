@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { getCurrentUser, refreshToken } from "./services/auth";
+import { getCurrentUser } from "./services/auth";
 import { TDecodedUser } from "./types/user";
 
 // This function can be marked `async` if using `await` inside
@@ -16,13 +16,12 @@ const roleBaseRoutes = {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  console.log({ pathname });
-  // 1️⃣ Try to get current user
+  //  Try to get current user
   let user = (await getCurrentUser()) as TDecodedUser | null;
-  console.log({ user });
+  // console.log({ user });
 
 
-  // 3️⃣ Still no user → not authenticated → redirect to signin
+  //  Still no user → not authenticated → redirect to signin
   if (!user) {
     if (authRoutes.includes(pathname)) {
       return NextResponse.next();
@@ -34,7 +33,7 @@ export async function middleware(request: NextRequest) {
   }
 
 
-  // 4️⃣ If authenticated user tries to access auth routes, redirect to home/dashboard
+  // If authenticated user tries to access auth routes, redirect to home/dashboard
   if (user?.role && roleBaseRoutes[user?.role as TRole]) {
     const roleRoutes = roleBaseRoutes[user?.role as TRole];
     const isMatched = roleRoutes.some((route) => pathname.match(route));

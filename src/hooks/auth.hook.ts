@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { TDecodedUser, TPatient, TSignin } from "../types/user";
+import { TDecodedUser, TSignin } from "../types/user";
 import {
   getCurrentUser,
   registerAdmin,

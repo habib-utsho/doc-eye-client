@@ -1,17 +1,24 @@
 "use client";
 
+import { subtitle } from "@/src/components/primitives";
 import DEForm from "@/src/components/ui/Form/DEForm";
 import MyInp from "@/src/components/ui/Form/MyInp";
+import { DeleteIcon, PlusIcon } from "@/src/components/ui/icons";
 import Loading from "@/src/components/ui/Loading";
+import { doctorTitles, doctorTypes } from "@/src/constant/doctor.constant";
+import { days } from "@/src/constant/index.constant";
 import { bloodGroups, districts } from "@/src/constant/user.constant";
 import { useGetAdminById } from "@/src/hooks/admin.hook";
 import { useGetDoctorById } from "@/src/hooks/doctor.hook";
 import { useGetPatientById } from "@/src/hooks/patient.hook";
+import { useGetAllSpecialties } from "@/src/hooks/specialty.hook";
 import useUserData from "@/src/hooks/user.hook";
+import { TSpecialty } from "@/src/types/specialty";
 import { TAdmin, TDoctor, TPatient, TUserRole } from "@/src/types/user";
 import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
 import { Button } from "@heroui/button";
 import { Divider } from "@heroui/divider";
+import { Input } from "@heroui/input";
 import moment from "moment";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -34,11 +41,8 @@ type FormValues = {
 };
 
 export default function ProfilePage() {
-  const formMethods = useForm<FormValues>({
-    // resolver: zodResolver(
-    //   medicalReportValidationSchema.createMedicalReportZodSchema
-    // ),
-  });
+  const { data: specialties, isLoading: isLoadingSpecialties } =
+    useGetAllSpecialties([{ name: "limit", value: 5000 }]);
 
   const { user } = useUserData();
   const userRole = user?.role as TUserRole;
@@ -68,6 +72,44 @@ export default function ProfilePage() {
       : userRole === "patient"
       ? FaUser
       : FaShieldAlt;
+
+  const formMethods = useForm<FormValues>({
+    // resolver: zodResolver(
+    //   medicalReportValidationSchema.createMedicalReportZodSchema
+    // ),
+  });
+
+  // Working Experiences
+  const [workingExperiences, setWorkingExperiences] = useState([
+    {
+      workPlace: "",
+      department: "",
+      designation: "",
+      workingPeriodStart: "",
+      workingPeriodEnd: "",
+    },
+  ]);
+  const onAddExperience = () => {
+    setWorkingExperiences([
+      ...workingExperiences,
+      {
+        workPlace: "",
+        department: "",
+        designation: "",
+        workingPeriodStart: "",
+        workingPeriodEnd: "",
+      },
+    ]);
+  };
+  const onRemoveExperience = (index: number) => {
+    setWorkingExperiences(workingExperiences.filter((_, i) => i !== index));
+  };
+  const onExperienceChange = (index: number, key: string, value: string) => {
+    const updatedExperiences = workingExperiences.map((experience, i) => {
+      return i === index ? { ...experience, [key]: value } : experience;
+    });
+    setWorkingExperiences(updatedExperiences);
+  };
 
   // set profile img
   useEffect(() => {
@@ -189,7 +231,7 @@ export default function ProfilePage() {
                   <div>
                     <p className="text-sm text-gray-600">Blood Group</p>
                     <p className="font-medium flex items-center gap-2">
-                      {myData?.bloodGroup}
+                      {myData?.bloodGroup || "N/A"}
                     </p>
                   </div>
                   {userRole != "doctor" && (
@@ -493,15 +535,259 @@ export default function ProfilePage() {
                     <FaStethoscope className="w-5 h-5" />
                     Doctor Details Details
                   </h2>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Specialty
-                      </label>
-                      <input
-                        defaultValue={doctorData.medicalSpecialties?.[0]?.name}
-                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  <div className="space-y-3">
+                    {/* {reusableInp} */}
+                    <div className="flex flex-col md:flex-row gap-4">
+                      <MyInp
+                        type="select"
+                        name="doctorTitle"
+                        label="Doctor Title"
+                        options={doctorTitles?.map((doctorTitle) => ({
+                          key: doctorTitle,
+                          label: doctorTitle,
+                        }))}
                       />
+                      <MyInp
+                        type="select"
+                        name="doctorType"
+                        label="Doctor Type"
+                        options={doctorTypes?.map((doctorType) => ({
+                          key: doctorType,
+                          label: doctorType,
+                        }))}
+                      />
+                    </div>
+                    <div className="flex flex-col md:flex-row gap-4">
+                      <MyInp
+                        type="select"
+                        name="medicalSpecialties"
+                        label="Medical Specialties"
+                        selectionMode="multiple"
+                        disabled={
+                          isLoadingSpecialties ||
+                          specialties?.data?.length === 0
+                        }
+                        options={specialties?.data?.map(
+                          (specialty: TSpecialty) => ({
+                            key: specialty._id,
+                            label: specialty.name,
+                          })
+                        )}
+                      />
+                      <MyInp
+                        type="text"
+                        name="medicalDegree"
+                        placeholder="e.g., BCS (Health), MBBS"
+                        label="Medical Degree"
+                      />
+                    </div>
+
+                    {/* Total exp and current workplace */}
+                    <div className="flex flex-col md:flex-row gap-4">
+                      <MyInp
+                        type="number"
+                        name="totalExperienceYear"
+                        placeholder="e.g., 15"
+                        label="Total Exp Year"
+                      />
+                      <MyInp
+                        type="text"
+                        name="currentWorkplace"
+                        placeholder="e.g., Dhaka Medical College"
+                        label="Current Workplace"
+                      />
+                    </div>
+                    {/* consultationFee and follow up fee */}
+                    <div className="flex flex-col md:flex-row gap-4">
+                      <MyInp
+                        type="number"
+                        name="consultationFee"
+                        placeholder="e.g., 1000"
+                        label="Consultation Fee (BDT)"
+                      />
+                      <MyInp
+                        type="number"
+                        name="followupFee"
+                        placeholder="e.g., 600"
+                        label="Followup Fee (BDT)"
+                      />
+                    </div>
+                    {/* NID & BMDC */}
+                    <div className="flex flex-col md:flex-row gap-4">
+                      <MyInp
+                        type="text"
+                        name="nid"
+                        placeholder="e.g., 663543434423"
+                        label="NID"
+                      />
+                      <MyInp
+                        type="text"
+                        name="bmdc"
+                        placeholder="e.g., 55754"
+                        label="BMDC"
+                      />
+                    </div>
+
+                    {/* Bio */}
+                    <div>
+                      <h2 className={`${subtitle()}`}>Bio</h2>
+                      <Divider className="w-[200px] mb-3" />
+                      <MyInp
+                        type="textarea"
+                        name="bio"
+                        label="Bio"
+                        placeholder="Write something about yourself"
+                      />
+                    </div>
+
+                    {/* Working experiences */}
+                    <div>
+                      <h2 className={`${subtitle()}`}>Working Experiences</h2>
+                      <Divider className="w-[200px] mb-3" />
+
+                      <div className="space-y-4">
+                        {workingExperiences.map((experience, index) => (
+                          <div
+                            key={index}
+                            className="space-y-4 border p-4 rounded-md"
+                          >
+                            <div className="text-right">
+                              <Button
+                                size="sm"
+                                variant="bordered"
+                                className="text-danger"
+                                onClick={() => onRemoveExperience(index)}
+                                isIconOnly
+                              >
+                                <DeleteIcon />
+                              </Button>
+                            </div>
+
+                            <div className="flex flex-col md:flex-row gap-4">
+                              <MyInp
+                                type="text"
+                                name={`workingExperiences[${index}].workPlace`}
+                                placeholder="e.g., Dhaka Medical College"
+                                label="Work Place"
+                                value={experience.workPlace}
+                                onChange={(e) =>
+                                  onExperienceChange(
+                                    index,
+                                    "workPlace",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                              <MyInp
+                                type="text"
+                                name={`workingExperiences[${index}].department`}
+                                placeholder="e.g., Orthopaedics"
+                                label="Department"
+                                value={experience.department}
+                                onChange={(e) =>
+                                  onExperienceChange(
+                                    index,
+                                    "department",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                              <MyInp
+                                type="text"
+                                name={`workingExperiences[${index}].designation`}
+                                placeholder="e.g., Assistant Professor"
+                                label="Designation"
+                                value={experience.designation}
+                                onChange={(e) =>
+                                  onExperienceChange(
+                                    index,
+                                    "designation",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+                            <div className="flex flex-col md:flex-row gap-4">
+                              <MyInp
+                                type="date"
+                                name={`workingExperiences[${index}].workingPeriodStart`}
+                                label="Working Period Start"
+                                value={experience.workingPeriodStart}
+                                onChange={(e) =>
+                                  onExperienceChange(
+                                    index,
+                                    "workingPeriodStart",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                              <MyInp
+                                type="date"
+                                name={`workingExperiences[${index}].workingPeriodEnd`}
+                                label="Working Period End"
+                                value={experience.workingPeriodEnd}
+                                onChange={(e) =>
+                                  onExperienceChange(
+                                    index,
+                                    "workingPeriodEnd",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+                          </div>
+                        ))}
+
+                        <Button
+                          size="sm"
+                          color="primary"
+                          className="!text-white"
+                          onPress={onAddExperience}
+                          isIconOnly
+                        >
+                          <PlusIcon />
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Availability */}
+                    <div>
+                      <h2 className={`${subtitle()}`}>Availability</h2>
+                      <Divider className="w-[200px] mb-3" />
+                      <div className="space-y-4">
+                        <div className="flex flex-col md:flex-row gap-4">
+                          <MyInp
+                            type="select"
+                            name="availability.dayStart"
+                            options={days?.map((day) => ({
+                              key: day,
+                              label: day,
+                            }))}
+                            label="Day Start"
+                          />
+                          <MyInp
+                            type="select"
+                            name="availability.dayEnd"
+                            options={days?.map((day) => ({
+                              key: day,
+                              label: day,
+                            }))}
+                            label="Day End"
+                          />
+                        </div>
+                        <div className="flex flex-col md:flex-row gap-4">
+                          <MyInp
+                            type="time"
+                            name="availability.timeStart"
+                            label="Time Start"
+                          />
+                          <MyInp
+                            type="time"
+                            name="availability.timeEnd"
+                            label="Time End"
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
