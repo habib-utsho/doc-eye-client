@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { Modal, ModalContent, ModalFooter } from "@heroui/modal";
+import { Modal, ModalContent } from "@heroui/modal";
 import DEForm from "@/src/components/ui/Form/DEForm";
 import { medicalReportValidationSchema } from "@/src/schemas/medicalReport.schema";
 import { zodResolver } from "@hookform/resolvers/zod";

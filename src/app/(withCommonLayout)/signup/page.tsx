@@ -22,6 +22,7 @@ import { days } from "@/src/constant/index.constant";
 import { DeleteIcon, PlusIcon } from "@/src/components/ui/icons";
 import { toast } from "sonner";
 import MyUpload from "@/src/components/ui/Form/MyUpload";
+import { FaUser, FaUserMd, FaBriefcaseMedical } from "react-icons/fa";
 
 // Need to change password
 const SignupPage = () => {
@@ -81,7 +82,10 @@ const SignupPage = () => {
         height={200}
         width={200}
       />
-
+      <h2 className="font-semibold text-xl !mt-8 flex items-center gap-2 text-primary">
+        <FaUser /> Basic Information
+      </h2>
+      <Divider />
       <div className="flex flex-col md:flex-row gap-4">
         <MyInp type="text" name="name" label="Name" />
         <MyInp type="email" name="email" label="Email" />
@@ -140,6 +144,23 @@ const SignupPage = () => {
       content: (
         <div className="space-y-4">
           {reusableInp}
+
+          {/* Bio */}
+          <div>
+            <h2 className={`${subtitle()}`}>Bio</h2>
+            <Divider className="w-[200px] mb-3" />
+            <MyInp
+              type="textarea"
+              name="bio"
+              label="Bio"
+              placeholder="Write something about yourself"
+            />
+          </div>
+
+          <h2 className="font-semibold text-xl !mt-8 flex items-center gap-2 text-primary">
+            <FaBriefcaseMedical /> Medical Information
+          </h2>
+          <Divider />
           <div className="flex flex-col md:flex-row gap-4">
             <MyInp
               type="select"
@@ -180,22 +201,7 @@ const SignupPage = () => {
             />
           </div>
 
-          {/* Total exp and current workplace */}
-          <div className="flex flex-col md:flex-row gap-4">
-            <MyInp
-              type="number"
-              name="totalExperienceYear"
-              placeholder="e.g., 15"
-              label="Total Exp Year"
-            />
-            <MyInp
-              type="text"
-              name="currentWorkplace"
-              placeholder="e.g., Dhaka Medical College"
-              label="Current Workplace"
-            />
-          </div>
-          {/* consultationFee and follow up fee */}
+          {/* consultationFee , follow up fee and current exp year */}
           <div className="flex flex-col md:flex-row gap-4">
             <MyInp
               type="number"
@@ -208,6 +214,12 @@ const SignupPage = () => {
               name="followupFee"
               placeholder="e.g., 600"
               label="Followup Fee (BDT)"
+            />
+            <MyInp
+              type="number"
+              name="totalExperienceYear"
+              placeholder="e.g., 15"
+              label="Total Exp Year"
             />
           </div>
           {/* NID & BMDC */}
@@ -226,16 +238,49 @@ const SignupPage = () => {
             />
           </div>
 
-          {/* Bio */}
+          <h2 className="font-semibold text-xl !mt-8 flex items-center gap-2 text-primary">
+            <FaUserMd /> Professional Information
+          </h2>
+          <Divider />
+
+          {/* Current workplace */}
           <div>
-            <h2 className={`${subtitle()}`}>Bio</h2>
+            <h2 className={`${subtitle()}`}>Current Workplace</h2>
             <Divider className="w-[200px] mb-3" />
-            <MyInp
-              type="textarea"
-              name="bio"
-              label="Bio"
-              placeholder="Write something about yourself"
-            />
+            <div className="space-y-4">
+              <div className="flex flex-col md:flex-row gap-4">
+                <MyInp
+                  type="text"
+                  name="currentWorkplace.workplace"
+                  label="Workplace"
+                  placeholder="e.g., Dhaka Medical College"
+                />
+                <MyInp
+                  type="text"
+                  name="currentWorkPlace.department"
+                  label="Department"
+                  placeholder="e.g., Orthopaedics"
+                />
+                <MyInp
+                  type="text"
+                  name="currentWorkPlace.designation"
+                  label="Designation"
+                  placeholder="e.g., Assistant Professor"
+                />
+              </div>
+              <div className="flex flex-col md:flex-row gap-4">
+                <MyInp
+                  type="date"
+                  name="availability.workingPeriodStart"
+                  label="Working period start"
+                />
+                <MyInp
+                  type="date"
+                  name="availability.workingPeriodEnd"
+                  label="Working period End"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Working experiences */}
@@ -390,7 +435,13 @@ const SignupPage = () => {
     // doctorTitle: "Dr.",
     // doctorType: "Medical",
     totalExperienceYear: 12,
-    // currentWorkplace: "Dhaka Medical College",
+    // currentWorkplace: {
+    //   workPlace: "City Hospital",
+    //   department: "Internal Medicine",
+    //   designation: "Senior Physician",
+    //   workingPeriodStart: "2022-05-05T00:00:00.000+00:00",
+    //   workingPeriodEnd: "2024-05-05T00:00:00.000+00:00",
+    // },
     consultationFee: 1000,
     followupFee: 600,
     nid: "663543434423",

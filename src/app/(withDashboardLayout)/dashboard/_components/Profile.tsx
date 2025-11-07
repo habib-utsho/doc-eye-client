@@ -3,22 +3,25 @@
 import { subtitle } from "@/src/components/primitives";
 import DEForm from "@/src/components/ui/Form/DEForm";
 import MyInp from "@/src/components/ui/Form/MyInp";
+import MyUpload from "@/src/components/ui/Form/MyUpload";
 import { DeleteIcon, PlusIcon } from "@/src/components/ui/icons";
 import Loading from "@/src/components/ui/Loading";
 import { doctorTitles, doctorTypes } from "@/src/constant/doctor.constant";
 import { days } from "@/src/constant/index.constant";
-import { bloodGroups, districts } from "@/src/constant/user.constant";
+import { bloodGroups, districts, genders } from "@/src/constant/user.constant";
 import { useGetAdminById } from "@/src/hooks/admin.hook";
 import { useGetDoctorById } from "@/src/hooks/doctor.hook";
 import { useGetPatientById } from "@/src/hooks/patient.hook";
 import { useGetAllSpecialties } from "@/src/hooks/specialty.hook";
 import useUserData from "@/src/hooks/user.hook";
+import { authValidationSchema } from "@/src/schemas/auth.schema";
 import { TSpecialty } from "@/src/types/specialty";
 import { TAdmin, TDoctor, TPatient, TUserRole } from "@/src/types/user";
 import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
 import { Button } from "@heroui/button";
 import { Divider } from "@heroui/divider";
 import { Input } from "@heroui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import moment from "moment";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -36,14 +39,14 @@ import {
   FaCamera,
 } from "react-icons/fa";
 
-type FormValues = {
-  name: string;
-};
+type FormValues = Partial<TPatient & TDoctor & TAdmin>;
 
 export default function ProfilePage() {
   const { data: specialties, isLoading: isLoadingSpecialties } =
     useGetAllSpecialties([{ name: "limit", value: 5000 }]);
 
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const { user } = useUserData();
   const userRole = user?.role as TUserRole;
 
@@ -73,12 +76,6 @@ export default function ProfilePage() {
       ? FaUser
       : FaShieldAlt;
 
-  const formMethods = useForm<FormValues>({
-    // resolver: zodResolver(
-    //   medicalReportValidationSchema.createMedicalReportZodSchema
-    // ),
-  });
-
   // Working Experiences
   const [workingExperiences, setWorkingExperiences] = useState([
     {
@@ -105,6 +102,8 @@ export default function ProfilePage() {
     setWorkingExperiences(workingExperiences.filter((_, i) => i !== index));
   };
   const onExperienceChange = (index: number, key: string, value: string) => {
+    console.log({ index, key, value });
+    // return;
     const updatedExperiences = workingExperiences.map((experience, i) => {
       return i === index ? { ...experience, [key]: value } : experience;
     });
@@ -120,9 +119,45 @@ export default function ProfilePage() {
     return <Loading />;
   }
 
-  console.log({ myData, patientData, doctorData, adminData });
+  // console.log({ myData, patientData, doctorData, adminData });
 
-  const onSubmit: SubmitHandler<TPatient> = async (payload: TPatient) => {};
+  const onSubmit: SubmitHandler<TPatient> = async (payload: TPatient) => {
+    console.log(payload);
+  };
+  const defaultValues = {
+    name: myData?.name,
+    email: myData?.email,
+    phone: myData?.phone,
+    dateOfBirth: myData?.dateOfBirth,
+    gender: myData?.gender,
+    district: myData?.district,
+    bloodGroup: myData?.bloodGroup,
+    bio: myData?.bio,
+    doctorTitle: myData?.doctorTitle,
+    doctorType: myData?.doctorType,
+    totalExperienceYear: 12,
+    currentWorkplace: {
+      workPlace: myData?.currentWorkplace?.workPlace,
+      department: myData?.currentWorkplace?.department,
+      designation: myData?.currentWorkplace?.designation,
+      workingPeriodStart: myData?.currentWorkplace?.workingPeriodStart,
+      workingPeriodEnd: myData?.currentWorkplace?.workingPeriodEnd,
+    },
+    consultationFee: myData?.consultationFee,
+    followupFee: myData?.followupFee,
+    nid: myData?.nid,
+    bmdc: myData?.bmdc,
+    medicalDegree: myData?.medicalDegree,
+    medicalSpecialties: myData?.medicalSpecialties,
+    // availability: {
+    //   dayStart: "Saturday",
+    //   dayEnd: "Thursday",
+    //   timeStart: "09:00",
+    //   timeEnd: "17:00",
+    // },
+  };
+
+  // console.log(workingExperiences);
 
   return (
     <div className="min-h-screen p-4">
@@ -153,6 +188,13 @@ export default function ProfilePage() {
             <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-60 group-hover:opacity-100 transition cursor-pointer rounded-full z-20">
               <FaCamera className="w-8 h-8 text-white" />
               {/* Your custom <Input type="file" /> goes here */}
+              {/* <MyUpload
+                setSelectedFile={setSelectedFile}
+                previewUrl={previewUrl}
+                setPreviewUrl={setPreviewUrl}
+                height={200}
+                width={200}
+              /> */}
             </label>
           )}
 
@@ -173,9 +215,9 @@ export default function ProfilePage() {
           <Button
             onPress={() => setIsEditing(true)}
             variant="solid"
+            startContent={<FaEdit className="w-4 h-4" />}
             className=" bg-white/20 text-white hover:bg-white/30 transition"
           >
-            <FaEdit className="w-4 h-4" />
             Edit Profile
           </Button>
         )}
@@ -186,7 +228,7 @@ export default function ProfilePage() {
           {!isEditing && (
             <div className="space-y-8">
               {/* Personal Info */}
-              <div className="bg-white rounded-xl shadow p-6">
+              <div className=" rounded-xl shadow dark:bg-slate-900  p-6">
                 <h2 className="text-xl font-semibold mb-4 text-gray-800">
                   Personal Information
                 </h2>
@@ -263,7 +305,7 @@ export default function ProfilePage() {
 
               {/* Doctor Details */}
               {userRole === "doctor" && doctorData && (
-                <div className="bg-white rounded-xl shadow p-6 space-y-6">
+                <div className="shadow dark:bg-slate-900 rounded-xl  p-6 space-y-6">
                   {/* Section Header */}
                   <h2 className="flex items-center gap-2 text-xl font-semibold text-blue-700">
                     <FaStethoscope className="w-5 h-5" />
@@ -439,11 +481,16 @@ export default function ProfilePage() {
           {isEditing && (
             <DEForm
               className="space-y-8"
-              methods={formMethods}
               onSubmit={onSubmit}
+              defaultValues={defaultValues}
+              resolver={zodResolver(
+                userRole === "doctor"
+                  ? authValidationSchema.doctorUpdateValidationSchema
+                  : authValidationSchema.patientUpdateValidationSchema
+              )}
             >
               {/* Personal Info */}
-              <div className="bg-white rounded-xl shadow p-6">
+              <div className="shadow dark:bg-slate-900 rounded-xl  p-6">
                 <h2 className="text-xl font-semibold mb-4 text-gray-800">
                   Personal Information
                 </h2>
@@ -451,31 +498,31 @@ export default function ProfilePage() {
                   <MyInp
                     type="text"
                     name="name"
-                    defaultValue={myData?.name || ""}
                     label="Full Name"
                     placeholder="Your name here"
                   />
                   <MyInp
                     type="email"
                     name="email"
-                    defaultValue={myData?.email || ""}
                     label="Email"
                     placeholder="Your email here"
                     disabled
                   />
                   <MyInp
                     type="text"
-                    name="name"
-                    defaultValue={myData?.phone || ""}
+                    name="phone"
                     label="Phone"
                     placeholder="Your phone here"
                   />
                   <MyInp
-                    type="text"
+                    type="select"
                     name="gender"
-                    defaultValue={myData?.gender || ""}
                     label="Gender"
-                    placeholder="Your gender here"
+                    placeholder="Select Gender"
+                    options={genders?.map((gender) => ({
+                      key: gender,
+                      label: gender,
+                    }))}
                   />
                   <MyInp
                     type="select"
@@ -499,44 +546,38 @@ export default function ProfilePage() {
                     }))}
                   />
                   {userRole != "doctor" && (
-                    <MyInp
-                      type="number"
-                      name="weight"
-                      defaultValue={myData?.weight?.toString() || ""}
-                      label="Weight (kg)"
-                      placeholder="Your weight here"
-                    />
-                  )}
-                  {userRole != "doctor" && (
-                    <MyInp
-                      type="number"
-                      name="height"
-                      defaultValue={myData?.height?.toString() || ""}
-                      label="Height (cm)"
-                      placeholder="Your height here"
-                    />
-                  )}
-                  {userRole != "doctor" && (
-                    <MyInp
-                      type="text"
-                      name="allergies"
-                      defaultValue={myData?.allergies || ""}
-                      label="Allergies"
-                      placeholder="Your allergies here"
-                    />
+                    <>
+                      <MyInp
+                        type="number"
+                        name="weight"
+                        label="Weight (kg)"
+                        placeholder="Your weight here"
+                      />{" "}
+                      <MyInp
+                        type="number"
+                        name="height"
+                        label="Height (cm)"
+                        placeholder="Your height here"
+                      />{" "}
+                      <MyInp
+                        type="text"
+                        name="allergies"
+                        label="Allergies"
+                        placeholder="Your allergies here"
+                      />
+                    </>
                   )}
                 </div>
               </div>
 
               {/* Doctor Edit */}
               {userRole === "doctor" && doctorData && (
-                <div className="bg-white rounded-xl shadow p-6 space-y-6">
+                <div className="shadow dark:bg-slate-900 rounded-xl  p-6 space-y-6">
                   <h2 className="flex items-center gap-2 text-xl font-semibold text-primary">
                     <FaStethoscope className="w-5 h-5" />
-                    Doctor Details Details
+                    Doctor Details
                   </h2>
                   <div className="space-y-3">
-                    {/* {reusableInp} */}
                     <div className="flex flex-col md:flex-row gap-4">
                       <MyInp
                         type="select"
@@ -582,19 +623,25 @@ export default function ProfilePage() {
                       />
                     </div>
 
-                    {/* Total exp and current workplace */}
+                    {/* consultationFee , follow up fee and current exp year */}
                     <div className="flex flex-col md:flex-row gap-4">
+                      <MyInp
+                        type="number"
+                        name="consultationFee"
+                        placeholder="e.g., 1000"
+                        label="Consultation Fee (BDT)"
+                      />
+                      <MyInp
+                        type="number"
+                        name="followupFee"
+                        placeholder="e.g., 600"
+                        label="Followup Fee (BDT)"
+                      />
                       <MyInp
                         type="number"
                         name="totalExperienceYear"
                         placeholder="e.g., 15"
                         label="Total Exp Year"
-                      />
-                      <MyInp
-                        type="text"
-                        name="currentWorkplace"
-                        placeholder="e.g., Dhaka Medical College"
-                        label="Current Workplace"
                       />
                     </div>
                     {/* consultationFee and follow up fee */}
@@ -619,11 +666,13 @@ export default function ProfilePage() {
                         name="nid"
                         placeholder="e.g., 663543434423"
                         label="NID"
+                        disabled
                       />
                       <MyInp
                         type="text"
                         name="bmdc"
                         placeholder="e.g., 55754"
+                        disabled
                         label="BMDC"
                       />
                     </div>
@@ -638,6 +687,46 @@ export default function ProfilePage() {
                         label="Bio"
                         placeholder="Write something about yourself"
                       />
+                    </div>
+
+                    {/* Current workplace */}
+                    <div>
+                      <h2 className={`${subtitle()}`}>Current Workplace</h2>
+                      <Divider className="w-[200px] mb-3" />
+                      <div className="space-y-4">
+                        <div className="flex flex-col md:flex-row gap-4">
+                          <MyInp
+                            type="text"
+                            name="currentWorkplace.workplace"
+                            label="Workplace"
+                            placeholder="e.g., Dhaka Medical College"
+                          />
+                          <MyInp
+                            type="text"
+                            name="currentWorkPlace.department"
+                            label="Department"
+                            placeholder="e.g., Orthopaedics"
+                          />
+                          <MyInp
+                            type="text"
+                            name="currentWorkPlace.designation"
+                            label="Designation"
+                            placeholder="e.g., Assistant Professor"
+                          />
+                        </div>
+                        <div className="flex flex-col md:flex-row gap-4">
+                          <MyInp
+                            type="date"
+                            name="currentWorkPlace.workingPeriodStart"
+                            label="Working period start"
+                          />
+                          <MyInp
+                            type="date"
+                            name="currentWorkPlace.workingPeriodEnd"
+                            label="Working period End"
+                          />
+                        </div>
+                      </div>
                     </div>
 
                     {/* Working experiences */}
@@ -656,7 +745,7 @@ export default function ProfilePage() {
                                 size="sm"
                                 variant="bordered"
                                 className="text-danger"
-                                onClick={() => onRemoveExperience(index)}
+                                onPress={() => onRemoveExperience(index)}
                                 isIconOnly
                               >
                                 <DeleteIcon />
@@ -669,42 +758,42 @@ export default function ProfilePage() {
                                 name={`workingExperiences[${index}].workPlace`}
                                 placeholder="e.g., Dhaka Medical College"
                                 label="Work Place"
-                                value={experience.workPlace}
-                                onChange={(e) =>
-                                  onExperienceChange(
-                                    index,
-                                    "workPlace",
-                                    e.target.value
-                                  )
-                                }
+                                // value={experience.workPlace}
+                                // onChange={(e) =>
+                                //   onExperienceChange(
+                                //     index,
+                                //     "workPlace",
+                                //     e.target.value
+                                //   )
+                                // }
                               />
                               <MyInp
                                 type="text"
                                 name={`workingExperiences[${index}].department`}
                                 placeholder="e.g., Orthopaedics"
                                 label="Department"
-                                value={experience.department}
-                                onChange={(e) =>
-                                  onExperienceChange(
-                                    index,
-                                    "department",
-                                    e.target.value
-                                  )
-                                }
+                                // value={experience.department}
+                                // onChange={(e) =>
+                                //   onExperienceChange(
+                                //     index,
+                                //     "department",
+                                //     e.target.value
+                                //   )
+                                // }
                               />
                               <MyInp
                                 type="text"
                                 name={`workingExperiences[${index}].designation`}
                                 placeholder="e.g., Assistant Professor"
                                 label="Designation"
-                                value={experience.designation}
-                                onChange={(e) =>
-                                  onExperienceChange(
-                                    index,
-                                    "designation",
-                                    e.target.value
-                                  )
-                                }
+                                // value={experience.designation}
+                                // onChange={(e) =>
+                                //   onExperienceChange(
+                                //     index,
+                                //     "designation",
+                                //     e.target.value
+                                //   )
+                                // }
                               />
                             </div>
                             <div className="flex flex-col md:flex-row gap-4">
@@ -713,26 +802,26 @@ export default function ProfilePage() {
                                 name={`workingExperiences[${index}].workingPeriodStart`}
                                 label="Working Period Start"
                                 value={experience.workingPeriodStart}
-                                onChange={(e) =>
-                                  onExperienceChange(
-                                    index,
-                                    "workingPeriodStart",
-                                    e.target.value
-                                  )
-                                }
+                                // onChange={(e) =>
+                                //   onExperienceChange(
+                                //     index,
+                                //     "workingPeriodStart",
+                                //     e.target.value
+                                //   )
+                                // }
                               />
                               <MyInp
                                 type="date"
                                 name={`workingExperiences[${index}].workingPeriodEnd`}
                                 label="Working Period End"
                                 value={experience.workingPeriodEnd}
-                                onChange={(e) =>
-                                  onExperienceChange(
-                                    index,
-                                    "workingPeriodEnd",
-                                    e.target.value
-                                  )
-                                }
+                                // onChange={(e) =>
+                                //   onExperienceChange(
+                                //     index,
+                                //     "workingPeriodEnd",
+                                //     e.target.value
+                                //   )
+                                // }
                               />
                             </div>
                           </div>
@@ -795,17 +884,20 @@ export default function ProfilePage() {
 
               {/* Action Buttons */}
               <div className="flex justify-end gap-3">
-                <button
-                  onClick={() => setIsEditing(false)}
-                  className="flex items-center gap-2 px-5 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                <Button
+                  onPress={() => setIsEditing(false)}
+                  startContent={<FaTimes className="w-4 h-4" />}
+                  className="font-medium"
                 >
-                  <FaTimes className="w-4 h-4" />
                   Cancel
-                </button>
-                <button className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition">
-                  <FaSave className="w-4 h-4" />
+                </Button>
+                <Button
+                  startContent={<FaSave className="w-4 h-4" />}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium  hover:from-blue-700 hover:to-purple-700 transition"
+                  type="submit"
+                >
                   Save Changes
-                </button>
+                </Button>
               </div>
             </DEForm>
           )}

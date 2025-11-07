@@ -104,6 +104,8 @@ const commonSignupValidationSchema = z.object({
 });
 
 const patientSignupValidationSchema = commonSignupValidationSchema;
+const patientUpdateValidationSchema = patientSignupValidationSchema.omit({ email: true, password: true }) // not updatable
+  .partial();
 
 const doctorSignupValidationSchema = z.object({
   ...commonSignupValidationSchema.shape,
@@ -146,9 +148,13 @@ const doctorSignupValidationSchema = z.object({
     timeEnd: z.string().min(1, "Time End is required."),
   }),
 });
+const doctorUpdateValidationSchema = doctorSignupValidationSchema.omit({ email: true, password: true, nid: true, bmdc: true }) // cannot change identity info
+  .partial();
 
 export const authValidationSchema = {
   signinValidationSchema,
   patientSignupValidationSchema,
   doctorSignupValidationSchema,
+  patientUpdateValidationSchema,
+  doctorUpdateValidationSchema
 };

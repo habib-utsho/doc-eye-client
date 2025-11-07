@@ -1,5 +1,6 @@
 "use client";
 
+import { error } from "console";
 import React, { ReactNode, useEffect } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
@@ -34,6 +35,7 @@ const DEForm = ({
   const {
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = internalMethods;
 
@@ -42,6 +44,8 @@ const DEForm = ({
       reset(defaultValues);
     }
   }, [defaultValues, reset]);
+
+  console.log(errors, watch("currentWorkPlace"));
 
   return (
     <FormProvider {...internalMethods}>

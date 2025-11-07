@@ -137,13 +137,32 @@ const MyInp = ({
       defaultValue={defaultValue || ""}
       render={({ field }) => {
         const handleChange = (e: any) => {
+          // For select multiple, convert comma-separated string to array
+          if (type === "select" && selectionMode === "multiple") {
+            const vals = e?.target?.value ? e.target.value.split(",") : [];
+            field.onChange(vals);
+            if (onChange) onChange(e);
+            return;
+          }
+
+          // For number inputs, convert string value to actual number (or empty string for blank)
+          if (type === "number") {
+            const raw = e?.target?.value;
+            const parsed = raw === "" || raw === undefined ? "" : Number(raw);
+            // Pass the parsed number to react-hook-form
+            field.onChange(parsed);
+            // If a caller provided an onChange prop, call it with a normalized event-like object
+            if (onChange)
+              onChange({
+                ...e,
+                target: { ...e.target, value: parsed },
+              });
+            return;
+          }
+
+          // Default behavior: pass through the event
           field.onChange(e);
           if (onChange) onChange(e);
-
-          if (type === "select" && selectionMode === "multiple") {
-            // console.log(e?.target?.value?.split(","), "e");
-            field.onChange(e?.target?.value?.split(","));
-          }
         };
 
         // Using built in append and remove props from react-hook-form
@@ -286,6 +305,8 @@ const MyInp = ({
             </Select>
           );
         }
+
+ 
 
         return (
           <Input
