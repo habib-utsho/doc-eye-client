@@ -111,7 +111,7 @@ export type TCommonPatientAdminDoctor = {
   profileImg: string;
   gender: TGender;
   district: TDistrict;
-  dateOfBirth: Date;
+  dateOfBirth: string;
   bloodGroup: TBloodGroup;
   isDeleted: boolean;
   createdAt?: string;

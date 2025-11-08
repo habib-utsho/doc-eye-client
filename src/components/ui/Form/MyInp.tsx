@@ -61,6 +61,7 @@ const MyInp = ({
   color = "default",
   disabled,
   defaultValue,
+  value,
   onChange,
   options = [],
   className,
@@ -286,6 +287,22 @@ const MyInp = ({
             <Select
               {...field}
               onChange={handleChange}
+              selectedKeys={
+                selectionMode === "multiple"
+                  ? field.value || []
+                  : field.value
+                  ? [field.value]
+                  : []
+              }
+              onSelectionChange={(keys) => {
+                const selectedValue =
+                  selectionMode === "multiple"
+                    ? Array.from(keys)
+                    : Array.from(keys)[0] || "";
+                field.onChange(selectedValue);
+                if (onChange)
+                  onChange({ target: { name, value: selectedValue } });
+              }}
               size={size}
               radius={radius}
               color={color}
@@ -306,12 +323,11 @@ const MyInp = ({
           );
         }
 
- 
-
         return (
           <Input
             {...field}
             onChange={handleChange}
+            // defaultValue={defaultValue || ""}
             type={type}
             size={size}
             radius={radius}

@@ -1,10 +1,10 @@
 "use client";
 
 import { subtitle } from "@/src/components/primitives";
+import Empty from "@/src/components/shared/Empty";
 import DEForm from "@/src/components/ui/Form/DEForm";
 import MyInp from "@/src/components/ui/Form/MyInp";
-import MyUpload from "@/src/components/ui/Form/MyUpload";
-import { DeleteIcon, PlusIcon } from "@/src/components/ui/icons";
+import { PlusIcon } from "@/src/components/ui/icons";
 import Loading from "@/src/components/ui/Loading";
 import { doctorTitles, doctorTypes } from "@/src/constant/doctor.constant";
 import { days } from "@/src/constant/index.constant";
@@ -14,18 +14,16 @@ import { useGetDoctorById } from "@/src/hooks/doctor.hook";
 import { useGetPatientById } from "@/src/hooks/patient.hook";
 import { useGetAllSpecialties } from "@/src/hooks/specialty.hook";
 import useUserData from "@/src/hooks/user.hook";
-import { authValidationSchema } from "@/src/schemas/auth.schema";
 import { TSpecialty } from "@/src/types/specialty";
 import { TAdmin, TDoctor, TPatient, TUserRole } from "@/src/types/user";
 import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
+import { MinusOutlined } from "@ant-design/icons";
 import { Button } from "@heroui/button";
 import { Divider } from "@heroui/divider";
-import { Input } from "@heroui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
 import moment from "moment";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import {
   FaUserMd,
   FaUser,
@@ -76,88 +74,114 @@ export default function ProfilePage() {
       ? FaUser
       : FaShieldAlt;
 
-  // Working Experiences
-  const [workingExperiences, setWorkingExperiences] = useState([
-    {
-      workPlace: "",
-      department: "",
-      designation: "",
-      workingPeriodStart: "",
-      workingPeriodEnd: "",
-    },
-  ]);
-  const onAddExperience = () => {
-    setWorkingExperiences([
-      ...workingExperiences,
-      {
-        workPlace: "",
-        department: "",
-        designation: "",
-        workingPeriodStart: "",
-        workingPeriodEnd: "",
-      },
-    ]);
-  };
-  const onRemoveExperience = (index: number) => {
-    setWorkingExperiences(workingExperiences.filter((_, i) => i !== index));
-  };
-  const onExperienceChange = (index: number, key: string, value: string) => {
-    console.log({ index, key, value });
-    // return;
-    const updatedExperiences = workingExperiences.map((experience, i) => {
-      return i === index ? { ...experience, [key]: value } : experience;
-    });
-    setWorkingExperiences(updatedExperiences);
-  };
+  // RHF
 
-  // set profile img
-  useEffect(() => {
-    setPreview(user?.profileImg);
-  }, [user]);
-
-  if (isPending) {
-    return <Loading />;
-  }
-
-  // console.log({ myData, patientData, doctorData, adminData });
-
-  const onSubmit: SubmitHandler<TPatient> = async (payload: TPatient) => {
-    console.log(payload);
-  };
   const defaultValues = {
     name: myData?.name,
     email: myData?.email,
     phone: myData?.phone,
-    dateOfBirth: myData?.dateOfBirth,
+    dateOfBirth: myData?.dateOfBirth?.slice(0, 10),
     gender: myData?.gender,
     district: myData?.district,
     bloodGroup: myData?.bloodGroup,
     bio: myData?.bio,
     doctorTitle: myData?.doctorTitle,
     doctorType: myData?.doctorType,
-    totalExperienceYear: 12,
+    totalExperienceYear: myData?.totalExperienceYear,
     currentWorkplace: {
       workPlace: myData?.currentWorkplace?.workPlace,
       department: myData?.currentWorkplace?.department,
       designation: myData?.currentWorkplace?.designation,
-      workingPeriodStart: myData?.currentWorkplace?.workingPeriodStart,
-      workingPeriodEnd: myData?.currentWorkplace?.workingPeriodEnd,
+      workingPeriodStart: myData?.currentWorkplace?.workingPeriodStart?.slice(
+        0,
+        10
+      ),
+      workingPeriodEnd: myData?.currentWorkplace?.workingPeriodEnd?.slice(
+        0,
+        10
+      ),
     },
     consultationFee: myData?.consultationFee,
     followupFee: myData?.followupFee,
     nid: myData?.nid,
     bmdc: myData?.bmdc,
     medicalDegree: myData?.medicalDegree,
-    medicalSpecialties: myData?.medicalSpecialties,
-    // availability: {
-    //   dayStart: "Saturday",
-    //   dayEnd: "Thursday",
-    //   timeStart: "09:00",
-    //   timeEnd: "17:00",
-    // },
+    medicalSpecialties: myData?.medicalSpecialties?.map((ms) => ms?._id),
+    availability: myData?.availability,
+    // workingExperiences: myData?.workingExperiences,
+  };
+  const formMethods = useForm<FormValues>({
+    // resolver: zodResolver(
+    //   userRole === "doctor"
+    //     ? authValidationSchema.doctorUpdateValidationSchema
+    //     : authValidationSchema.patientUpdateValidationSchema
+    // ),
+  });
+
+  const {
+    control,
+    formState: { errors },
+  } = formMethods;
+  // console.log({ control, errors });
+  const {
+    fields: workingExperiencesFields,
+    append: appendWorkingExperiences,
+    remove: removeWorkingExperiences,
+  } = useFieldArray({
+    control,
+    name: "workingExperiences",
+  });
+  // Current workplace
+  // const [currentWorkplace, setCurrentWorkplace] = useState({
+  //   workPlace: "",
+  //   department: "",
+  //   designation: "",
+  //   workingPeriodStart: "",
+  //   workingPeriodEnd: "",
+  // });
+
+  // const onCurrentWorkplaceChange = (key: string, value: string) => {
+  //   setCurrentWorkplace((prevWorkplace) => ({
+  //     ...prevWorkplace,
+  //     [key]: value,
+  //   }));
+  // };
+
+  // set profile img
+  useEffect(() => {
+    setPreview(user?.profileImg);
+  }, [user]);
+
+  // console.log({ myData, patientData, doctorData, adminData });
+
+  const onSubmit: SubmitHandler<TPatient> = async (payload: TPatient) => {
+    console.log(payload);
   };
 
+  useEffect(() => {
+    if (myData && myData?.workingExperiences) {
+      myData?.workingExperiences?.forEach((we) => {
+        appendWorkingExperiences({
+          workPlace: we.workPlace,
+          department: we.department,
+          designation: we.designation,
+          workingPeriodStart: we.workingPeriodStart?.slice(0, 10),
+          workingPeriodEnd: we.workingPeriodEnd?.slice(0, 10),
+        });
+      });
+    }
+  }, [myData]);
+
   // console.log(workingExperiences);
+  if (isPending) {
+    return <Loading />;
+  }
+
+  console.log({
+    myDataWorkingExp: myData?.workingExperiences,
+    localStateWX: workingExperiencesFields,
+    myData,
+  });
 
   return (
     <div className="min-h-screen p-4">
@@ -229,7 +253,7 @@ export default function ProfilePage() {
             <div className="space-y-8">
               {/* Personal Info */}
               <div className=" rounded-xl shadow dark:bg-slate-900  p-6">
-                <h2 className="text-xl font-semibold mb-4 text-gray-800">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
                   Personal Information
                 </h2>
                 <Divider className="mb-4" />
@@ -355,7 +379,7 @@ export default function ProfilePage() {
 
                   {/* Specialties */}
                   <div className=" p-3 rounded-md shadow mt-6">
-                    <h3 className="text-lg font-semibold text-gray-800  mb-3">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white  mb-3">
                       Medical Specialties
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -378,7 +402,7 @@ export default function ProfilePage() {
 
                   {/* Availability */}
                   <div className=" p-3 rounded-md shadow mt-6">
-                    <h3 className="text-lg font-semibold text-gray-800  mb-3">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white  mb-3">
                       Availability
                     </h3>
                     <div className="flex items-center gap-1">
@@ -398,7 +422,7 @@ export default function ProfilePage() {
                   {/* Current Workplace */}
                   {doctorData.currentWorkplace && (
                     <div className=" p-3 rounded-md shadow mt-6">
-                      <h3 className="text-lg font-semibold text-gray-800  mb-3">
+                      <h3 className="text-lg font-semibold text-gray-800 dark:text-white  mb-3">
                         Current Workplace
                       </h3>
                       <div className="grid md:grid-cols-2 gap-4">
@@ -443,20 +467,20 @@ export default function ProfilePage() {
                   {/* Past Experiences */}
                   {doctorData.workingExperiences?.length > 0 && (
                     <div className=" p-3 rounded-md shadow mt-6">
-                      <h3 className="text-lg font-semibold text-gray-800  mb-3">
+                      <h3 className="text-lg font-semibold text-gray-800 dark:text-white  mb-3">
                         Past Experiences
                       </h3>
                       <div className="space-y-4">
                         {doctorData.workingExperiences.map((exp) => (
                           <div
                             key={exp._id}
-                            className="border rounded-lg p-4 bg-gray-50"
+                            className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-700"
                           >
                             <p className="font-semibold">{exp.designation}</p>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-gray-600 dark:text-slate-200">
                               {exp.department}, {exp.workPlace}
                             </p>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-gray-500 dark:text-slate-300">
                               {moment(exp.workingPeriodStart).format(
                                 "DD MMM, YYYY"
                               )}{" "}
@@ -477,21 +501,21 @@ export default function ProfilePage() {
             </div>
           )}
 
-          {/* EDIT MODE – Replace with your <Form> and <Input> */}
           {isEditing && (
             <DEForm
               className="space-y-8"
               onSubmit={onSubmit}
+              methods={formMethods}
               defaultValues={defaultValues}
-              resolver={zodResolver(
-                userRole === "doctor"
-                  ? authValidationSchema.doctorUpdateValidationSchema
-                  : authValidationSchema.patientUpdateValidationSchema
-              )}
+              // resolver={zodResolver(
+              //   userRole === "doctor"
+              //     ? authValidationSchema.doctorUpdateValidationSchema
+              //     : authValidationSchema.patientUpdateValidationSchema
+              // )}
             >
               {/* Personal Info */}
               <div className="shadow dark:bg-slate-900 rounded-xl  p-6">
-                <h2 className="text-xl font-semibold mb-4 text-gray-800">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
                   Personal Information
                 </h2>
                 <div className="grid md:grid-cols-2 gap-6">
@@ -697,146 +721,171 @@ export default function ProfilePage() {
                         <div className="flex flex-col md:flex-row gap-4">
                           <MyInp
                             type="text"
-                            name="currentWorkplace.workplace"
+                            name="currentWorkplace.workPlace"
                             label="Workplace"
+                            // value={currentWorkplace.workPlace}
+                            // onChange={(e) =>
+                            //   onCurrentWorkplaceChange(
+                            //     "workplace",
+                            //     e.target.value
+                            //   )
+                            // }
                             placeholder="e.g., Dhaka Medical College"
                           />
                           <MyInp
                             type="text"
-                            name="currentWorkPlace.department"
+                            name="currentWorkplace.department"
                             label="Department"
                             placeholder="e.g., Orthopaedics"
+                            // value={currentWorkplace.department}
+                            // onChange={(e) =>
+                            //   onCurrentWorkplaceChange(
+                            //     "department",
+                            //     e.target.value
+                            //   )
+                            // }
                           />
                           <MyInp
                             type="text"
-                            name="currentWorkPlace.designation"
+                            name="currentWorkplace.designation"
                             label="Designation"
                             placeholder="e.g., Assistant Professor"
+                            // value={currentWorkplace.designation}
+                            // onChange={(e) =>
+                            //   onCurrentWorkplaceChange(
+                            //     "designation",
+                            //     e.target.value
+                            //   )
+                            // }
                           />
                         </div>
                         <div className="flex flex-col md:flex-row gap-4">
                           <MyInp
                             type="date"
-                            name="currentWorkPlace.workingPeriodStart"
+                            name="currentWorkplace.workingPeriodStart"
                             label="Working period start"
+                            // value={currentWorkplace.workingPeriodStart}
+                            // onChange={(e) =>
+                            //   onCurrentWorkplaceChange(
+                            //     "workingPeriodStart",
+                            //     e.target.value
+                            //   )
+                            // }
                           />
                           <MyInp
                             type="date"
-                            name="currentWorkPlace.workingPeriodEnd"
+                            name="currentWorkplace.workingPeriodEnd"
                             label="Working period End"
+                            // value={currentWorkplace.workingPeriodEnd}
+                            // onChange={(e) =>
+                            //   onCurrentWorkplaceChange(
+                            //     "workingPeriodEnd",
+                            //     e.target.value
+                            //   )
+                            // }
                           />
                         </div>
                       </div>
                     </div>
 
                     {/* Working experiences */}
-                    <div>
-                      <h2 className={`${subtitle()}`}>Working Experiences</h2>
-                      <Divider className="w-[200px] mb-3" />
+                    <div className="shadow p-4 rounded-md">
+                      <h2 className="font-semibold">Working Experiences</h2>
+                      <Divider className="mt-1 mb-6" />
 
-                      <div className="space-y-4">
-                        {workingExperiences.map((experience, index) => (
-                          <div
-                            key={index}
-                            className="space-y-4 border p-4 rounded-md"
+                      {workingExperiencesFields.length == 0 ? (
+                        <Empty
+                          className="h-[80px] cursor-pointer"
+                          description="Add Input First"
+                          onClick={() =>
+                            appendWorkingExperiences({
+                              workPlace: "",
+                              department: "",
+                              designation: "",
+                              workingPeriodStart: "",
+                              workingPeriodEnd: "",
+                            })
+                          }
+                        />
+                      ) : (
+                        <>
+                          {workingExperiencesFields.map((field, index) => (
+                            <div
+                              className="shadow p-2 rounded-md mb-4"
+                              key={field.id}
+                            >
+                              <div className="text-right">
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="shadow"
+                                  className="my-2"
+                                  onPress={() =>
+                                    removeWorkingExperiences(index)
+                                  }
+                                  aria-label="remove working exp"
+                                >
+                                  <MinusOutlined />
+                                </Button>
+                              </div>
+                              <div className="grid grid-cols-2 gap-4">
+                                <MyInp
+                                  name={`workingExperiences[${index}].workPlace`}
+                                  type="text"
+                                  label="Workplace"
+                                  placeholder="Enter workplace"
+                                  defaultValue={field.workPlace}
+                                />
+                                <MyInp
+                                  name={`workingExperiences[${index}].department`}
+                                  type="text"
+                                  label="Department"
+                                  placeholder="Enter department"
+                                  defaultValue={field.department}
+                                />
+                                <MyInp
+                                  name={`workingExperiences[${index}].designation`}
+                                  type="text"
+                                  label="Designation"
+                                  placeholder="Enter designation"
+                                  defaultValue={field.designation}
+                                />
+                                <MyInp
+                                  name={`workingExperiences[${index}].workingPeriodStart`}
+                                  type="date"
+                                  label="Working period start"
+                                  placeholder="Enter working period start"
+                                  defaultValue={field.workingPeriodStart}
+                                />
+                                <MyInp
+                                  name={`workingExperiences[${index}].workingPeriodEnd`}
+                                  type="date"
+                                  label="Working period end"
+                                  placeholder="Enter working period end"
+                                  defaultValue={field.workingPeriodEnd}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="shadow"
+                            className="mt-2"
+                            onPress={() =>
+                              appendWorkingExperiences({
+                                workPlace: "",
+                                department: "",
+                                designation: "",
+                                workingPeriodStart: "",
+                                workingPeriodEnd: "",
+                              })
+                            }
                           >
-                            <div className="text-right">
-                              <Button
-                                size="sm"
-                                variant="bordered"
-                                className="text-danger"
-                                onPress={() => onRemoveExperience(index)}
-                                isIconOnly
-                              >
-                                <DeleteIcon />
-                              </Button>
-                            </div>
-
-                            <div className="flex flex-col md:flex-row gap-4">
-                              <MyInp
-                                type="text"
-                                name={`workingExperiences[${index}].workPlace`}
-                                placeholder="e.g., Dhaka Medical College"
-                                label="Work Place"
-                                // value={experience.workPlace}
-                                // onChange={(e) =>
-                                //   onExperienceChange(
-                                //     index,
-                                //     "workPlace",
-                                //     e.target.value
-                                //   )
-                                // }
-                              />
-                              <MyInp
-                                type="text"
-                                name={`workingExperiences[${index}].department`}
-                                placeholder="e.g., Orthopaedics"
-                                label="Department"
-                                // value={experience.department}
-                                // onChange={(e) =>
-                                //   onExperienceChange(
-                                //     index,
-                                //     "department",
-                                //     e.target.value
-                                //   )
-                                // }
-                              />
-                              <MyInp
-                                type="text"
-                                name={`workingExperiences[${index}].designation`}
-                                placeholder="e.g., Assistant Professor"
-                                label="Designation"
-                                // value={experience.designation}
-                                // onChange={(e) =>
-                                //   onExperienceChange(
-                                //     index,
-                                //     "designation",
-                                //     e.target.value
-                                //   )
-                                // }
-                              />
-                            </div>
-                            <div className="flex flex-col md:flex-row gap-4">
-                              <MyInp
-                                type="date"
-                                name={`workingExperiences[${index}].workingPeriodStart`}
-                                label="Working Period Start"
-                                value={experience.workingPeriodStart}
-                                // onChange={(e) =>
-                                //   onExperienceChange(
-                                //     index,
-                                //     "workingPeriodStart",
-                                //     e.target.value
-                                //   )
-                                // }
-                              />
-                              <MyInp
-                                type="date"
-                                name={`workingExperiences[${index}].workingPeriodEnd`}
-                                label="Working Period End"
-                                value={experience.workingPeriodEnd}
-                                // onChange={(e) =>
-                                //   onExperienceChange(
-                                //     index,
-                                //     "workingPeriodEnd",
-                                //     e.target.value
-                                //   )
-                                // }
-                              />
-                            </div>
-                          </div>
-                        ))}
-
-                        <Button
-                          size="sm"
-                          color="primary"
-                          className="!text-white"
-                          onPress={onAddExperience}
-                          isIconOnly
-                        >
-                          <PlusIcon />
-                        </Button>
-                      </div>
+                            <PlusIcon />
+                          </Button>
+                        </>
+                      )}
                     </div>
 
                     {/* Availability */}

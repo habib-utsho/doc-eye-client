@@ -1,7 +1,7 @@
 "use client";
 
 import { error } from "console";
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect, useMemo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 type TFormConfig = {
@@ -43,9 +43,9 @@ const DEForm = ({
     if (defaultValues) {
       reset(defaultValues);
     }
-  }, [defaultValues, reset]);
+  }, []);
 
-  console.log(errors, watch("currentWorkPlace"));
+  // console.log(errors, watch("currentWorkPlace"));
 
   return (
     <FormProvider {...internalMethods}>

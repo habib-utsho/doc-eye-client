@@ -123,7 +123,7 @@ const doctorSignupValidationSchema = z.object({
     department: z.string().min(1, "Department is required."),
     designation: z.string().min(1, "Designation is required."),
     workingPeriodStart: z.string().min(1, "Working Period Start is required."),
-    workingPeriodEnd: z.string().min(1, "Working Period End is required."),
+    workingPeriodEnd: z.string().min(1, "Working Period End is required.").optional(),
   }),
   consultationFee: z.number().min(1, "Consultation Fee is required."),
   followupFee: z.number().min(1, "Follow Up Fee is required."),
