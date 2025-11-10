@@ -14,6 +14,7 @@ const MyUpload = ({
   defaultValue,
   placeholder = "Upload your avatar",
   align = "left",
+  isEditing = false,
 }: {
   setSelectedFile: React.Dispatch<React.SetStateAction<File | null>>;
   previewUrl: string | null;
@@ -23,6 +24,7 @@ const MyUpload = ({
   width?: number;
   placeholder?: string;
   align?: "center" | "left" | "right";
+  isEditing: boolean;
 }) => {
   const [myDefaultValue, setMyDefaultValue] = useState<string | null>(
     defaultValue || null
@@ -56,6 +58,7 @@ const MyUpload = ({
       setPreviewUrl(null);
     }
   };
+
   return (
     <div className={`flex justify-${align}`}>
       <div
@@ -66,30 +69,39 @@ const MyUpload = ({
         }}
       >
         {previewUrl || myDefaultValue ? (
-          <div className="relative h-full w-full rounded-lg overflow-hidden border border-primary">
+          <div className="relative h-full w-full rounded-lg overflow-hidden border border-primary z-50">
             <Image
               alt="avatar"
               src={previewUrl || myDefaultValue || ""}
               // height={350}
               // width={350}
               layout="fill"
-              className="border rounded-lg h-full w-full object-coverf"
+              className="border rounded-lg h-full w-full object-cover___"
             />
-            <span className="bg-white bg-opacity-30 hover:bg-danger hover:bg-opacity-20 border border-danger p-2 rounded-bl-lg rounded-tr-lg inline-block absolute top-0  right-0 cursor-pointer">
-              <DeleteIcon
-                className=" text-danger scale-150"
-                onClick={() => {
-                  setSelectedFile(null);
-                  setPreviewUrl(null);
-                  setMyDefaultValue(null);
-                }}
-              />
-            </span>
+            {isEditing && (
+              <span className="bg-white bg-opacity-30 hover:bg-danger hover:bg-opacity-20 border border-danger p-2 rounded-bl-lg rounded-tr-lg inline-block absolute top-0  right-0 cursor-pointer">
+                <DeleteIcon
+                  className=" text-danger scale-150"
+                  onClick={() => {
+                    setSelectedFile(null);
+                    setPreviewUrl(null);
+                    setMyDefaultValue(null);
+                  }}
+                />
+              </span>
+            )}
           </div>
         ) : (
           <div
-            className="h-full w-full  border flex items-center justify-center rounded-lg cursor-pointer relative"
-            style={{ backgroundImage: `url(${signinBG.src})` }}
+            className="h-full w-full  border flex items-center justify-center rounded-lg cursor-pointer relative "
+            style={{
+              backgroundImage: `
+              linear-gradient(to right, rgba(59, 130, 246, 0.5), rgba(139, 92, 246, 0.5)),
+              url(${signinBG.src})
+              `,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
           >
             <Button isIconOnly className="h-full w-full bg-opacity-50">
               <div className="flex flex-col gap-1 items-center justify-center">

@@ -212,15 +212,15 @@ const DashboardHome = ({ role }: { role: TUserRole }) => {
                       >
                         <div>
                           <div
-                            className="rounded-full h-10 w-10 flex items-center justify-center text-white text-2xl mb-3"
+                            className="rounded-full h-10 w-10 flex items-center justify-center  text-2xl mb-3"
                             style={{ backgroundColor: stat.color }}
                           >
                             {stat.icon}
                           </div>
-                          <div className="text-xl font-semibold mb-1">
+                          <div className="text-xl font-semibold mb-1 text-black">
                             {stat.value}
                           </div>
-                          <h3 className="text-md font-semibold">
+                          <h3 className="text-md font-semibold text-black">
                             {stat.title}
                           </h3>
                         </div>

@@ -19,7 +19,7 @@ export const useGetDoctorById = (id: string | undefined) =>
     queryKey: ["doctor", id],
     queryFn: () => getDoctorById(id),
   });
-export const useGetDoctorByDoctorCode = (id: string | undefined) =>
+export const useGetDoctorByDoctorCode = (id: string | null) =>
   useQuery({
     queryKey: ["doctor", id],
     queryFn: () => getDoctorByDoctorCode(id),
@@ -28,8 +28,15 @@ export const useGetDoctorByDoctorCode = (id: string | undefined) =>
 export const useUpdateDoctorById = () =>
   useMutation({
     mutationKey: ["doctor"],
-    mutationFn: ({ id, payload }: { id: string; payload: FormData }) =>
-      updateDoctorById(id, payload),
+    mutationFn: async ({ id, payload }: { id: string; payload: FormData }) => {
+      let res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/doctor/${id}`, {
+        method: "PATCH",
+        credentials: "include",
+        body: payload,
+      })
+      let data = await res.json()
+      return data
+    },
     onSuccess(data) {
       if (data?.success) {
         toast.success(data?.message || "Doctor updated successfully!");

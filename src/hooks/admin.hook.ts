@@ -4,9 +4,10 @@ import {
   deleteAdminById,
   getAdminById,
   getAllAdmin,
-  updateAdminById,
 } from "../services/admin";
 import { toast } from "sonner";
+import axios from "axios";
+import axiosInstance from "../lib/axiosInstance";
 
 export const useGetAllAdmin = (query: TFilterQuery[] | undefined) =>
   useQuery({
@@ -22,8 +23,16 @@ export const useGetAdminById = (id: string | null) =>
 export const useUpdateAdminById = () =>
   useMutation({
     mutationKey: ["admin"],
-    mutationFn: ({ id, payload }: { id: string; payload: FormData }) =>
-      updateAdminById(id, payload),
+    mutationFn: async ({ id, payload }: { id: string; payload: FormData }) => {
+
+      let res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/admin/${id}`, {
+        method: "PATCH",
+        credentials: "include",
+        body: payload,
+      })
+      let data = await res.json()
+      return data
+    },
     onSuccess(data) {
       if (data?.success) {
         toast.success(data?.message || "Admin updated successfully!");

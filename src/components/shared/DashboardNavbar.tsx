@@ -31,7 +31,7 @@ export const DashboardNavbar = ({
 }) => {
   const role = user?.role;
   const router = useRouter();
-  console.log({ isLoading, user });
+  // console.log({ isLoading, user });
 
   return (
     <NextUINavbar

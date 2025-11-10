@@ -13,6 +13,7 @@ type TUserProvider = {
 export const UserContext = createContext<TUserProvider | null>(null);
 
 const UserContextProvider = ({ children }: { children: ReactNode }) => {
+  const [localUserRefetch, setLocalUserRefetch] = useState<Boolean>(true);
   const [user, setUser] = useState<TDecodedUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -23,13 +24,15 @@ const UserContextProvider = ({ children }: { children: ReactNode }) => {
   };
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, [localUserRefetch]);
 
   const value = {
     user,
     setUser,
     isLoading,
     setIsLoading,
+    localUserRefetch,
+    setLocalUserRefetch,
   };
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

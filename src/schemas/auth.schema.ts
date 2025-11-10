@@ -97,14 +97,28 @@ const commonSignupValidationSchema = z.object({
   bloodGroup: z.enum(["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O+"], {
     message: "Blood group is required.",
   }),
-  weight: z.number().optional(), // Optional field
-  height: z.number().optional(), // Optional field
+  weight: z.preprocess(
+    (val) => {
+      if (val === "" || val === null || val === undefined) return undefined;
+      const num = Number(val);
+      return isNaN(num) ? undefined : num;
+    },
+    z.number().optional()
+  ),
+  height: z.preprocess(
+    (val) => {
+      if (val === "" || val === null || val === undefined) return undefined;
+      const num = Number(val);
+      return isNaN(num) ? undefined : num;
+    },
+    z.number().optional()
+  ),
   allergies: z.string().optional(), // Optional field
   isDeleted: z.boolean().default(false), // Default value
 });
 
 const patientSignupValidationSchema = commonSignupValidationSchema;
-const patientUpdateValidationSchema = patientSignupValidationSchema.omit({ email: true, password: true }) // not updatable
+const patientUpdateValidationSchema = patientSignupValidationSchema.omit({ email: true, password: true })
   .partial();
 
 const doctorSignupValidationSchema = z.object({
@@ -123,7 +137,8 @@ const doctorSignupValidationSchema = z.object({
     department: z.string().min(1, "Department is required."),
     designation: z.string().min(1, "Designation is required."),
     workingPeriodStart: z.string().min(1, "Working Period Start is required."),
-    workingPeriodEnd: z.string().min(1, "Working Period End is required.").optional(),
+    // workingPeriodEnd: z.string().min(1, "Working Period End is required.").optional(),
+    workingPeriodEnd: z.string().optional(),
   }),
   consultationFee: z.number().min(1, "Consultation Fee is required."),
   followupFee: z.number().min(1, "Follow Up Fee is required."),

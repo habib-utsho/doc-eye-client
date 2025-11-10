@@ -4,22 +4,28 @@ import { subtitle } from "@/src/components/primitives";
 import Empty from "@/src/components/shared/Empty";
 import DEForm from "@/src/components/ui/Form/DEForm";
 import MyInp from "@/src/components/ui/Form/MyInp";
+import MyUpload from "@/src/components/ui/Form/MyUpload";
 import { PlusIcon } from "@/src/components/ui/icons";
 import Loading from "@/src/components/ui/Loading";
 import { doctorTitles, doctorTypes } from "@/src/constant/doctor.constant";
 import { days } from "@/src/constant/index.constant";
 import { bloodGroups, districts, genders } from "@/src/constant/user.constant";
-import { useGetAdminById } from "@/src/hooks/admin.hook";
-import { useGetDoctorById } from "@/src/hooks/doctor.hook";
-import { useGetPatientById } from "@/src/hooks/patient.hook";
+import { useGetAdminById, useUpdateAdminById } from "@/src/hooks/admin.hook";
+import { useGetDoctorById, useUpdateDoctorById } from "@/src/hooks/doctor.hook";
+import {
+  useGetPatientById,
+  useUpdatePatientById,
+} from "@/src/hooks/patient.hook";
 import { useGetAllSpecialties } from "@/src/hooks/specialty.hook";
 import useUserData from "@/src/hooks/user.hook";
+import { authValidationSchema } from "@/src/schemas/auth.schema";
 import { TSpecialty } from "@/src/types/specialty";
 import { TAdmin, TDoctor, TPatient, TUserRole } from "@/src/types/user";
 import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
 import { MinusOutlined } from "@ant-design/icons";
 import { Button } from "@heroui/button";
 import { Divider } from "@heroui/divider";
+import { zodResolver } from "@hookform/resolvers/zod";
 import moment from "moment";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -34,8 +40,9 @@ import {
   FaEnvelope,
   FaPhone,
   FaStethoscope,
-  FaCamera,
 } from "react-icons/fa";
+import { FaCamera } from "react-icons/fa6";
+import { toast } from "sonner";
 
 type FormValues = Partial<TPatient & TDoctor & TAdmin>;
 
@@ -43,12 +50,20 @@ export default function ProfilePage() {
   const { data: specialties, isLoading: isLoadingSpecialties } =
     useGetAllSpecialties([{ name: "limit", value: 5000 }]);
 
+  const { mutate: updateDoctorMutate, isPending: isLoadingUpdateDoctor } =
+    useUpdateDoctorById();
+  const { mutate: updateAdminMutate, isPending: isLoadingUpdateAdmin } =
+    useUpdateAdminById();
+  const { mutate: updatePatientMutate, isPending: isLoadingUpdatePatient } =
+    useUpdatePatientById();
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const { user } = useUserData();
+
+  const { user, setLocalUserRefetch, localUserRefetch } = useUserData();
   const userRole = user?.role as TUserRole;
 
-  const { data, isPending, isError } =
+  const { data, isPending, refetch, isError } =
     userRole === "patient"
       ? useGetPatientById(user?._id || "")
       : userRole === "doctor"
@@ -65,7 +80,6 @@ export default function ProfilePage() {
   >;
 
   const [isEditing, setIsEditing] = useState(false);
-  const [preview, setPreview] = useState(user?.profileImg);
 
   const RoleIcon =
     userRole === "doctor"
@@ -84,6 +98,9 @@ export default function ProfilePage() {
     gender: myData?.gender,
     district: myData?.district,
     bloodGroup: myData?.bloodGroup,
+    weight: myData?.weight,
+    height: myData?.height,
+    allergies: myData?.allergies,
     bio: myData?.bio,
     doctorTitle: myData?.doctorTitle,
     doctorType: myData?.doctorType,
@@ -111,18 +128,18 @@ export default function ProfilePage() {
     // workingExperiences: myData?.workingExperiences,
   };
   const formMethods = useForm<FormValues>({
-    // resolver: zodResolver(
-    //   userRole === "doctor"
-    //     ? authValidationSchema.doctorUpdateValidationSchema
-    //     : authValidationSchema.patientUpdateValidationSchema
-    // ),
+    resolver: zodResolver(
+      userRole === "doctor"
+        ? authValidationSchema.doctorUpdateValidationSchema
+        : authValidationSchema.patientUpdateValidationSchema
+    ),
   });
 
   const {
     control,
     formState: { errors },
   } = formMethods;
-  // console.log({ control, errors });
+
   const {
     fields: workingExperiencesFields,
     append: appendWorkingExperiences,
@@ -131,35 +148,53 @@ export default function ProfilePage() {
     control,
     name: "workingExperiences",
   });
-  // Current workplace
-  // const [currentWorkplace, setCurrentWorkplace] = useState({
-  //   workPlace: "",
-  //   department: "",
-  //   designation: "",
-  //   workingPeriodStart: "",
-  //   workingPeriodEnd: "",
-  // });
-
-  // const onCurrentWorkplaceChange = (key: string, value: string) => {
-  //   setCurrentWorkplace((prevWorkplace) => ({
-  //     ...prevWorkplace,
-  //     [key]: value,
-  //   }));
-  // };
-
-  // set profile img
-  useEffect(() => {
-    setPreview(user?.profileImg);
-  }, [user]);
 
   // console.log({ myData, patientData, doctorData, adminData });
 
   const onSubmit: SubmitHandler<TPatient> = async (payload: TPatient) => {
-    console.log(payload);
+    let formData = new FormData();
+
+    if (!previewUrl && !selectedFile) {
+      toast.error("Profile image is required!");
+      return;
+    }
+
+    formData.append("data", JSON.stringify(payload));
+
+    if (previewUrl != myData?.profileImg && selectedFile) {
+      formData.append("file", selectedFile as Blob);
+    }
+
+    // console.log(payload, selectedFile);
+    // To display all entries
+    // for (let [key, value] of payload.entries()) {
+    //   console.log(key, value);
+    // }
+
+    if (myData._id) {
+      let mutate =
+        userRole === "doctor"
+          ? updateDoctorMutate
+          : userRole === "patient"
+          ? updatePatientMutate
+          : updateAdminMutate;
+
+      mutate(
+        { id: myData._id, payload: formData },
+        {
+          onSuccess: () => {
+            refetch();
+            setLocalUserRefetch(!localUserRefetch);
+          },
+        }
+      );
+    }
   };
 
+  // Append working experiences and add previewURL
   useEffect(() => {
     if (myData && myData?.workingExperiences) {
+      removeWorkingExperiences();
       myData?.workingExperiences?.forEach((we) => {
         appendWorkingExperiences({
           workPlace: we.workPlace,
@@ -170,6 +205,10 @@ export default function ProfilePage() {
         });
       });
     }
+
+    if (myData && myData?.profileImg) {
+      setPreviewUrl(myData?.profileImg);
+    }
   }, [myData]);
 
   // console.log(workingExperiences);
@@ -177,52 +216,31 @@ export default function ProfilePage() {
     return <Loading />;
   }
 
-  console.log({
-    myDataWorkingExp: myData?.workingExperiences,
-    localStateWX: workingExperiencesFields,
-    myData,
-  });
+  // console.log({
+  //   myDataWorkingExp: myData?.workingExperiences,
+  //   localStateWX: workingExperiencesFields,
+  //   myData,
+  //   previewUrl,
+  //   selectedFile,
+  // });
 
   return (
     <div className="min-h-screen p-4">
       {/* Banner */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-700 text-white flex flex-col md:flex-row items-center gap-8 p-5 rounded-md shadow">
         {/* Avatar */}
-        <div className="relative group">
-          <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-2xl">
-            {preview ? (
-              <Image
-                src={preview}
-                alt={user?.name || "Profile Image"}
-                width={160}
-                height={160}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="flex items-center justify-center h-full bg-gradient-to-br from-blue-500 to-purple-600 text-4xl font-bold text-white">
-                {user?.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
-              </div>
-            )}
-          </div>
-
-          {isEditing && (
-            <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-60 group-hover:opacity-100 transition cursor-pointer rounded-full z-20">
-              <FaCamera className="w-8 h-8 text-white" />
-              {/* Your custom <Input type="file" /> goes here */}
-              {/* <MyUpload
-                setSelectedFile={setSelectedFile}
-                previewUrl={previewUrl}
-                setPreviewUrl={setPreviewUrl}
-                height={200}
-                width={200}
-              /> */}
-            </label>
-          )}
-
-          <div className="absolute inset-0 w-40 h-40 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full blur-3xl opacity-70 z-10 animate-pulse" />
+        <div>
+          {/* <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-2xl"> */}
+          <DEForm onSubmit={onSubmit} methods={formMethods}>
+            <MyUpload
+              setSelectedFile={setSelectedFile}
+              previewUrl={previewUrl}
+              setPreviewUrl={setPreviewUrl}
+              height={200}
+              width={200}
+              isEditing={isEditing}
+            />
+          </DEForm>
         </div>
 
         {/* Name & Role */}
@@ -312,7 +330,7 @@ export default function ProfilePage() {
                     <div>
                       <p className="text-sm text-gray-600">Height</p>
                       <p className="font-medium flex items-center gap-2">
-                        {myData?.height ? `${myData.height} kg` : "N/A"}
+                        {myData?.height ? `${myData.height} cm` : "N/A"}
                       </p>
                     </div>
                   )}
@@ -320,7 +338,7 @@ export default function ProfilePage() {
                     <div>
                       <p className="text-sm text-gray-600">Allergies</p>
                       <p className="font-medium flex items-center gap-2">
-                        {myData?.allergies ? `${myData.allergies} kg` : "N/A"}
+                        {myData?.allergies ? `${myData.allergies}` : "N/A"}
                       </p>
                     </div>
                   )}
@@ -668,21 +686,6 @@ export default function ProfilePage() {
                         label="Total Exp Year"
                       />
                     </div>
-                    {/* consultationFee and follow up fee */}
-                    <div className="flex flex-col md:flex-row gap-4">
-                      <MyInp
-                        type="number"
-                        name="consultationFee"
-                        placeholder="e.g., 1000"
-                        label="Consultation Fee (BDT)"
-                      />
-                      <MyInp
-                        type="number"
-                        name="followupFee"
-                        placeholder="e.g., 600"
-                        label="Followup Fee (BDT)"
-                      />
-                    </div>
                     {/* NID & BMDC */}
                     <div className="flex flex-col md:flex-row gap-4">
                       <MyInp
@@ -814,6 +817,9 @@ export default function ProfilePage() {
                               className="shadow p-2 rounded-md mb-4"
                               key={field.id}
                             >
+                              <h2 className="font-semibold text-primary dark:text-white">
+                                Exp-{index + 1}
+                              </h2>
                               <div className="text-right">
                                 <Button
                                   type="button"
@@ -828,42 +834,46 @@ export default function ProfilePage() {
                                   <MinusOutlined />
                                 </Button>
                               </div>
-                              <div className="grid grid-cols-2 gap-4">
-                                <MyInp
-                                  name={`workingExperiences[${index}].workPlace`}
-                                  type="text"
-                                  label="Workplace"
-                                  placeholder="Enter workplace"
-                                  defaultValue={field.workPlace}
-                                />
-                                <MyInp
-                                  name={`workingExperiences[${index}].department`}
-                                  type="text"
-                                  label="Department"
-                                  placeholder="Enter department"
-                                  defaultValue={field.department}
-                                />
-                                <MyInp
-                                  name={`workingExperiences[${index}].designation`}
-                                  type="text"
-                                  label="Designation"
-                                  placeholder="Enter designation"
-                                  defaultValue={field.designation}
-                                />
-                                <MyInp
-                                  name={`workingExperiences[${index}].workingPeriodStart`}
-                                  type="date"
-                                  label="Working period start"
-                                  placeholder="Enter working period start"
-                                  defaultValue={field.workingPeriodStart}
-                                />
-                                <MyInp
-                                  name={`workingExperiences[${index}].workingPeriodEnd`}
-                                  type="date"
-                                  label="Working period end"
-                                  placeholder="Enter working period end"
-                                  defaultValue={field.workingPeriodEnd}
-                                />
+                              <div className="space-y-4">
+                                <div className="flex flex-col md:flex-row gap-4">
+                                  <MyInp
+                                    name={`workingExperiences[${index}].workPlace`}
+                                    type="text"
+                                    label="Workplace"
+                                    placeholder="Enter workplace"
+                                    defaultValue={field.workPlace}
+                                  />
+                                  <MyInp
+                                    name={`workingExperiences[${index}].department`}
+                                    type="text"
+                                    label="Department"
+                                    placeholder="Enter department"
+                                    defaultValue={field.department}
+                                  />
+                                  <MyInp
+                                    name={`workingExperiences[${index}].designation`}
+                                    type="text"
+                                    label="Designation"
+                                    placeholder="Enter designation"
+                                    defaultValue={field.designation}
+                                  />
+                                </div>
+                                <div className="flex flex-col md:flex-row gap-4">
+                                  <MyInp
+                                    name={`workingExperiences[${index}].workingPeriodStart`}
+                                    type="date"
+                                    label="Working period start"
+                                    placeholder="Enter working period start"
+                                    defaultValue={field.workingPeriodStart}
+                                  />
+                                  <MyInp
+                                    name={`workingExperiences[${index}].workingPeriodEnd`}
+                                    type="date"
+                                    label="Working period end"
+                                    placeholder="Enter working period end"
+                                    defaultValue={field.workingPeriodEnd}
+                                  />
+                                </div>
                               </div>
                             </div>
                           ))}
@@ -944,6 +954,11 @@ export default function ProfilePage() {
                   startContent={<FaSave className="w-4 h-4" />}
                   className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium  hover:from-blue-700 hover:to-purple-700 transition"
                   type="submit"
+                  isLoading={
+                    isLoadingUpdateDoctor ||
+                    isLoadingUpdateAdmin ||
+                    isLoadingUpdatePatient
+                  }
                 >
                   Save Changes
                 </Button>

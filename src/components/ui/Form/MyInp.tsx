@@ -131,6 +131,8 @@ const MyInp = ({
     return undefined;
   };
 
+  // console.log(errors, getValues());
+
   return (
     <Controller
       name={name}
