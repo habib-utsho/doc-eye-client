@@ -9,22 +9,29 @@ import {
 } from "@heroui/modal";
 import { Button } from "@heroui/button";
 import { toast } from "sonner";
-import { TPatient, TUser } from "@/src/types/user";
+import { TPatient } from "@/src/types/user";
 import { FaShield } from "react-icons/fa6";
-import {
-  useMakePatientAdmin,
-  useUpdatePatientById,
-} from "@/src/hooks/patient.hook";
+import { useMakePatientAdmin } from "@/src/hooks/patient.hook";
+import { useGetAllAppointments } from "@/src/hooks/appointment.hook";
+import { Tooltip } from "@heroui/tooltip";
 
 interface MakeAdminModalProps {
   patient: TPatient;
   refetch: () => void;
 }
 
-const MakeAdminModal = ({ patient, refetch }: MakeAdminModalProps) => {
+const MakePatientToAdminModal = ({ patient, refetch }: MakeAdminModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { mutate: makePatientAdmin, isPending: isMakePatientAdminLoading } =
     useMakePatientAdmin();
+  const { data: appointments, isLoading: isLoadingAppointments } =
+    useGetAllAppointments([
+      {
+        name: "patient",
+        value: patient?._id,
+      },
+    ]);
+  console.log(appointments, patient.name, patient._id);
 
   const handleConfirm = () => {
     makePatientAdmin(patient._id, {
@@ -44,18 +51,32 @@ const MakeAdminModal = ({ patient, refetch }: MakeAdminModalProps) => {
       },
     });
   };
+  const hasAppointments = appointments?.meta?.total;
 
   return (
     <>
-      <Button
-        color="primary"
-        className="text-white"
-        variant="shadow"
-        onPress={() => setIsOpen(true)}
+      <Tooltip
+        content={
+          hasAppointments
+            ? "Cannot make admin — patient has appointments"
+            : "Make this patient an admin"
+        }
       >
-        <FaShield size={16} />
-        Make Admin
-      </Button>
+        <Button
+          color="primary"
+          className={`${
+            (hasAppointments || isLoadingAppointments) && "opacity-50"
+          } text-white`}
+          variant="shadow"
+          onPress={() =>
+            !hasAppointments && !isLoadingAppointments && setIsOpen(true)
+          }
+          disabled={hasAppointments || isLoadingAppointments}
+        >
+          <FaShield size={16} />
+          Make Admin
+        </Button>
+      </Tooltip>
 
       <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
         <ModalContent>
@@ -87,4 +108,4 @@ const MakeAdminModal = ({ patient, refetch }: MakeAdminModalProps) => {
   );
 };
 
-export default MakeAdminModal;
+export default MakePatientToAdminModal;

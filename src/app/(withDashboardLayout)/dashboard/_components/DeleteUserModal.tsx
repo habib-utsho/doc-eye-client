@@ -17,12 +17,14 @@ const DeleteUserModal = ({
   isLoading,
   isSuccess,
   deleteType,
+  disabled,
 }: {
   id: string;
   handler: (id: string) => void;
   isLoading: boolean;
   isSuccess: boolean;
   deleteType: string;
+  disabled?: boolean;
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -35,11 +37,14 @@ const DeleteUserModal = ({
     <>
       <Button
         color="danger"
-        className="text-danger bg-opacity-20 hover:scale-[1.07]"
+        className={`${
+          disabled && "pointer-events-none opacity-50"
+        } text-danger bg-opacity-20 hover:scale-[1.07]`}
         isIconOnly
         startContent={<DeleteIcon />}
         isLoading={isLoading}
         onPress={onOpen}
+        disabled={disabled}
       />
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>

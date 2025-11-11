@@ -318,7 +318,7 @@ export default function ProfilePage() {
                       {myData?.bloodGroup || "N/A"}
                     </p>
                   </div>
-                  {userRole != "doctor" && (
+                  {userRole == "patient" && (
                     <div>
                       <p className="text-sm text-gray-600">Weight</p>
                       <p className="font-medium flex items-center gap-2">
@@ -326,7 +326,7 @@ export default function ProfilePage() {
                       </p>
                     </div>
                   )}
-                  {userRole != "doctor" && (
+                  {userRole == "patient" && (
                     <div>
                       <p className="text-sm text-gray-600">Height</p>
                       <p className="font-medium flex items-center gap-2">
@@ -334,7 +334,7 @@ export default function ProfilePage() {
                       </p>
                     </div>
                   )}
-                  {userRole != "doctor" && (
+                  {userRole == "patient" && (
                     <div>
                       <p className="text-sm text-gray-600">Allergies</p>
                       <p className="font-medium flex items-center gap-2">
@@ -587,7 +587,7 @@ export default function ProfilePage() {
                       label: bg,
                     }))}
                   />
-                  {userRole != "doctor" && (
+                  {userRole == "patient" && (
                     <>
                       <MyInp
                         type="number"

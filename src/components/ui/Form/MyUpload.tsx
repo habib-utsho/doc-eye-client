@@ -14,7 +14,7 @@ const MyUpload = ({
   defaultValue,
   placeholder = "Upload your avatar",
   align = "left",
-  isEditing = false,
+  isEditing = true,
 }: {
   setSelectedFile: React.Dispatch<React.SetStateAction<File | null>>;
   previewUrl: string | null;

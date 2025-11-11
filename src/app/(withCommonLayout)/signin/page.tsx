@@ -157,7 +157,7 @@ const SigninPage = () => {
 
               <Table
                 className="mt-5"
-                defaultSelectedKeys={["1"]}
+                defaultSelectedKeys={["2"]}
                 selectionMode="single"
                 color="primary"
                 aria-label="Example static collection table"

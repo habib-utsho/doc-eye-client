@@ -36,7 +36,6 @@ type TMyInp = {
   radius?: "none" | "sm" | "md" | "lg" | "full";
   label?: ReactNode;
   placeholder?: string;
-  value?: string;
   defaultValue?: string;
   disabled?: boolean;
   onChange?: (
@@ -61,7 +60,6 @@ const MyInp = ({
   color = "default",
   disabled,
   defaultValue,
-  value,
   onChange,
   options = [],
   className,

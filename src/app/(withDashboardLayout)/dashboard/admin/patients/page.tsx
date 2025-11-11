@@ -16,9 +16,7 @@ import DeleteUserModal from "../../_components/DeleteUserModal";
 import { useToggleUserStatus } from "@/src/hooks/auth.hook";
 import PatientDetailsModal from "./_components/modal/PatientDetailsModal";
 import { SearchIcon } from "@/src/components/ui/icons";
-import { Button } from "@heroui/button";
-import { FaShield } from "react-icons/fa6";
-import MakeAdminModal from "../../_components/MakeAdminModal";
+import MakePatientToAdminModal from "../../_components/MakePatientToAdminModal";
 
 const PatientsPage = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
@@ -42,6 +40,7 @@ const PatientsPage = () => {
       value: pagination.limit,
     },
   ]);
+
   const {
     mutate: deletePatientMutate,
     isPending: isLoadingDeletePatient,
@@ -61,7 +60,7 @@ const PatientsPage = () => {
           width={60}
           height={60}
           alt={patient?.name}
-          className="rounded-full bg-red-500 h-[60px] w-[60px]"
+          className="rounded-full bg-primary h-[60px] w-[60px]"
         />
         <div>
           <p>{patient?.name}</p>
@@ -97,7 +96,7 @@ const PatientsPage = () => {
           isSuccess={isSuccessDeletePatient}
           deleteType="patient"
         />
-        <MakeAdminModal patient={patient} refetch={refetchPatients} />
+        <MakePatientToAdminModal patient={patient} refetch={refetchPatients} />
       </div>
     ),
   }));
@@ -128,17 +127,21 @@ const PatientsPage = () => {
 
   return (
     <div className="p-4">
-      <div className="flex justify-between items-center mb-4 xl:mb-6 gap-4">
-        <div className="flex items-center gap-2">
-          <Input
-            name="search"
-            startContent={<SearchIcon />}
-            placeholder="Search patient..."
-            onChange={(e) => setSearchTerm(e.target.value)}
-            isClearable
-            onClear={() => setSearchTerm("")}
-          />
-        </div>
+      <div className="flex flex-wrap  justify-between  gap-4">
+        <h2 className="whitespace-nowrap font-semibold text-xl">
+          Patients
+          {patients?.meta?.total ? `(${patients?.meta?.total})` : ""}
+        </h2>
+
+        <Input
+          name="search"
+          startContent={<SearchIcon />}
+          placeholder="Search patients..."
+          onChange={(e) => setSearchTerm(e.target.value)}
+          isClearable
+          onClear={() => setSearchTerm("")}
+          className="w-[320px]"
+        />
       </div>
       <DETable
         data={patients}

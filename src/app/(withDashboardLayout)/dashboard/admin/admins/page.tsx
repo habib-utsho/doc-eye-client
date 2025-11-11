@@ -7,13 +7,14 @@ import Image from "next/image";
 import { TAdmin, TUser } from "@/src/types/user";
 import moment from "moment";
 import { Switch } from "@heroui/switch";
-import { toast } from "sonner";
 import { Input } from "@heroui/input";
 import { SearchIcon } from "@/src/components/ui/icons";
 import DeleteUserModal from "../../_components/DeleteUserModal";
 import { useToggleUserStatus } from "@/src/hooks/auth.hook";
+import useUserData from "@/src/hooks/user.hook";
 
 const AdminsPage = () => {
+  const { user, isLoading: isUserLoading } = useUserData();
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
@@ -57,7 +58,7 @@ const AdminsPage = () => {
           width={60}
           height={60}
           alt={admin?.name}
-          className="rounded-full h-[60px] w-[60px]"
+          className="rounded-full bg-primary h-[60px] w-[60px]"
         />
         <div>{admin?.name}</div>
       </div>
@@ -87,6 +88,7 @@ const AdminsPage = () => {
           handler={deleteAdminMutate}
           isLoading={isLoadingDeleteAdmin}
           isSuccess={isSuccessDeleteAdmin}
+          disabled={admin?._id == user?._id}
           deleteType="admin"
         />
       </div>
@@ -147,22 +149,26 @@ const AdminsPage = () => {
 
   return (
     <div className="w-full p-4">
-      <div className="flex justify-between items-center mb-4 xl:mb-6 gap-4">
-        <div className="flex items-center gap-2">
-          <Input
-            name="search"
-            startContent={<SearchIcon />}
-            placeholder="Search admin..."
-            onChange={(e) => setSearchTerm(e.target.value)}
-            isClearable
-            onClear={() => setSearchTerm("")}
-          />
-        </div>
+      <div className="flex flex-wrap  justify-between  gap-4">
+        <h2 className="whitespace-nowrap font-semibold text-xl">
+          Admins
+          {admins?.meta?.total ? `(${admins?.meta?.total})` : ""}
+        </h2>
+
+        <Input
+          name="search"
+          startContent={<SearchIcon />}
+          placeholder="Search admins..."
+          onChange={(e) => setSearchTerm(e.target.value)}
+          isClearable
+          onClear={() => setSearchTerm("")}
+          className="w-[320px]"
+        />
       </div>
 
       <DETable
         data={admins}
-        isLoading={isLoadingAdmins}
+        isLoading={isLoadingAdmins || isUserLoading}
         columns={columns}
         rows={rows}
         pagination={pagination}

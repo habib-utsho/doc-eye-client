@@ -115,7 +115,7 @@ const DoctorsPage = () => {
             width={60}
             height={60}
             alt={doctor?.name}
-            className="rounded-full h-[60px] w-[60px] mr-2"
+            className="rounded-full bg-primary h-[60px] w-[60px]"
           />
         ) : (
           <div className="rounded-full h-[60px] w-[60px] bg-primary-500 bg-opacity-20 mr-2" />
@@ -265,27 +265,35 @@ const DoctorsPage = () => {
 
   return (
     <div className="p-4">
-      <div className="mb-4 xl:mb-6 gap-4">
-        <div className=" grid grid-cols-4 gap-4 text-nowrap">
+      <div className="mb-4 xl:mb-6 gap-4 space-y-4">
+        <div className="flex flex-wrap  justify-between  gap-4">
+          <h2 className="whitespace-nowrap font-semibold text-xl">
+            Doctors
+            {doctors?.meta?.total ? `(${doctors?.meta?.total})` : ""}
+          </h2>
+
           <Input
             name="search"
             startContent={<SearchIcon />}
-            placeholder="Search doctor..."
+            placeholder="Search doctors..."
             onChange={(e) => setSearchTerm(e.target.value)}
             isClearable
             onClear={() => setSearchTerm("")}
+            className="w-[320px]"
           />
-
+        </div>
+        <div className="flex justify-end gap-4 ">
           <Select
             label="Filter by specialty"
             onChange={(e) => setSpecialty(e.target.value)}
+            className="w-[250px]"
           >
             {specialties?.data?.map((specialty: TSpecialty) => (
               <SelectItem key={specialty._id}>{specialty.name}</SelectItem>
             ))}
           </Select>
           <Select
-            className=""
+            className="w-[250px]"
             label="Sort by consultation fee"
             onChange={(e) => setConsultationFeeSort(e.target.value)}
           >
@@ -297,7 +305,7 @@ const DoctorsPage = () => {
             ))}
           </Select>
           <Select
-            className=""
+            className="w-[250px]"
             label="Sort by experience"
             onChange={(e) => setConsultationFeeSort(e.target.value)}
           >
