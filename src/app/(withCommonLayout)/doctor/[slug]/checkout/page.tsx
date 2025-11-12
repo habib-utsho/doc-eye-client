@@ -1,6 +1,7 @@
 "use client";
 import Container from "@/src/components/ui/Container";
 import {
+  ArrowLeftOutlined,
   DollarCircleOutlined,
   UserAddOutlined,
   WalletOutlined,
@@ -14,7 +15,12 @@ import { Button } from "@heroui/button";
 import bKashLogo from "@/src/assets/img/payment/bkash_logo.png";
 import sslcommerzLogo from "@/src/assets/img/payment/sslcommerz_logo.png";
 import { Radio, RadioGroup } from "@heroui/radio";
-import { useParams, usePathname, useSearchParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { useGetDoctorByDoctorCode } from "@/src/hooks/doctor.hook";
 import useUserData from "@/src/hooks/user.hook";
 import Loading from "@/src/components/ui/Loading";
@@ -23,6 +29,10 @@ import PaymentModal from "../_components/PaymentModal";
 import { useGetAllAppointments } from "@/src/hooks/appointment.hook";
 import Link from "next/link";
 import { Alert } from "@heroui/alert";
+import { RiCalendarScheduleLine } from "react-icons/ri";
+import { FaUserDoctor } from "react-icons/fa6";
+import { CiMedicalCross } from "react-icons/ci";
+import { useGetPatientById } from "@/src/hooks/patient.hook";
 
 const DoctorCheckout = () => {
   const params = useParams() as { slug: string };
@@ -33,6 +43,7 @@ const DoctorCheckout = () => {
   const doctor = doctorRes?.data as TDoctor;
   const { isLoading: isUserLoading, user } = useUserData();
   const pathname = usePathname();
+  const router = useRouter();
 
   const [activePaymentMethod, setActivePaymentMethod] = useState<
     "bKash" | "SSLCOMMERZ"
@@ -51,6 +62,10 @@ const DoctorCheckout = () => {
     { name: "limit", value: 250 }, //TODO: change this limit - break paginate or separate API
   ]);
 
+  const { data: patient, isLoading: isPatientLoading } = useGetPatientById(
+    user?._id || ""
+  );
+
   // console.log({
   //   id: params.slug,
   //   activeDate,
@@ -62,13 +77,15 @@ const DoctorCheckout = () => {
   //   doctor,
   // });
 
-  if (isDoctorLoading || isUserLoading) return <Loading />;
+  if (isDoctorLoading || isUserLoading || isPatientLoading) return <Loading />;
 
   const vat5Percent = Math.round((doctor?.consultationFee / 100) * 5);
   const totalAmount =
     vat5Percent +
     doctor?.consultationFee +
     Number(process.env.NEXT_PUBLIC_PER_CONSULTATION_SERVICE_FEE!!);
+
+  console.log(patient);
 
   return (
     <div className="py-6 bg-slate-50 dark:bg-gray-900">
@@ -94,6 +111,11 @@ const DoctorCheckout = () => {
           <div className="col-span-12 md:col-span-7 space-y-4">
             {/* Patient selection */}
             <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">
+              <Button
+                className="h-[30px] !w-[55px] min-w-0 !px-2 "
+                startContent={<ArrowLeftOutlined />}
+                onPress={() => router.back()}
+              />
               <h1 className="font-semibold text-lg">
                 <UserAddOutlined /> Patient Selection
               </h1>
@@ -126,6 +148,33 @@ const DoctorCheckout = () => {
               setActiveTime={setActiveTime}
             />
 
+            {/* Type of consultation */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">
+              <h1 className="font-semibold text-md flex gap-1 items-center">
+                {" "}
+                <CiMedicalCross className="text-xl" />
+                Type of consultation
+              </h1>
+              {isAvailableNow ? (
+                <div className="flex gap-4 items-center">
+                  <FaUserDoctor />
+                  <div>
+                    <h2 className="font-semibold">
+                      Instant Video Consultation
+                    </h2>
+                    <p className="text-sm">Consult within few minutes</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex gap-4 items-center">
+                  <RiCalendarScheduleLine />
+                  <div>
+                    <h2 className="font-semibold">Appointment schedule</h2>
+                    <p className="text-sm">Select appointment time & date</p>
+                  </div>
+                </div>
+              )}
+            </div>
             {/* Payment Details */}
             <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">
               <h1 className="font-semibold text-md">
@@ -208,7 +257,7 @@ const DoctorCheckout = () => {
                   <p className="text-md">৳{totalAmount}</p>
                 </div>
 
-                {!user ? (
+                {!patient ? (
                   <Link
                     href={`/signin?redirect=${pathname}`}
                     className="w-full"
@@ -236,7 +285,7 @@ const DoctorCheckout = () => {
                     doctor={doctor}
                     activeDate={activeDate}
                     activeTime={activeTime}
-                    user={user}
+                    patient={patient?.data}
                     refetchAppointments={refetchAppointments}
                   />
                 )}

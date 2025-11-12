@@ -8,6 +8,8 @@ type TUserProvider = {
   setUser: React.Dispatch<React.SetStateAction<TDecodedUser | null>>;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  localUserRefetch: Boolean;
+  setLocalUserRefetch: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const UserContext = createContext<TUserProvider | null>(null);

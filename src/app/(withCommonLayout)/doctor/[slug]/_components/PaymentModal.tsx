@@ -1,9 +1,12 @@
 "use client";
+import VideoCall from "@/src/app/(withDashboardLayout)/dashboard/_components/VideoCall";
 import { useInitPayment } from "@/src/hooks/payment.hook";
 import { TAppointmentType } from "@/src/types/appointment";
-import { TDecodedUser, TDoctor } from "@/src/types/user";
+import { TDecodedUser, TDoctor, TPatient } from "@/src/types/user";
 import { DollarOutlined } from "@ant-design/icons";
+import { Alert } from "@heroui/alert";
 import { Button } from "@heroui/button";
+import { Divider } from "@heroui/divider";
 import {
   Modal,
   ModalBody,
@@ -29,8 +32,8 @@ type TPaymentModalProps = {
   activeDate: string | null;
   activeTime: string | null;
   isAvailableNow: boolean;
-  user: TDecodedUser | null;
-  doctor: TDoctor | null;
+  patient: TPatient;
+  doctor: TDoctor;
   refetchAppointments: () => void;
 };
 const PaymentModal: React.FC<TPaymentModalProps> = ({
@@ -39,7 +42,7 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
   isDisabled,
   activeDate,
   activeTime,
-  user,
+  patient,
   doctor,
   refetchAppointments,
   isAvailableNow,
@@ -64,7 +67,7 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
       toast.error("Please select a time");
       return;
     }
-    if (!user) {
+    if (!patient) {
       toast.error("Please select a patient");
       return;
     }
@@ -75,7 +78,7 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
 
     const payload = {
       doctor: doctor._id,
-      patient: user._id,
+      patient: patient._id,
       // schedule: isAvailableNow
       //   ? new Date().toISOString()
       //   : activeDate + "T" + activeTime + ":00Z",
@@ -85,9 +88,8 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
       appointmentType: "online" as TAppointmentType,
       amount,
       paymentMethod: paymentType,
+      status: isAvailableNow ? "confirmed" : "pending",
     };
-
-    console.log({ payload });
 
     // return;
 
@@ -201,29 +203,49 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
               </ModalHeader>
 
               <ModalBody className="text-center text-gray-700">
-                <p className="text-sm">
-                  Your appointment has been confirmed. Would you like to view
-                  your upcoming appointments now?
-                </p>
+                {isAvailableNow ? (
+                  <p>
+                    You can now start your consultation. <br />
+                    <br />
+                    <Divider className="mb-6" />
+                    <Alert
+                      color={"danger"}
+                      className="text-warning bg-warning bg-opacity-5"
+                      title={`*This will open Jitsi Meet in a new tab. Doctor
+                      should be start the call first for control.`}
+                    />
+                  </p>
+                ) : (
+                  <p className="text-sm">
+                    Your appointment has been confirmed. Would you like to view
+                    your upcoming appointments now?
+                  </p>
+                )}
               </ModalBody>
 
-              <ModalFooter className="flex justify-center gap-4">
-                <Button color="secondary" variant="light" onPress={onClose}>
-                  Stay Here
-                </Button>
-                <Button
-                  color="primary"
-                  className="text-white"
-                  onPress={() => {
-                    router.push(
-                      isAvailableNow
-                        ? "/dashboard/patient/expired-appointments"
-                        : "/dashboard/patient/upcoming-appointments"
-                    );
-                  }}
-                >
-                  Go to Appointments
-                </Button>
+              <ModalFooter>
+                {isAvailableNow ? (
+                  <VideoCall from="patient" doctor={doctor} patient={patient} />
+                ) : (
+                  <div className="flex justify-center gap-4">
+                    <Button color="secondary" variant="light" onPress={onClose}>
+                      Stay Here
+                    </Button>
+                    <Button
+                      color="primary"
+                      className="text-white"
+                      onPress={() => {
+                        router.push(
+                          isAvailableNow
+                            ? "/dashboard/patient/expired-appointments"
+                            : "/dashboard/patient/upcoming-appointments"
+                        );
+                      }}
+                    >
+                      Go to Appointments
+                    </Button>
+                  </div>
+                )}
               </ModalFooter>
             </>
           )}

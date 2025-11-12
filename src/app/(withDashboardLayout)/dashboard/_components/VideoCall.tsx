@@ -4,7 +4,6 @@ import { VideoCameraOutlined } from "@ant-design/icons";
 import { Button } from "@heroui/button";
 import { TDoctor, TPatient, TUserRole } from "@/src/types/user";
 import { TAppointment } from "@/src/types/appointment";
-import { useRouter } from "next/navigation";
 
 const VideoCall = ({
   from,
@@ -13,7 +12,7 @@ const VideoCall = ({
   patient,
 }: {
   from: TUserRole;
-  appointment: TAppointment;
+  appointment?: TAppointment;
   doctor: TDoctor;
   patient: TPatient;
 }) => {
