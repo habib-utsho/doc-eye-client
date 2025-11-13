@@ -202,6 +202,8 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
                 </span>
               </ModalHeader>
 
+
+
               <ModalBody className="text-center text-gray-700">
                 {isAvailableNow ? (
                   <p>
