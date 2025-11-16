@@ -8,10 +8,19 @@ interface TProps {
   x?: number;
   y?: number;
   scale?: number;
+  duration?: number;
   className?: string;
 }
 
-const MyMotion = ({ children, delay, x, y, scale, className }: TProps) => {
+const MyMotion = ({
+  children,
+  delay,
+  x,
+  y,
+  scale,
+  duration,
+  className,
+}: TProps) => {
   return (
     <motion.div
       variants={{
@@ -21,7 +30,13 @@ const MyMotion = ({ children, delay, x, y, scale, className }: TProps) => {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
-      transition={{ delay: delay || 0.2, type: "spring", stiffness: 70 }}
+      transition={{
+        delay: delay || 0.2,
+
+        duration: duration || 0.5,
+        type: "spring",
+        stiffness: 70,
+      }}
       className={className}
     >
       {children}
