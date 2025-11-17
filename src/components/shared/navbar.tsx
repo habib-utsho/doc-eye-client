@@ -1,3 +1,4 @@
+"use client";
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -18,8 +19,17 @@ import { ThemeSwitch } from "@/src/components/theme-switch";
 import Image from "next/image";
 import NavbarProfileDropdown from "./NavbarProfileDropdown";
 // import NavbarProfileDropdown from "./NavbarProfileDropdown";
+import { usePathname } from "next/navigation";
 
 export const Navbar = () => {
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    if (!href) return false;
+    // Exact match or nested path match
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(href + "/");
+  };
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -36,12 +46,12 @@ export const Navbar = () => {
           {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.href}>
               <NextLink
-                className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium"
-                )}
+                className={`${
+                  isActive(item.href) ? "text-primary font-semibold" : ""
+                }`}
                 color="foreground"
                 href={item.href}
+                data-active={isActive(item.href)}
               >
                 {item.label}
               </NextLink>
@@ -69,23 +79,23 @@ export const Navbar = () => {
       </NavbarContent>
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                    ? "danger"
-                    : "foreground"
-                }
-                href="#"
-                size="lg"
-              >
-                {item.label}
-              </Link>
-            </NavbarMenuItem>
-          ))}
+          {siteConfig.navMenuItems.map((item, index) => {
+            const active = isActive(item.href);
+            return (
+              <NavbarMenuItem key={`${item.href}-${index}`}>
+                <NextLink
+                  href={item.href}
+                  className={clsx(
+                    "text-lg",
+                    active ? "text-primary font-medium" : "text-foreground"
+                  )}
+                  data-active={active}
+                >
+                  {item.label}
+                </NextLink>
+              </NavbarMenuItem>
+            );
+          })}
         </div>
       </NavbarMenu>
     </NextUINavbar>

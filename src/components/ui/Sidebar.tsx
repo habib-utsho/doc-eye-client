@@ -225,19 +225,36 @@ const Sidebar = ({ isLoading, user }: { isLoading: boolean; user: TUser }) => {
   const renderRoutes = (routes: TSidebarRoute[]) => {
     return routes.map((route) => {
       if (route.children) {
+        // Check if any child is active for submenu highlighting
+        const hasActiveChild = route.children.some(
+          (child) =>
+            pathname === child.path || pathname.startsWith(child.path + "/")
+        );
         return (
-          <SubMenu key={route.name} label={route.name} icon={route.icon}>
+          <SubMenu
+            key={route.name}
+            label={route.name}
+            icon={route.icon}
+            active={hasActiveChild}
+          >
             {renderRoutes(route.children)}
           </SubMenu>
         );
       }
+
+      // Check if current route is active (exact match)
+      const isActive = pathname === route.path;
+
+
       return (
         <MenuItem
           key={route.path}
           component={<Link href={route.path || "#"} />}
-          active={pathname === route.path}
+          active={isActive}
           icon={route.icon}
-          className={`${isDark && "hover:text-black"} `}
+          className={`${isDark && "hover:text-black"} ${
+            isActive ? "font-semibold text-primary bg-slate-300" : ""
+          }`}
         >
           {route.name}
         </MenuItem>

@@ -56,7 +56,7 @@ const Banner = () => {
             className={`${title()} flex gap-2 items-center justify-center flex-wrap`}
           >
             Complete health solution{" "}
-            <span className={title({ color: "primary" })}>DocEye!</span>
+            <span className="text-primary dark:text-secondary">DocEye!</span>
           </h2>
           <p className={title({ class: "mt-4 !text-[24px]" })}>
             Connected with 50,000+ individuals who trust us.

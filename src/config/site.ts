@@ -18,10 +18,6 @@ export const siteConfig = {
       href: "/health-plans",
     },
     {
-      label: "Pricing",
-      href: "/pricing",
-    },
-    {
       label: "About",
       href: "/about-us",
     },

@@ -20,7 +20,9 @@ import {
 import Image from "next/image";
 import NavbarProfileDropdown from "./NavbarProfileDropdown";
 import { TUser } from "@/src/types/user";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { HomeOutlined, RightOutlined } from "@ant-design/icons";
+import { useMemo } from "react";
 
 export const DashboardNavbar = ({
   isLoading,
@@ -31,6 +33,16 @@ export const DashboardNavbar = ({
 }) => {
   const role = user?.role;
   const router = useRouter();
+  const pathname = usePathname();
+
+  const breadcrumbs = useMemo(() => {
+    const paths = pathname.split("/").filter(Boolean);
+    return paths.map((path, index) => ({
+      label: path.charAt(0).toUpperCase() + path.slice(1).replace(/-/g, " "),
+      href: "/" + paths.slice(0, index + 1).join("/"),
+      isLast: index === paths.length - 1,
+    }));
+  }, [pathname]);
   // console.log({ isLoading, user });
 
   return (
@@ -41,9 +53,45 @@ export const DashboardNavbar = ({
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
-          <NextLink className="flex justify-start items-center gap-1" href="/">
-            <p className="font-bold text-inherit">Something new here</p>
-          </NextLink>
+          <div className="flex justify-start items-center gap-1">
+            {/* Breadcrumbs Navigation */}
+            <div className="hidden lg:flex items-center gap-2 ml-6 text-sm">
+              <HomeOutlined
+                className="text-primary cursor-pointer hover:text-primary-600 transition-colors"
+                onClick={() => router.push("/")}
+              />
+              {breadcrumbs.map((crumb, index) => (
+                <div key={crumb.href} className="flex items-center gap-2">
+                  <RightOutlined className="text-xs text-gray-400" />
+                  {crumb.isLast ? (
+                    <span className="text-gray-900 dark:text-gray-100 font-medium">
+                      {crumb.label}
+                    </span>
+                  ) : (
+                    <span
+                      onClick={() => {
+                        const label = crumb.label.toLowerCase();
+
+                        if (
+                          label === "dashboard" ||
+                          label === "patient" ||
+                          label === "admin" ||
+                          label === "doctor"
+                        ) {
+                          router.push(`/dashboard/${role}`);
+                        } else {
+                          router.push(crumb.href);
+                        }
+                      }}
+                      className="text-gray-600 dark:text-gray-400 hover:text-primary cursor-pointer transition-colors"
+                    >
+                      {crumb.label}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
         </NavbarBrand>
       </NavbarContent>
 
