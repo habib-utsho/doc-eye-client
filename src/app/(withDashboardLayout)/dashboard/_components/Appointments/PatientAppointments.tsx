@@ -11,9 +11,15 @@ import { TAppointment } from "@/src/types/appointment";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { Button } from "@heroui/button";
 import useUserData from "@/src/hooks/user.hook";
-import { CheckCircleFilled, CheckCircleOutlined } from "@ant-design/icons";
+import {
+  CheckCircleFilled,
+  CheckCircleOutlined,
+  EyeOutlined,
+  StarOutlined,
+} from "@ant-design/icons";
 import Chat from "../Chat";
 import VideoCall from "../VideoCall";
+import Link from "next/link";
 
 const PatientAppointmentsPage = ({
   state = "upcoming",
@@ -98,7 +104,7 @@ const PatientAppointmentsPage = ({
         </Button>
       ),
       action: (
-        <>
+        <div className="flex items-center gap-2">
           {appointment.status === "confirmed" ||
           appointment.status === "completed" ? (
             <div className="flex  items-center rounded-md shadow shadow-primary">
@@ -116,9 +122,18 @@ const PatientAppointmentsPage = ({
               />
             </div>
           ) : (
-            "-"
+            ""
           )}
-        </>
+          <Button
+            as={Link}
+            href={`/dashboard/patient/appointment/${appointment._id}`}
+            isIconOnly
+            color="primary"
+            variant="light"
+            startContent={<EyeOutlined className="text-lg" />}
+            aria-label="Appointment details"
+          />
+        </div>
       ),
       createdAt: moment(appointment?.createdAt).format(
         "DD-MMM-YYYY ⏰ hh:mm A"

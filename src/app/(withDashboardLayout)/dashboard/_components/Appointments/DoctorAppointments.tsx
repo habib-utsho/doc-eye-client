@@ -25,6 +25,8 @@ import CompleteAppointmentsModal from "./CompleteAppointmentsModal";
 import { useDisclosure } from "@heroui/modal";
 import Chat from "../Chat";
 import VideoCall from "../VideoCall";
+import Link from "next/link";
+import { EyeOutlined } from "@ant-design/icons";
 
 const DoctorAppointmentsPage = ({
   state = "upcoming",
@@ -157,7 +159,7 @@ const DoctorAppointmentsPage = ({
         </>
       ),
       action: (
-        <>
+        <div className="flex items-center gap-2">
           {appointment.status === "confirmed" ||
           appointment.status === "completed" ? (
             <div className="flex  items-center rounded-md shadow shadow-primary">
@@ -177,7 +179,16 @@ const DoctorAppointmentsPage = ({
           ) : (
             "-"
           )}
-        </>
+          <Button
+            as={Link}
+            href={`/dashboard/patient/appointment/${appointment._id}`}
+            isIconOnly
+            color="primary"
+            variant="light"
+            startContent={<EyeOutlined className="text-lg" />}
+            aria-label="Appointment details"
+          />
+        </div>
       ),
       createdAt: moment(appointment?.createdAt).format(
         "DD-MMM-YYYY ⏰ hh:mm A"

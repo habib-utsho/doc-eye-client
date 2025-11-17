@@ -9,14 +9,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Container from "@/src/components/ui/Container";
 import { motion } from "framer-motion";
 import MyMotion from "@/src/components/ui/MyMotion";
-import { InfoCircleFilled, InfoCircleOutlined } from "@ant-design/icons";
 import { InfoIcon } from "@/src/components/ui/icons";
+import useUserData from "@/src/hooks/user.hook";
 
 const SuccessPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const transactionId = searchParams.get("transactionId");
   const appointmentId = searchParams.get("appointmentId");
+  const { user } = useUserData();
 
   const CheckCircleIcon = () => (
     <svg
@@ -134,7 +135,7 @@ const SuccessPage = () => {
             <CardFooter className="flex flex-col sm:flex-row gap-3 justify-center py-6">
               <Button
                 as={Link}
-                href="/"
+                href={`/`}
                 color="default"
                 variant="ghost"
                 size="lg"
@@ -144,13 +145,15 @@ const SuccessPage = () => {
               </Button>{" "}
               <Button
                 as={Link}
-                href="/dashboard"
+                href={`/dashboard/${
+                  user?.role || "patient"
+                }/appointment/${appointmentId}`}
                 color="primary"
                 variant="solid"
                 size="lg"
                 className="w-full sm:w-auto min-w-[200px] text-white"
               >
-                Go to Dashboard
+                Go to Appointment Details
               </Button>
             </CardFooter>
           </Card>

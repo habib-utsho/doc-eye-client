@@ -2,8 +2,9 @@ import { TAppointment } from "./appointment";
 import { TDoctor, TPatient } from "./user";
 
 export type TPayment = {
+  trans_id: string;
   _id: string;
-  amount: {  
+  amount: {
     consultationFee: number,
     vat: number,
     platformFee: number,

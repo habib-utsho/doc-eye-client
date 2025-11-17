@@ -51,11 +51,11 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
   const { mutate: initPayment, isPending: isLoadingInitPayment } =
     useInitPayment();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const {
-    isOpen: isRedirectModalOpen,
-    onOpen: openRedirectModal,
-    onClose: closeRedirectModal,
-  } = useDisclosure();
+  // const {
+  //   isOpen: isRedirectModalOpen,
+  //   onOpen: openRedirectModal,
+  //   onClose: closeRedirectModal,
+  // } = useDisclosure();
 
   const handlePaymentFunc = () => {
     if (!isAvailableNow && !activeDate) {
@@ -79,6 +79,11 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
     const payload = {
       doctor: doctor._id,
       patient: patient._id,
+      // doctorCode: doctor.doctorCode,
+      name: patient.name,
+      email: patient.email,
+      phone: patient.phone,
+
       // schedule: isAvailableNow
       //   ? new Date().toISOString()
       //   : activeDate + "T" + activeTime + ":00Z",
@@ -87,7 +92,7 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
         : moment(`${activeDate} ${activeTime}`, "YYYY-MM-DD HH:mm").format(),
       appointmentType: "online" as TAppointmentType,
       amount,
-      paymentMethod: paymentType,
+      // paymentMethod: paymentType,
       status: isAvailableNow ? "confirmed" : "pending",
     };
 
@@ -95,13 +100,17 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
 
     initPayment(payload, {
       onSuccess: (data) => {
+        console.log(data);
         if (data?.success) {
           toast.success(data?.message || "Payment successful!");
-          refetchAppointments();
-          onOpenChange();
+          console.log(data, data?.data?.payment_url);
+          window.location.href = data?.data?.payment_url;
 
           // Open redirect confirmation modal
-          openRedirectModal();
+          // refetchAppointments();
+          // onOpenChange();
+
+          // openRedirectModal();
         } else {
           toast.error(data?.message || "Failed to payment!");
         }
@@ -122,7 +131,13 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
         onPress={() => !isDisabled && onOpen()}
         disabled={isDisabled}
       >
-        {paymentType === "bKash" ? "Pay with bKash" : "Pay with SSLCOMMERZ"}
+        {paymentType === "bKash"
+          ? "Pay with bKash"
+          : paymentType === "SSLCOMMERZ"
+          ? "Pay with SSLCOMMERZ"
+          : paymentType === "AamarPay"
+          ? "Pay with Aamar Pay"
+          : "Pay Now"}
       </Button>
       <Modal
         isOpen={isOpen}
@@ -190,8 +205,8 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
         </ModalContent>
       </Modal>
 
-      {/* Redirect modal */}
-      <Modal isOpen={isRedirectModalOpen} onOpenChange={closeRedirectModal}>
+      {/* Redirect modal -- unused */}
+      {/* <Modal isOpen={isRedirectModalOpen} onOpenChange={closeRedirectModal}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -250,7 +265,7 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
             </>
           )}
         </ModalContent>
-      </Modal>
+      </Modal> */}
     </>
   );
 };

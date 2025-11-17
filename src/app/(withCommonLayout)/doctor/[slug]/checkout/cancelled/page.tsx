@@ -50,7 +50,7 @@ const CancelledPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-warning-50 via-background to-default-50 flex items-center justify-center py-12 px-4">
-      <Container className="max-w-2xl">
+      <Container className="w-full md:w-[672px]">
         <MyMotion scale={0.8}>
           <Card className="shadow border border-warning/20">
             <CardHeader className="flex flex-col items-center gap-4 pt-8 pb-4">

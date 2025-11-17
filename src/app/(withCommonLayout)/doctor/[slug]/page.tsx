@@ -17,7 +17,7 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
   const isDoctorAvailableP = isDoctorAvailable(doctor);
   // console.log(isDoctorAvailableP, "isDoctorAvailableP");
 
-  console.log(isDoctorAvailableP, "isDoctorAvailableP");
+  // console.log(isDoctorAvailableP, "isDoctorAvailableP");
   return (
     <div className="py-8 space-y-4 md:space-y-8 bg-slate-50 dark:bg-gray-900">
       <div className=" py-4">

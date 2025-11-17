@@ -14,6 +14,7 @@ import Appointments from "../_components/Appointments";
 import { Button } from "@heroui/button";
 import bKashLogo from "@/src/assets/img/payment/bkash_logo.png";
 import sslcommerzLogo from "@/src/assets/img/payment/sslcommerz_logo.png";
+import AamarPayLogo from "@/src/assets/img/payment/aamarpay_logo.png";
 import { Radio, RadioGroup } from "@heroui/radio";
 import {
   useParams,
@@ -46,8 +47,8 @@ const DoctorCheckout = () => {
   const router = useRouter();
 
   const [activePaymentMethod, setActivePaymentMethod] = useState<
-    "bKash" | "SSLCOMMERZ"
-  >("bKash");
+    "bKash" | "SSLCOMMERZ" | "AamarPay"
+  >("AamarPay");
 
   const [activeDate, setActiveDate] = useState<string | null>(null);
   const [activeTime, setActiveTime] = useState<string | null>(null);
@@ -210,12 +211,15 @@ const DoctorCheckout = () => {
                   className="pb-4"
                   defaultValue={activePaymentMethod}
                   onValueChange={(e) =>
-                    setActivePaymentMethod(e as "bKash" | "SSLCOMMERZ")
+                    setActivePaymentMethod(
+                      e as "bKash" | "SSLCOMMERZ" | "AamarPay"
+                    )
                   }
                 >
                   <Radio
                     value="bKash"
                     className="max-w-full payment-radio mb-2"
+                    isDisabled
                   >
                     {" "}
                     <div className="flex justify-between items-center w-full">
@@ -235,6 +239,7 @@ const DoctorCheckout = () => {
                   <Radio
                     value="SSLCOMMERZ"
                     className="max-w-full payment-radio"
+                    isDisabled
                   >
                     {" "}
                     <div className="flex justify-between items-center">
@@ -245,6 +250,21 @@ const DoctorCheckout = () => {
                       <Image
                         src={sslcommerzLogo}
                         alt="sslcommerzLogo"
+                        width={100}
+                        height={100}
+                      />
+                    </div>
+                  </Radio>
+                  <Radio value="AamarPay" className="max-w-full payment-radio">
+                    {" "}
+                    <div className="flex justify-between items-center">
+                      <div className="text-sm">
+                        <h2 className="font-[500]">Aamar Pay</h2>
+                        <p className="font-thin">Other option to pay</p>
+                      </div>
+                      <Image
+                        src={AamarPayLogo}
+                        alt="aamarPayLogo"
                         width={100}
                         height={100}
                       />

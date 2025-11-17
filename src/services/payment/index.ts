@@ -8,7 +8,7 @@ import { cookies } from "next/headers";
 
 export const makePaymentInit = async (payload: TCreateAppointment) => {
   try {
-    const response = await axiosInstance.post(`/payment`, payload);
+    const response = await axiosInstance.post(`/payment-gateway/init`, payload);
     revalidateTag("payment");
     revalidateTag("appointment");
     revalidateTag("doctor");
