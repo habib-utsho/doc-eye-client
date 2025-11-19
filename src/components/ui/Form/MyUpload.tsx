@@ -24,7 +24,7 @@ const MyUpload = ({
   width?: number;
   placeholder?: string;
   align?: "center" | "left" | "right";
-  isEditing: boolean;
+  isEditing?: boolean;
 }) => {
   const [myDefaultValue, setMyDefaultValue] = useState<string | null>(
     defaultValue || null

@@ -21,7 +21,7 @@ import React from "react";
 import { toast } from "sonner";
 
 type TPaymentModalProps = {
-  paymentType: "bKash" | "SSLCOMMERZ";
+  paymentType: "bKash" | "SSLCOMMERZ" | "aamarPay";
   amount: {
     consultationFee: number;
     vat: number;
@@ -34,6 +34,7 @@ type TPaymentModalProps = {
   isAvailableNow: boolean;
   patient: TPatient;
   doctor: TDoctor;
+  paymentMethod: "bKash" | "SSLCOMMERZ" | "aamarPay";
   refetchAppointments: () => void;
 };
 const PaymentModal: React.FC<TPaymentModalProps> = ({
@@ -45,6 +46,7 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
   patient,
   doctor,
   refetchAppointments,
+  paymentMethod,
   isAvailableNow,
 }) => {
   const router = useRouter();
@@ -92,7 +94,7 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
         : moment(`${activeDate} ${activeTime}`, "YYYY-MM-DD HH:mm").format(),
       appointmentType: "online" as TAppointmentType,
       amount,
-      // paymentMethod: paymentType,
+      paymentMethod,
       status: isAvailableNow ? "confirmed" : "pending",
     };
 
@@ -135,7 +137,7 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
           ? "Pay with bKash"
           : paymentType === "SSLCOMMERZ"
           ? "Pay with SSLCOMMERZ"
-          : paymentType === "AamarPay"
+          : paymentType === "aamarPay"
           ? "Pay with Aamar Pay"
           : "Pay Now"}
       </Button>

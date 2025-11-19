@@ -4,7 +4,11 @@ import videoConsultationMockup1 from "@/src/assets/img/Homepage/EasyStep/videoCo
 import onlinePrescriptionMockup2 from "@/src/assets/img/Homepage/EasyStep/onlinePrescriptionMockup2.svg";
 import onlineMedicineMockup3 from "@/src/assets/img/Homepage/EasyStep/onlineMedicineMockup3.svg";
 import Image from "next/image";
-import { FaKitMedical, FaPrescription, FaUserDoctor } from "react-icons/fa6";
+import {
+  VideoCameraOutlined,
+  FileTextOutlined,
+  MedicineBoxOutlined,
+} from "@ant-design/icons";
 import CommonSectionTitle from "../../ui/CommonSectionTitle";
 import Container from "../../ui/Container";
 import { subtitle, title } from "../../primitives";
@@ -14,19 +18,19 @@ const EasyStep = () => {
   const easySteps = [
     {
       title: "Video Consultation",
-      icon: <FaUserDoctor></FaUserDoctor>,
+      icon: <VideoCameraOutlined />,
       description:
         "Connect with experienced doctors through secure video consultations. Receive personalized medical advice and guidance from the comfort of your home.",
     },
     {
       title: "Instant Prescription",
-      icon: <FaPrescription></FaPrescription>,
+      icon: <FileTextOutlined />,
       description:
         "Get your prescriptions instantly. Our qualified doctors will diagnose your condition and provide accurate prescriptions, allowing you to quickly access the medications you need.",
     },
     {
       title: "Order Medicine Online",
-      icon: <FaKitMedical></FaKitMedical>,
+      icon: <MedicineBoxOutlined />,
       description:
         "Conveniently order your prescribed medications online. Our platform offers a seamless experience to have your medicines delivered to your doorstep, ensuring you never miss a dose.",
     },

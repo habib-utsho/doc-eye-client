@@ -1,12 +1,16 @@
 import ErrorBoundary from "@/src/components/ErrorBoundary";
-import { title } from "@/src/components/primitives";
 import Container from "@/src/components/ui/Container";
 import React, { Suspense } from "react";
 import SpecialtySection from "./_components/SpecialtySection";
 import SpecialtyLoadingCard from "./_components/SpecialtyLoadingCard";
 import SpecialtyErrorCard from "./_components/SpecialtyErrorCard";
+import { getSpecialties } from "@/src/services/specialty";
 
 const SpecialtyPage = async () => {
+  const specialties = await getSpecialties([
+    { name: "limit", value: 500000 },
+    { name: "isDeleted", value: false },
+  ]);
   return (
     <div className="py-8">
       <Container className="space-y-8">
@@ -15,7 +19,7 @@ const SpecialtyPage = async () => {
         </h2>
         <ErrorBoundary fallback={<SpecialtyErrorCard />}>
           <Suspense fallback={<SpecialtyLoadingCard />}>
-            <SpecialtySection />
+            <SpecialtySection specialties={specialties?.data} />
           </Suspense>
         </ErrorBoundary>
       </Container>

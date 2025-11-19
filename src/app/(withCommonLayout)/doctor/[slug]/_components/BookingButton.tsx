@@ -4,7 +4,7 @@ import { Button } from "@heroui/button";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const BookingButton = async ({
+const BookingButton = ({
   params,
   isDoctorAvailableP,
 }: {
@@ -12,7 +12,6 @@ const BookingButton = async ({
   isDoctorAvailableP: boolean;
 }) => {
   const router = useRouter();
-  const p = await params;
 
   return (
     <div className="flex justify-end items-center gap-2 mt-2">
@@ -23,7 +22,7 @@ const BookingButton = async ({
           size="lg"
           startContent={<VideoCameraOutlined />}
           onPress={() =>
-            router.push(`/doctor/${p?.slug}/checkout?isAvailableNow=true`)
+            router.push(`/doctor/${params?.slug}/checkout?isAvailableNow=true`)
           }
         >
           Book now
@@ -35,7 +34,7 @@ const BookingButton = async ({
         size="lg"
         startContent={<CalendarOutlined />}
         onPress={() =>
-          router.push(`/doctor/${p?.slug}/checkout?isAvailableNow=false`)
+          router.push(`/doctor/${params?.slug}/checkout?isAvailableNow=false`)
         }
       >
         Appointment

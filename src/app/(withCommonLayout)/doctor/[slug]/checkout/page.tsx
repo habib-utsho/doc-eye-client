@@ -30,9 +30,11 @@ import PaymentModal from "../_components/PaymentModal";
 import { useGetAllAppointments } from "@/src/hooks/appointment.hook";
 import Link from "next/link";
 import { Alert } from "@heroui/alert";
-import { RiCalendarScheduleLine } from "react-icons/ri";
-import { FaUserDoctor } from "react-icons/fa6";
-import { CiMedicalCross } from "react-icons/ci";
+import {
+  CalendarOutlined,
+  VideoCameraOutlined,
+  MedicineBoxOutlined,
+} from "@ant-design/icons";
 import { useGetPatientById } from "@/src/hooks/patient.hook";
 
 const DoctorCheckout = () => {
@@ -47,8 +49,8 @@ const DoctorCheckout = () => {
   const router = useRouter();
 
   const [activePaymentMethod, setActivePaymentMethod] = useState<
-    "bKash" | "SSLCOMMERZ" | "AamarPay"
-  >("AamarPay");
+    "bKash" | "SSLCOMMERZ" | "aamarPay"
+  >("aamarPay");
 
   const [activeDate, setActiveDate] = useState<string | null>(null);
   const [activeTime, setActiveTime] = useState<string | null>(null);
@@ -84,7 +86,7 @@ const DoctorCheckout = () => {
   const totalAmount =
     vat5Percent +
     doctor?.consultationFee +
-    Number(process.env.NEXT_PUBLIC_PER_CONSULTATION_SERVICE_FEE!!);
+    Number(process.env.NEXT_PUBLIC_PER_CONSULTATION_SERVICE_FEE!);
 
   console.log(patient);
 
@@ -153,12 +155,11 @@ const DoctorCheckout = () => {
             <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm space-y-3">
               <h1 className="font-semibold text-md flex gap-1 items-center">
                 {" "}
-                <CiMedicalCross className="text-xl" />
-                Type of consultation
+                <MedicineBoxOutlined className="text-xl" /> Type of consultation
               </h1>
               {isAvailableNow ? (
                 <div className="flex gap-4 items-center">
-                  <FaUserDoctor />
+                  <VideoCameraOutlined className="text-2xl text-primary" />
                   <div>
                     <h2 className="font-semibold">
                       Instant Video Consultation
@@ -168,7 +169,7 @@ const DoctorCheckout = () => {
                 </div>
               ) : (
                 <div className="flex gap-4 items-center">
-                  <RiCalendarScheduleLine />
+                  <CalendarOutlined className="text-2xl text-primary" />
                   <div>
                     <h2 className="font-semibold">Appointment schedule</h2>
                     <p className="text-sm">Select appointment time & date</p>
@@ -212,7 +213,7 @@ const DoctorCheckout = () => {
                   defaultValue={activePaymentMethod}
                   onValueChange={(e) =>
                     setActivePaymentMethod(
-                      e as "bKash" | "SSLCOMMERZ" | "AamarPay"
+                      e as "bKash" | "SSLCOMMERZ" | "aamarPay"
                     )
                   }
                 >
@@ -255,7 +256,7 @@ const DoctorCheckout = () => {
                       />
                     </div>
                   </Radio>
-                  <Radio value="AamarPay" className="max-w-full payment-radio">
+                  <Radio value="aamarPay" className="max-w-full payment-radio">
                     {" "}
                     <div className="flex justify-between items-center">
                       <div className="text-sm">
@@ -295,7 +296,7 @@ const DoctorCheckout = () => {
                       vat: vat5Percent,
                       total: totalAmount,
                       platformFee: Number(
-                        process.env.NEXT_PUBLIC_PER_CONSULTATION_SERVICE_FEE!!
+                        process.env.NEXT_PUBLIC_PER_CONSULTATION_SERVICE_FEE!
                       ),
                     }}
                     isDisabled={
@@ -307,6 +308,7 @@ const DoctorCheckout = () => {
                     activeTime={activeTime}
                     patient={patient?.data}
                     refetchAppointments={refetchAppointments}
+                    paymentMethod={activePaymentMethod}
                   />
                 )}
               </div>

@@ -5,7 +5,6 @@ import {
   getAllDoctors,
   getDoctorByDoctorCode,
   getDoctorById,
-  updateDoctorById,
 } from "../services/doctor";
 import { toast } from "sonner";
 
@@ -29,12 +28,12 @@ export const useUpdateDoctorById = () =>
   useMutation({
     mutationKey: ["doctor"],
     mutationFn: async ({ id, payload }: { id: string; payload: FormData }) => {
-      let res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/doctor/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/doctor/${id}`, {
         method: "PATCH",
         credentials: "include",
         body: payload,
       })
-      let data = await res.json()
+      const data = await res.json()
       return data
     },
     onSuccess(data) {

@@ -25,12 +25,12 @@ export const useUpdateAdminById = () =>
     mutationKey: ["admin"],
     mutationFn: async ({ id, payload }: { id: string; payload: FormData }) => {
 
-      let res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/admin/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/admin/${id}`, {
         method: "PATCH",
         credentials: "include",
         body: payload,
       })
-      let data = await res.json()
+      const data = await res.json()
       return data
     },
     onSuccess(data) {

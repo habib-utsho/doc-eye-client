@@ -8,14 +8,14 @@ type TUserProvider = {
   setUser: React.Dispatch<React.SetStateAction<TDecodedUser | null>>;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  localUserRefetch: Boolean;
+  localUserRefetch: boolean;
   setLocalUserRefetch: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const UserContext = createContext<TUserProvider | null>(null);
 
 const UserContextProvider = ({ children }: { children: ReactNode }) => {
-  const [localUserRefetch, setLocalUserRefetch] = useState<Boolean>(true);
+  const [localUserRefetch, setLocalUserRefetch] = useState<boolean>(true);
   const [user, setUser] = useState<TDecodedUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 

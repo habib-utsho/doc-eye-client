@@ -7,6 +7,8 @@ import React from "react";
 const layout = ({ children }: { children: React.ReactNode }) => {
   const { isLoading, user } = useUserData();
 
+  if (!user) return null;
+
   return (
     <>
       <div className="flex justify-between relative">

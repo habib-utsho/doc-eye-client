@@ -19,7 +19,7 @@ import {
 } from "@/src/components/ui/icons";
 import Image from "next/image";
 import NavbarProfileDropdown from "./NavbarProfileDropdown";
-import { TUser } from "@/src/types/user";
+import { TUser, TDecodedUser } from "@/src/types/user";
 import { usePathname, useRouter } from "next/navigation";
 import { HomeOutlined, RightOutlined } from "@ant-design/icons";
 import { useMemo } from "react";
@@ -29,7 +29,7 @@ export const DashboardNavbar = ({
   user,
 }: {
   isLoading: boolean;
-  user: TUser;
+  user: TDecodedUser;
 }) => {
   const role = user?.role;
   const router = useRouter();

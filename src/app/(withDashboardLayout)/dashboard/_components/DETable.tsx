@@ -46,7 +46,7 @@ const DETable = ({
         color="primary"
         aria-label="DE table"
         bottomContent={
-          data?.meta?.page!! > 0 ? (
+          data?.meta?.page! > 0 ? (
             <div className="flex w-full justify-center">
               <Pagination
                 isCompact

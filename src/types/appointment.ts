@@ -25,7 +25,7 @@ export type TCreateAppointment = {
     platformFee: number,
     total: number,
   };
-  paymentMethod?: "bKash" | "SSLCOMMERZ";
+  paymentMethod?: "bKash" | "SSLCOMMERZ" | "aamarPay";
   appointmentType: "in-person" | "online";
   symptoms?: string;
 };

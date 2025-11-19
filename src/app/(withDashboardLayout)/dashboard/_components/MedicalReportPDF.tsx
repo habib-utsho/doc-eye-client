@@ -3,7 +3,7 @@ import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { Divider } from "@heroui/divider";
 import moment from "moment";
 import React from "react";
-import { FaPrescription } from "react-icons/fa6";
+import { FileTextOutlined } from "@ant-design/icons";
 import logo from "@/src/assets/img/logo.png";
 import Image from "next/image";
 
@@ -111,7 +111,10 @@ const MedicalReportPDF = ({
 
         {/*  Advices & Medication */}
         <div className="col-span-8 space-y-6">
-          <FaPrescription className="text-4xl mb-2 text-primary-1" />
+          <FileTextOutlined
+            className="text-4xl mb-2 text-primary-1"
+            style={{ fontSize: "2.25rem" }}
+          />
 
           {/* Advices */}
           <div>

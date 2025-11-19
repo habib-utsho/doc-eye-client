@@ -25,10 +25,10 @@ const DEForm = ({
   ...rest
 }: DEFormProps) => {
   const formConfig: TFormConfig = {};
-  if (!!defaultValues) {
+  if (defaultValues) {
     formConfig["defaultValues"] = defaultValues;
   }
-  if (!!resolver) {
+  if (resolver) {
     formConfig["resolver"] = resolver;
   }
   const internalMethods = methods || useForm(formConfig);
@@ -43,7 +43,8 @@ const DEForm = ({
     if (defaultValues) {
       reset(defaultValues);
     }
-  }, []);
+  }, [defaultValues]);
+
 
   // console.log(errors, watch("currentWorkPlace"));
 

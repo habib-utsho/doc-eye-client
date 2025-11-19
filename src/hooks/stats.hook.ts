@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getStats } from "../services/stats";
 import { TUserRole } from "../types/user";
 

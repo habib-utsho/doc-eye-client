@@ -524,9 +524,8 @@ const AppointmentDetailsPage = () => {
                     // variant="shadow"
                     className="text-black text-center p-2 w-full h-[70px] !gap-4 bg-gray-100 border"
                     isIconOnly
-                    onPress={handleAppointmentPrint}
+                    onPress={() => handleAppointmentPrint()}
                     aria-label="Print appointment details"
-                    block
                   >
                     <DownloadIcon className="text-2xl" />
                     {/* <Image src={prescriptionIcon} alt="Prescription icon" /> */}

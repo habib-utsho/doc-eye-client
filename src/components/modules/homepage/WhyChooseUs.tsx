@@ -1,11 +1,11 @@
 import React from "react";
 import WhyChooseUsBg from "@/src/assets/img/Homepage/WhyChooseUs/WhyChooseUs.svg";
 import {
-  FaCaretUp,
-  FaHouseTsunami,
-  FaPlus,
-  FaUserDoctor,
-} from "react-icons/fa6";
+  SolutionOutlined,
+  RiseOutlined,
+  HomeOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import CommonSectionTitle from "../../ui/CommonSectionTitle";
 import Container from "../../ui/Container";
 import { Button } from "@heroui/button";
@@ -17,19 +17,19 @@ const WhyChooseUs = () => {
       title: "Qualified Doctors",
       subTitle:
         "a person who holds a degree recognised by the Medical Council is registered",
-      icon: <FaUserDoctor></FaUserDoctor>,
+      icon: <SolutionOutlined />,
     },
     {
       title: "Trusted Treatment",
       subTitle:
         "DocEye has many types of treatment to relieve symptoms for all types illness.",
-      icon: <FaCaretUp></FaCaretUp>,
+      icon: <RiseOutlined />,
     },
     {
       title: "24/7 Services",
       subTitle:
         "DocEye is at your service 24×7 aiming to provide the best services.",
-      icon: <FaHouseTsunami></FaHouseTsunami>,
+      icon: <HomeOutlined />,
     },
   ];
 
@@ -70,7 +70,7 @@ const WhyChooseUs = () => {
                   size="md"
                   className="hover:bg-primary hover:text-white"
                 >
-                  Learn more <FaPlus></FaPlus>
+                  Learn more <PlusOutlined />
                 </Button>
               </div>
             );

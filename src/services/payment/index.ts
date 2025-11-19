@@ -27,7 +27,8 @@ export const makePaymentInit = async (payload: TCreateAppointment) => {
 };
 
 export const getAllPayment = async (query: TFilterQuery[] | undefined) => {
-  const accessToken = cookies().get("DEaccessToken")?.value;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("DEaccessToken")?.value;
   const fetchOption = {
     headers: {
       ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),

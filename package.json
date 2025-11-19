@@ -6,7 +6,8 @@
       "dev": "next dev --turbo",
       "build": "next build",
       "start": "next start",
-      "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
+      "lint": "next lint",
+      "lint:fix": "next lint --fix"
    },
    "dependencies": {
       "@ant-design/icons": "^5.5.2",
@@ -62,7 +63,7 @@
       "react": "^19.1.0",
       "react-dom": "^19.1.0",
       "react-hook-form": "^7.53.0",
-      "react-icons": "^5.4.0",
+      "react-icons": "^5.5.0",
       "react-pro-sidebar": "^1.1.0",
       "react-vertical-timeline-component": "^3.6.0",
       "recharts": "^3.2.1",
@@ -71,6 +72,8 @@
       "zod": "^3.23.8"
    },
    "devDependencies": {
+      "@eslint/js": "^9.39.1",
+      "@next/eslint-plugin-next": "^16.0.3",
       "@types/moment": "^2.13.0",
       "@types/node": "20.5.7",
       "@types/react": "18.3.3",
@@ -79,21 +82,22 @@
       "@typescript-eslint/eslint-plugin": "7.2.0",
       "@typescript-eslint/parser": "7.2.0",
       "autoprefixer": "10.4.19",
-      "eslint": "^8.57.0",
-      "eslint-config-next": "14.2.1",
+      "eslint": "^9.39.1",
+      "eslint-config-next": "16.0.3",
       "eslint-config-prettier": "^8.2.0",
       "eslint-plugin-import": "^2.26.0",
       "eslint-plugin-jsx-a11y": "^6.4.1",
       "eslint-plugin-node": "^11.1.0",
       "eslint-plugin-prettier": "^5.1.3",
-      "eslint-plugin-react": "^7.23.2",
-      "eslint-plugin-react-hooks": "^4.6.0",
+      "eslint-plugin-react": "^7.37.5",
+      "eslint-plugin-react-hooks": "^7.0.1",
       "eslint-plugin-unused-imports": "^3.2.0",
       "livekit-client": "^2.15.6",
       "postcss": "8.4.38",
       "react-to-print": "^3.1.0",
       "tailwind-variants": "0.1.20",
       "tailwindcss": "3.4.3",
-      "typescript": "5.0.4"
+      "typescript": "5.0.4",
+      "typescript-eslint": "^8.47.0"
    }
 }

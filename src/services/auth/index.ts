@@ -100,9 +100,10 @@ const toggleUserStatus = async (id: string) => {
   }
 };
 
-const signOut = () => {
-  cookies().delete("DEaccessToken");
-  cookies().delete("DErefreshToken");
+const signOut = async () => {
+  const cookieStore = await cookies();
+  cookieStore.delete("DEaccessToken");
+  cookieStore.delete("DErefreshToken");
 };
 
 const getCurrentUser = async () => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { FaPlus } from "react-icons/fa6";
+import { PlusOutlined } from "@ant-design/icons";
 import doctorConsultation from "@/src/assets/img/Homepage/Services/doctorConsultation.png";
 import healthRecord from "@/src/assets/img/Homepage/Services/healthRecord.png";
 import medicationReminder from "@/src/assets/img/Homepage/Services/medicationReminder.png";
@@ -97,7 +97,7 @@ const Services = () => {
                     variant="flat"
                     className="text-primary dark:text-white"
                   >
-                    Learn more <FaPlus></FaPlus>
+                    Learn more <PlusOutlined />
                   </Button>
                 </div>
               );

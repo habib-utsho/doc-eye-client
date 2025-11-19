@@ -22,7 +22,19 @@ import { authValidationSchema } from "@/src/schemas/auth.schema";
 import { TSpecialty } from "@/src/types/specialty";
 import { TAdmin, TDoctor, TPatient, TUserRole } from "@/src/types/user";
 import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
-import { MinusOutlined } from "@ant-design/icons";
+import {
+  MinusOutlined,
+  UserOutlined,
+  SafetyOutlined,
+  SolutionOutlined,
+  EditOutlined,
+  SaveOutlined,
+  CloseOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  MedicineBoxOutlined,
+  CameraOutlined,
+} from "@ant-design/icons";
 import { Button } from "@heroui/button";
 import { Divider } from "@heroui/divider";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,18 +42,6 @@ import moment from "moment";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import {
-  FaUserMd,
-  FaUser,
-  FaShieldAlt,
-  FaEdit,
-  FaSave,
-  FaTimes,
-  FaEnvelope,
-  FaPhone,
-  FaStethoscope,
-} from "react-icons/fa";
-import { FaCamera } from "react-icons/fa6";
 import { toast } from "sonner";
 
 type FormValues = Partial<TPatient & TDoctor & TAdmin>;
@@ -83,10 +83,10 @@ export default function ProfilePage() {
 
   const RoleIcon =
     userRole === "doctor"
-      ? FaUserMd
+      ? SolutionOutlined
       : userRole === "patient"
-      ? FaUser
-      : FaShieldAlt;
+      ? UserOutlined
+      : SafetyOutlined;
 
   // RHF
 
@@ -152,7 +152,7 @@ export default function ProfilePage() {
   // console.log({ myData, patientData, doctorData, adminData });
 
   const onSubmit: SubmitHandler<TPatient> = async (payload: TPatient) => {
-    let formData = new FormData();
+    const formData = new FormData();
 
     if (!previewUrl && !selectedFile) {
       toast.error("Profile image is required!");
@@ -172,7 +172,7 @@ export default function ProfilePage() {
     // }
 
     if (myData._id) {
-      let mutate =
+      const mutate =
         userRole === "doctor"
           ? updateDoctorMutate
           : userRole === "patient"
@@ -257,7 +257,7 @@ export default function ProfilePage() {
           <Button
             onPress={() => setIsEditing(true)}
             variant="solid"
-            startContent={<FaEdit className="w-4 h-4" />}
+            startContent={<EditOutlined className="w-4 h-4" />}
             className=" bg-white/20 text-white hover:bg-white/30 transition"
           >
             Edit Profile
@@ -283,14 +283,14 @@ export default function ProfilePage() {
                   <div>
                     <p className="text-sm text-gray-600">Email</p>
                     <p className="font-medium flex items-center gap-2">
-                      <FaEnvelope className="w-4 h-4 text-blue-600" />
+                      <MailOutlined className="w-4 h-4 text-blue-600" />
                       {myData?.email}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">Phone</p>
                     <p className="font-medium flex items-center gap-2">
-                      <FaPhone className="w-4 h-4 text-green-600" />
+                      <PhoneOutlined className="w-4 h-4 text-green-600" />
                       {myData?.phone}
                     </p>
                   </div>
@@ -350,7 +350,7 @@ export default function ProfilePage() {
                 <div className="shadow dark:bg-slate-900 rounded-xl  p-6 space-y-6">
                   {/* Section Header */}
                   <h2 className="flex items-center gap-2 text-xl font-semibold text-blue-700">
-                    <FaStethoscope className="w-5 h-5" />
+                    <MedicineBoxOutlined className="w-5 h-5" />
                     Professional Details
                   </h2>
                   <Divider className="mb-2" />
@@ -616,7 +616,7 @@ export default function ProfilePage() {
               {userRole === "doctor" && doctorData && (
                 <div className="shadow dark:bg-slate-900 rounded-xl  p-6 space-y-6">
                   <h2 className="flex items-center gap-2 text-xl font-semibold text-primary">
-                    <FaStethoscope className="w-5 h-5" />
+                    <MedicineBoxOutlined className="w-5 h-5" />
                     Doctor Details
                   </h2>
                   <div className="space-y-3">
@@ -945,13 +945,13 @@ export default function ProfilePage() {
               <div className="flex justify-end gap-3">
                 <Button
                   onPress={() => setIsEditing(false)}
-                  startContent={<FaTimes className="w-4 h-4" />}
+                  startContent={<CloseOutlined className="w-4 h-4" />}
                   className="font-medium"
                 >
                   Cancel
                 </Button>
                 <Button
-                  startContent={<FaSave className="w-4 h-4" />}
+                  startContent={<SaveOutlined className="w-4 h-4" />}
                   className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium  hover:from-blue-700 hover:to-purple-700 transition"
                   type="submit"
                   isLoading={

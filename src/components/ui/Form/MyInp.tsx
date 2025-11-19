@@ -75,7 +75,7 @@ const MyInp = ({
     trigger,
   } = useFormContext();
 
-  const [isVisible, setIsVisible] = useState<Boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState("");
 
   if (type === "file") {
@@ -206,7 +206,7 @@ const MyInp = ({
                 <PlusIcon
                   onClick={handleAdd}
                   className={`cursor-pointer text-primary text-[12px] absolute right-[7px] top-[40px] ${
-                    !!errors ? "-translate-y-[24px]" : "-translate-y-1/2"
+                    errors ? "-translate-y-[24px]" : "-translate-y-1/2"
                   } translate`}
                 />
               </div>
@@ -301,7 +301,7 @@ const MyInp = ({
                     : Array.from(keys)[0] || "";
                 field.onChange(selectedValue);
                 if (onChange)
-                  onChange({ target: { name, value: selectedValue } });
+                  onChange({ target: { name, value: selectedValue } } as any);
               }}
               size={size}
               radius={radius}

@@ -102,7 +102,7 @@ const Appointments = ({
   appointments: TAppointment[];
   isLoadingAppointments: boolean;
 }) => {
-  if (isAvailableNow) return;
+  if (isAvailableNow) return null;
 
   // const { data: appointments, isLoading: isLoadingAppointments, refetch:refetchAppointments } =
   //   useGetAllAppointments([
@@ -115,7 +115,7 @@ const Appointments = ({
     const availableActiveDate = next15Days.find((day) =>
       isDoctorAvailableByDay(doctor, day.day)
     )?.date;
-    setActiveDate(availableActiveDate!!);
+    setActiveDate(availableActiveDate!);
   }, []);
 
   const appointmentsSchedule = appointments?.map(

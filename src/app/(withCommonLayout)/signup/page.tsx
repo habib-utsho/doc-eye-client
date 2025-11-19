@@ -22,7 +22,11 @@ import { days } from "@/src/constant/index.constant";
 import { DeleteIcon, PlusIcon } from "@/src/components/ui/icons";
 import { toast } from "sonner";
 import MyUpload from "@/src/components/ui/Form/MyUpload";
-import { FaUser, FaUserMd, FaBriefcaseMedical } from "react-icons/fa";
+import {
+  UserOutlined,
+  MedicineBoxOutlined,
+  SolutionOutlined,
+} from "@ant-design/icons";
 
 // Need to change password
 const SignupPage = () => {
@@ -83,7 +87,7 @@ const SignupPage = () => {
         width={200}
       />
       <h2 className="font-semibold text-xl !mt-8 flex items-center gap-2 text-primary">
-        <FaUser /> Basic Information
+        <UserOutlined /> Basic Information
       </h2>
       <Divider />
       <div className="flex flex-col md:flex-row gap-4">
@@ -144,7 +148,6 @@ const SignupPage = () => {
       content: (
         <div className="space-y-4">
           {reusableInp}
-
           {/* Bio */}
           <div>
             <h2 className={`${subtitle()}`}>Bio</h2>
@@ -156,9 +159,8 @@ const SignupPage = () => {
               placeholder="Write something about yourself"
             />
           </div>
-
           <h2 className="font-semibold text-xl !mt-8 flex items-center gap-2 text-primary">
-            <FaBriefcaseMedical /> Medical Information
+            <MedicineBoxOutlined /> Medical Information
           </h2>
           <Divider />
           <div className="flex flex-col md:flex-row gap-4">
@@ -200,7 +202,6 @@ const SignupPage = () => {
               label="Medical Degree"
             />
           </div>
-
           {/* consultationFee , follow up fee and current exp year */}
           <div className="flex flex-col md:flex-row gap-4">
             <MyInp
@@ -237,13 +238,10 @@ const SignupPage = () => {
               label="BMDC"
             />
           </div>
-
           <h2 className="font-semibold text-xl !mt-8 flex items-center gap-2 text-primary">
-            <FaUserMd /> Professional Information
+            <SolutionOutlined /> Professional Information
           </h2>
-          <Divider />
-
-          {/* Current workplace */}
+          <Divider /> {/* Current workplace */}
           <div>
             <h2 className={`${subtitle()}`}>Current Workplace</h2>
             <Divider className="w-[200px] mb-3" />
@@ -282,7 +280,6 @@ const SignupPage = () => {
               </div>
             </div>
           </div>
-
           {/* Working experiences */}
           <div>
             <h2 className={`${subtitle()}`}>Working Experiences</h2>
@@ -309,30 +306,18 @@ const SignupPage = () => {
                       name={`workingExperiences[${index}].workPlace`}
                       placeholder="e.g., Dhaka Medical College"
                       label="Work Place"
-                      value={experience.workPlace}
-                      onChange={(e) =>
-                        onExperienceChange(index, "workPlace", e.target.value)
-                      }
                     />
                     <MyInp
                       type="text"
                       name={`workingExperiences[${index}].department`}
                       placeholder="e.g., Orthopaedics"
                       label="Department"
-                      value={experience.department}
-                      onChange={(e) =>
-                        onExperienceChange(index, "department", e.target.value)
-                      }
                     />
                     <MyInp
                       type="text"
                       name={`workingExperiences[${index}].designation`}
                       placeholder="e.g., Assistant Professor"
                       label="Designation"
-                      value={experience.designation}
-                      onChange={(e) =>
-                        onExperienceChange(index, "designation", e.target.value)
-                      }
                     />
                   </div>
                   <div className="flex flex-col md:flex-row gap-4">
@@ -340,27 +325,11 @@ const SignupPage = () => {
                       type="date"
                       name={`workingExperiences[${index}].workingPeriodStart`}
                       label="Working Period Start"
-                      value={experience.workingPeriodStart}
-                      onChange={(e) =>
-                        onExperienceChange(
-                          index,
-                          "workingPeriodStart",
-                          e.target.value
-                        )
-                      }
                     />
                     <MyInp
                       type="date"
                       name={`workingExperiences[${index}].workingPeriodEnd`}
                       label="Working Period End"
-                      value={experience.workingPeriodEnd}
-                      onChange={(e) =>
-                        onExperienceChange(
-                          index,
-                          "workingPeriodEnd",
-                          e.target.value
-                        )
-                      }
                     />
                   </div>
                 </div>
@@ -377,7 +346,6 @@ const SignupPage = () => {
               </Button>
             </div>
           </div>
-
           {/* Availability */}
           <div>
             <h2 className={`${subtitle()}`}>Availability</h2>

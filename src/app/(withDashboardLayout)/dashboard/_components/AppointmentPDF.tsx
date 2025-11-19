@@ -3,7 +3,7 @@ import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { Divider } from "@heroui/divider";
 import moment from "moment";
 import React from "react";
-import { FaCalendarCheck } from "react-icons/fa6";
+import { CalendarOutlined } from "@ant-design/icons";
 import logo from "@/src/assets/img/logo.png";
 import Image from "next/image";
 
@@ -57,7 +57,7 @@ const AppointmentPDF = ({
       {/* Appointment Details */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-4">
-          <FaCalendarCheck className="text-2xl text-primary" />
+          <CalendarOutlined className="text-2xl text-primary" />
           <h2 className="text-xl font-bold">Appointment Information</h2>
         </div>
 

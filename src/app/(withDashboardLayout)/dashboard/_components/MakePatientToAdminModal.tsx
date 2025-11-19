@@ -10,7 +10,7 @@ import {
 import { Button } from "@heroui/button";
 import { toast } from "sonner";
 import { TPatient } from "@/src/types/user";
-import { FaShield } from "react-icons/fa6";
+import { SafetyOutlined } from "@ant-design/icons";
 import { useMakePatientAdmin } from "@/src/hooks/patient.hook";
 import { useGetAllAppointments } from "@/src/hooks/appointment.hook";
 import { Tooltip } from "@heroui/tooltip";
@@ -73,7 +73,7 @@ const MakePatientToAdminModal = ({ patient, refetch }: MakeAdminModalProps) => {
           }
           disabled={hasAppointments || isLoadingAppointments}
         >
-          <FaShield size={16} />
+          <SafetyOutlined style={{ fontSize: 16 }} />
           Make Admin
         </Button>
       </Tooltip>

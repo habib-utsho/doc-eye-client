@@ -1,4 +1,3 @@
-import React from "react";
 import { TDoctor } from "../types/user";
 import moment from "moment";
 

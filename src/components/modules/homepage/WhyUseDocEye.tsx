@@ -1,30 +1,19 @@
 "use client";
 import CommonSectionTitle from "@/src/components/ui/CommonSectionTitle";
 import React from "react";
-// import {
-//   FaBell,
-//   FaCalendar,
-//   FaClock,
-//   FaFile,
-//   FaLock,
-//   FaPrescription,
-//   FaSchoolCircleExclamation,
-//   FaTrophy,
-// } from "react-icons/fa6";
 import {
   VerticalTimeline,
   VerticalTimelineElement,
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
-import { GithubIcon } from "../../ui/icons";
 import {
-  FaCalendarCheck,
-  FaLock,
-  FaFileMedical,
-  FaUserDoctor,
-  FaBell,
-  FaPrescription,
-} from "react-icons/fa6";
+  CalendarOutlined,
+  LockOutlined,
+  FileTextOutlined,
+  SolutionOutlined,
+  BellOutlined,
+  MedicineBoxOutlined,
+} from "@ant-design/icons";
 import Container from "../../ui/Container";
 import { useTheme } from "next-themes";
 import MyMotion from "../../ui/MyMotion";
@@ -38,7 +27,7 @@ const WhyUseDocEye = () => {
         "Effortlessly book appointments with your preferred doctors at your convenience.",
       benefit: "Save time and avoid long waiting periods.",
       iconBg: "#09528C",
-      icon: <FaCalendarCheck />,
+      icon: <CalendarOutlined />,
     },
     {
       id: 2,
@@ -47,7 +36,7 @@ const WhyUseDocEye = () => {
         "Your medical data is kept confidential and secure with advanced encryption.",
       benefit: "Ensure the privacy of your health information.",
       iconBg: "#E57373",
-      icon: <FaLock />,
+      icon: <LockOutlined />,
     },
     {
       id: 3,
@@ -56,7 +45,7 @@ const WhyUseDocEye = () => {
         "View and manage your medical records online, anytime, anywhere.",
       benefit: "Have easy access to your complete medical history.",
       iconBg: "#8B008B",
-      icon: <FaFileMedical />,
+      icon: <FileTextOutlined />,
     },
     {
       id: 4,
@@ -65,7 +54,7 @@ const WhyUseDocEye = () => {
         "Check real-time availability of doctors and make last-minute appointments.",
       benefit: "Get prompt medical care when you need it most.",
       iconBg: "#00008B",
-      icon: <FaUserDoctor />,
+      icon: <SolutionOutlined />,
     },
     {
       id: 5,
@@ -74,7 +63,7 @@ const WhyUseDocEye = () => {
         "Request prescription refills quickly and conveniently through the portal.",
       benefit: "Avoid running out of essential medications.",
       iconBg: "#07332F",
-      icon: <FaPrescription />,
+      icon: <MedicineBoxOutlined />,
     },
     {
       id: 6,
@@ -83,8 +72,8 @@ const WhyUseDocEye = () => {
         "Receive timely health reminders and notifications for check-ups and vaccinations.",
       benefit:
         "Stay on top of your health and never miss an important appointment.",
-      iconBg: "#F7A582",
-      icon: <FaBell />,
+      iconBg: "#BB8FCE",
+      icon: <BellOutlined />,
     },
   ];
 
@@ -93,10 +82,12 @@ const WhyUseDocEye = () => {
       <Container className="space-y-8 md:space-y-16">
         <CommonSectionTitle title={"Why use DocEye?"}></CommonSectionTitle>
 
+        {/* @ts-expect-error - react-vertical-timeline-component has TypeScript incompatibility */}
         <VerticalTimeline>
           {timelines.map((timeline) => {
             const { id, title, description, benefit, icon, iconBg } = timeline;
             return (
+              // @ts-expect-error - react-vertical-timeline-component has TypeScript incompatibility
               <VerticalTimelineElement
                 key={id}
                 visible={true}

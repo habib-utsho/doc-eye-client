@@ -6,7 +6,6 @@ import {
   getSinglePatient,
   makePatientAdmin,
   updateFavoriteDoctors,
-  updatePatientById,
 } from "../services/patient";
 import { toast } from "sonner";
 
@@ -55,12 +54,12 @@ export const useUpdatePatientById = () =>
 
     mutationFn: async ({ id, payload }: { id: string; payload: FormData }) => {
 
-      let res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/patient/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/patient/${id}`, {
         method: "PATCH",
         credentials: "include",
         body: payload,
       })
-      let data = await res.json()
+      const data = await res.json()
       return data
     },
     onSuccess(data) {

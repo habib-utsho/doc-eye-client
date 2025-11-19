@@ -17,7 +17,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   //  Try to get current user
-  let user = (await getCurrentUser()) as TDecodedUser | null;
+  const user = (await getCurrentUser()) as TDecodedUser | null;
   // console.log({ user });
 
 

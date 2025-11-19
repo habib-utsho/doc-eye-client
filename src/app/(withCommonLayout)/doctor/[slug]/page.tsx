@@ -9,9 +9,14 @@ import { Badge } from "@heroui/badge";
 import BookingButton from "./_components/BookingButton";
 import FavoriteDoctorHeart from "../../specialty/_components/FavoriteDoctorHeart";
 
-const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
-  // console.log(params.slug, "slug");
-  const doctorRes = await getDoctorByDoctorCode(params.slug);
+const DoctorDetailsPage = async ({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) => {
+  const resolvedParams = await params;
+  // console.log(resolvedParams.slug, "slug");
+  const doctorRes = await getDoctorByDoctorCode(resolvedParams.slug);
   const doctor = doctorRes?.data as TDoctor;
   // console.log(doctor, "doctor");
   const isDoctorAvailableP = isDoctorAvailable(doctor);
@@ -92,7 +97,7 @@ const DoctorDetailsPage = async ({ params }: { params: { slug: string } }) => {
               </p>
               <BookingButton
                 isDoctorAvailableP={!!isDoctorAvailableP}
-                params={params}
+                params={resolvedParams}
               />
             </div>
           </div>

@@ -1,24 +1,18 @@
 import Empty from "@/src/components/shared/Empty";
-import { getSpecialties } from "@/src/services/specialty";
 import { TSpecialty } from "@/src/types/specialty";
 import { Image } from "@heroui/image";
 import { Tooltip } from "@heroui/tooltip";
 import Link from "next/link";
 import React from "react";
 
-const SpecialtySection = async () => {
-  const specialty = await getSpecialties([
-    { name: "limit", value: 500000 },
-    { name: "isDeleted", value: false },
-  ]);
-
+const SpecialtySection = ({ specialties }: { specialties: TSpecialty[] }) => {
   return (
     <>
-      {specialty?.data?.length === 0 ? (
+      {specialties?.length === 0 ? (
         <Empty description="No specialty found" />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-          {specialty.data?.map((item: TSpecialty) => {
+          {specialties?.map((item: TSpecialty) => {
             return (
               <Link
                 href={`/specialty/${item?._id}`}

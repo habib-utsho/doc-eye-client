@@ -75,7 +75,7 @@ const NavbarProfileDropdown = () => {
             </DropdownItem>
             <DropdownItem
               key="change-password"
-              href="/dashboard/change-password"
+              href={`/dashboard/${user?.role}/change-password`}
             >
               Change Password
             </DropdownItem>

@@ -36,7 +36,7 @@ import DoctorAppointmentsPage from "../Appointments/DoctorAppointments";
 import PatientAppointmentsPage from "../Appointments/PatientAppointments";
 import AdminAppointmentsPage from "../Appointments/AdminAppointments";
 import Link from "next/link";
-import { FaStethoscope } from "react-icons/fa6";
+import { MedicineBoxOutlined } from "@ant-design/icons";
 import { Badge } from "@heroui/badge";
 import { TSpecialty } from "@/src/types/specialty";
 
@@ -295,7 +295,7 @@ const DashboardHome = ({ role }: { role: TUserRole }) => {
               {role == "patient" ? (
                 <Card className="p-5 shadow">
                   <h2 className="font-semibold text-xl mb-4 flex items-center gap-2">
-                    <FaStethoscope className="text-primary h-5 w-5" />
+                    <MedicineBoxOutlined className="text-primary h-5 w-5" />
                     Most Consulted Doctor
                   </h2>
 

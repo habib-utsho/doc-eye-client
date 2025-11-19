@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getAllPayment, makePaymentInit } from "../services/payment";
-import { toast } from "sonner";
 import { TFilterQuery } from "../types";
 import { TCreateAppointment } from "../types/appointment";
 

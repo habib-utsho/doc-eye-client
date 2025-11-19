@@ -4,7 +4,7 @@ import { HeartFilledIcon } from "@/src/components/ui/icons";
 import { GlobalOutlined } from "@ant-design/icons";
 import { FaGraduationCap } from "react-icons/fa6";
 import Image from "next/image";
-import React from "react";
+import React, { ReactNode } from "react";
 
 import about1 from "@/src/assets/img/Homepage/About/About1.jpg";
 import about2 from "@/src/assets/img/Homepage/About/About2.jpg";
@@ -14,23 +14,27 @@ import { Button } from "@heroui/button";
 import Link from "next/link";
 
 const AboutUs = () => {
-  const features = [
+  const features: {
+    name: string;
+    description: string;
+    icon: React.ComponentType<any>;
+  }[] = [
     {
       name: "Trusted Medical Professionals",
       description:
         "Get access to verified and highly qualified doctors at your fingertips.",
-      icon: <FaGraduationCap className="text-primary-500 text-3xl" />,
+      icon: FaGraduationCap,
     },
     {
       name: "Patient-Centered Care",
       description:
         "Designed to empower patients through digital health access.",
-      icon: <HeartFilledIcon className="text-primary-500 text-3xl" />,
+      icon: HeartFilledIcon,
     },
     {
       name: "Accessible & Secure",
       description: "We make healthcare accessible for everyone, everywhere.",
-      icon: <GlobalOutlined className="text-primary-500 text-3xl" />,
+      icon: GlobalOutlined as any, // ant-icons doesn't match IconType
     },
   ];
 
@@ -87,20 +91,25 @@ const AboutUs = () => {
       <Container>
         <section className="mb-20">
           <div className="grid md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-lg p-8 text-center shadow transition duration-300 hover:shadow-lg"
-              >
-                <div className="mb-4 flex justify-center">{feature.icon}</div>
-                <h4 className="text-xl font-semibold mb-2 dark:text-white">
-                  {feature.name}
-                </h4>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
+            {features.map((feature, index) => {
+              const IconComponent = feature.icon;
+              return (
+                <div
+                  key={index}
+                  className="bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-lg p-8 text-center shadow transition duration-300 hover:shadow-lg"
+                >
+                  <div className="mb-4 flex justify-center">
+                    <IconComponent className="text-4xl text-primary" />
+                  </div>
+                  <h4 className="text-xl font-semibold mb-2 dark:text-white">
+                    {feature.name}
+                  </h4>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    {feature.description}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </section>
       </Container>

@@ -10,6 +10,7 @@ import {
   HeartOutlined,
   BellOutlined,
   GlobalOutlined,
+  SolutionOutlined,
 } from "@ant-design/icons";
 import logo from "@/src/assets/img/logo.png";
 import useUserData from "@/src/hooks/user.hook";
@@ -26,8 +27,7 @@ import {
 } from "react-pro-sidebar";
 import { useTheme } from "next-themes";
 import { useSignOut } from "@/src/hooks/useSignOut.hook";
-import { TUser } from "@/src/types/user";
-import { FaUserMd } from "react-icons/fa";
+import { TUser, TDecodedUser } from "@/src/types/user";
 
 // Dashboard routes
 type TSidebarRoute = {
@@ -51,7 +51,7 @@ const adminRoutes: TSidebarRoute[] = [
       {
         name: "Doctor",
         path: "/dashboard/admin/doctors",
-        icon: <FaUserMd />,
+        icon: <SolutionOutlined />,
       },
       {
         name: "Patient",
@@ -205,7 +205,13 @@ const patientRoutes: TSidebarRoute[] = [
   },
 ];
 
-const Sidebar = ({ isLoading, user }: { isLoading: boolean; user: TUser }) => {
+const Sidebar = ({
+  isLoading,
+  user,
+}: {
+  isLoading: boolean;
+  user: TDecodedUser;
+}) => {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const { handleSignOut } = useSignOut();
@@ -244,7 +250,6 @@ const Sidebar = ({ isLoading, user }: { isLoading: boolean; user: TUser }) => {
 
       // Check if current route is active (exact match)
       const isActive = pathname === route.path;
-
 
       return (
         <MenuItem

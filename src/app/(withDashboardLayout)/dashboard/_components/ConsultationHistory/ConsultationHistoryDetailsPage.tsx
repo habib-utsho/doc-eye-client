@@ -164,9 +164,8 @@ const ConsultationHistoryDetailsPage = ({ from }: { from: TUserRole }) => {
             variant="shadow"
             className="text-white p-2 w-full h-[80px] flex items-center justify-start !gap-4 bg-primary"
             isIconOnly
-            onPress={handleMedicalReportPrint}
+            onPress={() => handleMedicalReportPrint()}
             aria-label="Print prescription"
-            block
           >
             <PrescriptionIcon />
             {/* <Image src={prescriptionIcon} alt="Prescription icon" /> */}
@@ -291,9 +290,8 @@ const ConsultationHistoryDetailsPage = ({ from }: { from: TUserRole }) => {
             // variant="shadow"
             className="text-black text-center p-2 w-full h-[70px] !gap-4 bg-gray-100 border"
             isIconOnly
-            onPress={handleInvoicePrint}
+            onPress={() => handleInvoicePrint()}
             aria-label="Print invoice"
-            block
           >
             <DownloadIcon className="text-2xl" />
             {/* <Image src={prescriptionIcon} alt="Prescription icon" /> */}
