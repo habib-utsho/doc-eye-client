@@ -20,10 +20,18 @@ const UserContextProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchUser = async () => {
-    const user = await getCurrentUser();
-    setUser(user);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const user = await getCurrentUser();
+      setUser(user);
+    } catch (error) {
+      console.error("Failed to fetch user:", error);
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   useEffect(() => {
     fetchUser();
   }, [localUserRefetch]);

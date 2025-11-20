@@ -111,10 +111,11 @@ const getCurrentUser = async () => {
   try {
 
     decoded = await jwtDecode(accessToken);
+    console.log({ decoded });
 
     // if expired
     if (decoded?.exp && decoded.exp * 1000 < Date.now()) {
-
+      console.log("Token expired");
       const refreshed = await refreshToken();
       if (refreshed) {
         const newAccessToken = cookieStore.get("DEaccessToken")?.value;
@@ -159,10 +160,14 @@ const refreshToken = async () => {
     if (response.data?.success && response.data?.data) {
       const accessToken = response.data?.data?.accessToken;
 
+      // Production requires sameSite: "none" for cross-origin cookies
+      // Development can use "lax" or "strict"
+      const isProduction = process.env.NODE_ENV === "production";
+
       const cookieOptions = {
         httpOnly: true,
-        secure: true,
-        sameSite: "strict" as const,
+        secure: isProduction,
+        sameSite: (isProduction ? "none" : "lax") as "none" | "lax",
       };
 
       // Store the new tokens in cookies
@@ -173,8 +178,7 @@ const refreshToken = async () => {
     }
 
     return null;
-  } catch (error: unknown) {
-    // console.error("❌ Refresh token failed:", error, error?.message);
+  } catch {
     const cookieStore = await cookies();
     cookieStore.delete("DEaccessToken");
     cookieStore.delete("DErefreshToken");
