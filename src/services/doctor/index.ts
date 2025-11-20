@@ -27,20 +27,18 @@ export const getAllDoctors = async (query: TFilterQuery[] | undefined) => {
       `${process.env.NEXT_PUBLIC_BASE_URL}/doctor?${params.toString()}`,
       fetchOption
     );
-    if (!res.ok) {
-      throw new Error("Failed to get all doctors!");
-    }
+    // if (!res.ok) {
+    //   throw new Error("Failed to get all doctors!");
+    // }
     return res.json();
-  } catch (e: any) {
-    console.log(e.message, "from server action");
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path &&
-      `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to get all doctors!"
-    );
+  } catch (e: unknown) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const prefix = errorSource?.path ? `${errorSource.path}: ` : "";
+    const message =
+      prefix +
+      (errorSource?.message ?? error?.response?.data ?? error.message ?? "Failed to get all doctors!");
+    throw new Error(message);
   }
 };
 export const getDoctorById = async (id: string | undefined) => {
@@ -64,15 +62,13 @@ export const getDoctorById = async (id: string | undefined) => {
       throw new Error("Failed to get doctor!");
     }
     return res.json();
-  } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path &&
-      `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to get doctor!"
-    );
+  } catch (e: unknown) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to get doctor!");
+    throw new Error(message);
   }
 };
 export const getDoctorByDoctorCode = async (id: string | null) => {
@@ -96,15 +92,13 @@ export const getDoctorByDoctorCode = async (id: string | null) => {
       throw new Error("Failed to get doctor!");
     }
     return res.json();
-  } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path &&
-      `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to get doctor!"
-    );
+  } catch (e: unknown) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to get doctor!");
+    throw new Error(message);
   }
 };
 
@@ -160,14 +154,12 @@ export const deleteDoctorById = async (id: string | undefined) => {
     }
     revalidateTag("doctor");
     return res.json();
-  } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path &&
-      `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to delete a doctor!"
-    );
+  } catch (e: unknown) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to delete a doctor!");
+    throw new Error(message);
   }
 };

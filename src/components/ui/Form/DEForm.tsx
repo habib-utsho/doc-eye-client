@@ -1,7 +1,6 @@
 "use client";
 
-import { error } from "console";
-import React, { ReactNode, useEffect, useMemo } from "react";
+import React, { ReactNode, useEffect, useRef } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 type TFormConfig = {
@@ -25,26 +24,29 @@ const DEForm = ({
   ...rest
 }: DEFormProps) => {
   const formConfig: TFormConfig = {};
-  if (defaultValues) {
+  if (!!defaultValues) {
     formConfig["defaultValues"] = defaultValues;
   }
-  if (resolver) {
+  if (!!resolver) {
     formConfig["resolver"] = resolver;
   }
-  const internalMethods = methods || useForm(formConfig);
-  const {
-    handleSubmit,
-    reset,
-    watch,
-    formState: { errors },
-  } = internalMethods;
+  const internalMethods = useForm(formConfig);
+  const methodsToUse = methods || internalMethods;
+  const { handleSubmit, reset } = methodsToUse;
+
+  const prevDefaultValuesRef = useRef<string>();
 
   useEffect(() => {
-    if (defaultValues) {
+    const currentDefaultValues = JSON.stringify(defaultValues);
+
+    if (
+      defaultValues &&
+      prevDefaultValuesRef.current !== currentDefaultValues
+    ) {
+      prevDefaultValuesRef.current = currentDefaultValues;
       reset(defaultValues);
     }
-  }, [defaultValues]);
-
+  }, [defaultValues, reset]);
 
   // console.log(errors, watch("currentWorkPlace"));
 

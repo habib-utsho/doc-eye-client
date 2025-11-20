@@ -10,13 +10,13 @@ const registerAdmin = async (payload: FormData) => {
     const response = await axiosInstance.post(`/user/create-admin`, payload);
     revalidateTag("admin");
     return response.data;
-  } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path}: ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to register admin!"
-    );
+  } catch (e: unknown) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to register admin!");
+    throw new Error(message);
   }
 };
 const registerPatient = async (payload: FormData) => {
@@ -24,13 +24,13 @@ const registerPatient = async (payload: FormData) => {
     const response = await axiosInstance.post(`/user/create-patient`, payload);
     revalidateTag("patient");
     return response.data;
-  } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path}: ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to register patient!"
-    );
+  } catch (e: unknown) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to register patient!");
+    throw new Error(message);
   }
 };
 const registerDoctor = async (payload: FormData) => {
@@ -46,15 +46,13 @@ const registerDoctor = async (payload: FormData) => {
     const response = await axiosInstance.post(`/user/create-doctor`, payload);
     revalidateTag("doctor");
     return response.data;
-  } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path &&
-      `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to register doctor!"
-    );
+  } catch (e: unknown) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to register doctor!");
+    throw new Error(message);
   }
 };
 
@@ -88,15 +86,13 @@ const toggleUserStatus = async (id: string) => {
     const response = await axiosInstance.patch(`/user/toggle-status/${id}`);
     revalidateTag(response?.data?.data?.role || "user");
     return response.data;
-  } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path &&
-      `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to toggle user status!"
-    );
+  } catch (e: unknown) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to toggle user status!");
+    throw new Error(message);
   }
 };
 
@@ -161,7 +157,7 @@ const refreshToken = async () => {
     );
 
     if (response.data?.success && response.data?.data) {
-      const { accessToken } = response.data?.data;
+      const accessToken = response.data?.data?.accessToken;
 
       const cookieOptions = {
         httpOnly: true,
@@ -177,7 +173,7 @@ const refreshToken = async () => {
     }
 
     return null;
-  } catch (error: any) {
+  } catch (error: unknown) {
     // console.error("❌ Refresh token failed:", error, error?.message);
     const cookieStore = await cookies();
     cookieStore.delete("DEaccessToken");

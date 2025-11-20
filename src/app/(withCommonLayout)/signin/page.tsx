@@ -60,7 +60,7 @@ const SigninPage = () => {
   const rows = [
     {
       key: "1",
-      email: "utsho926@gmail.com ",
+      email: "utsho926@gmail.com",
       password: "1234@@aA",
       role: "Patient",
     },
@@ -172,10 +172,11 @@ const SigninPage = () => {
                     <TableRow
                       key={item.key}
                       onClick={() => {
-                        setDefaultValues({
-                          email: item?.email,
+                        const newValues = {
+                          email: item?.email?.trim(),
                           password: item?.password,
-                        });
+                        };
+                        setDefaultValues(newValues);
                       }}
                       className="cursor-pointer"
                     >

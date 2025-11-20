@@ -28,15 +28,13 @@ export const getAllAdmin = async (query: TFilterQuery[] | undefined) => {
       fetchOption
     );
     return res.json();
-  } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path &&
-      `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to get all admin!"
-    );
+  } catch (e: unknown) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to get all admin!");
+    throw new Error(message);
   }
 };
 
@@ -58,15 +56,14 @@ export const getAdminById = async (id: string | null) => {
       fetchOption
     );
     return res.json();
-  } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path &&
-      `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to get single admin!"
-    );
+  } catch (e: unknown) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to get single admin!");
+    throw new Error(message);
   }
 };
 // export const updateAdminById = async (
@@ -116,14 +113,12 @@ export const deleteAdminById = async (id: string | undefined) => {
     );
     revalidateTag("admin");
     return res.json();
-  } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path &&
-      `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to delete an admin!"
-    );
+  } catch (e: unknown) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to delete an admin!");
+    throw new Error(message);
   }
 };

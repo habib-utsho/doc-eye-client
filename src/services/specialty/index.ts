@@ -33,16 +33,13 @@ export const createSpecialty = async (payload: FormData) => {
     });
     revalidateTag("specialty");
     return response.data;
-  } catch (e: any) {
-    throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to create specialty!"
-    );
+  } catch (e: unknown) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to create specialty!");
+    throw new Error(message);
   }
 };
 export const updateSpecialty = async ({
@@ -62,13 +59,12 @@ export const updateSpecialty = async ({
     return response.data;
   } catch (e: any) {
     throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to update specialty!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to update specialty!"
     );
   }
 };
@@ -79,13 +75,12 @@ export const deleteSpecialty = async (id: string) => {
     return response.data;
   } catch (e: any) {
     throw new Error(
-      `${
-        e?.response?.data?.errorSources?.[0]?.path &&
-        `${e?.response?.data?.errorSources?.[0]?.path}:`
+      `${e?.response?.data?.errorSources?.[0]?.path &&
+      `${e?.response?.data?.errorSources?.[0]?.path}:`
       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-        e?.response?.data ||
-        e.message ||
-        "Failed to update specialty!"
+      e?.response?.data ||
+      e.message ||
+      "Failed to update specialty!"
     );
   }
 };

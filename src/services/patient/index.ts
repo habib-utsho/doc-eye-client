@@ -32,15 +32,13 @@ export const getAllPatient = async (query: TFilterQuery[] | undefined) => {
       throw new Error("Failed to get all patient!");
     }
     return res.json();
-  } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path &&
-      `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to get all patient!"
-    );
+  } catch (e: unknown) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to get all patient!");
+    throw new Error(message);
   }
 };
 export const getSinglePatient = async (id: string | null) => {
@@ -64,15 +62,13 @@ export const getSinglePatient = async (id: string | null) => {
       throw new Error("Failed to get single patient!");
     }
     return res.json();
-  } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path &&
-      `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to get single patient!"
-    );
+  } catch (e: unknown) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to get single patient!");
+    throw new Error(message);
   }
 };
 
@@ -86,15 +82,13 @@ export const updateFavoriteDoctors = async (
     revalidateTag("doctor");
     revalidateTag("patient");
     return res.data;
-  } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path &&
-      `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to update favorite doctors!"
-    );
+  } catch (e: unknown) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to update favorite doctors!");
+    throw new Error(message);
   }
 };
 export const makePatientAdmin = async (
@@ -108,15 +102,13 @@ export const makePatientAdmin = async (
     revalidateTag("patient");
     revalidateTag("admin");
     return res.data;
-  } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path &&
-      `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to update a patient!"
-    );
+  } catch (e: unknown) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to update a patient!");
+    throw new Error(message);
   }
 };
 
@@ -161,14 +153,12 @@ export const deletePatientById = async (id: string | undefined) => {
     );
     revalidateTag("patient");
     return res.data;
-  } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path &&
-      `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to delete a patient!"
-    );
+  } catch (e: unknown) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to delete a patient!");
+    throw new Error(message);
   }
 };

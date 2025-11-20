@@ -33,7 +33,6 @@ import {
   MailOutlined,
   PhoneOutlined,
   MedicineBoxOutlined,
-  CameraOutlined,
 } from "@ant-design/icons";
 import { Button } from "@heroui/button";
 import { Divider } from "@heroui/divider";

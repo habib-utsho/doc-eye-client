@@ -26,6 +26,7 @@ export const useUserSignin = ({ redirect }: { redirect: string | null }) => {
       if (data?.success) {
         const user = (await getCurrentUser()) as TDecodedUser;
         setUser(user);
+
         router.push(
           redirect ||
           (user?.role === "admin" || user?.role === "doctor"

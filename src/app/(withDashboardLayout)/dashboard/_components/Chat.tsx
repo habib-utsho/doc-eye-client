@@ -63,7 +63,8 @@ const Chat = ({ from, doctor, patient, appointment }: ChatProps) => {
   // Socket connection
   useEffect(() => {
     const socket = io(`${process.env.NEXT_PUBLIC_SOCKET_BASE_URL}`, {
-      transports: ["websocket"],
+      withCredentials: true, // If using cookies/auth
+      transports: ["websocket", "polling"],
     });
     socketRef.current = socket;
 
