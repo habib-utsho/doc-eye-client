@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import appSectionBG from "@/src/assets/img/Homepage/AppSection/appSectionBG2.jpg";
-import QRcode from "@/src/assets/img/Homepage/AppSection/QRcode.png";
+import appSectionBG from "@/src/assets/img/Homepage/appSection/appSectionBG2.jpg";
+import QRcode from "@/src/assets/img/Homepage/appSection/QRcode.png";
 import DownloadOnGooglePlay from "@/src/assets/img/Homepage/appSection/DownloadOnGooglePlay.png";
 import DownloadOnAppStore from "@/src/assets/img/Homepage/appSection/DownloadOnAppStore.png";
 import Image from "next/image";
