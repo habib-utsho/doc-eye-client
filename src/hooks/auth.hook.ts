@@ -24,21 +24,27 @@ export const useUserSignin = ({ redirect }: { redirect: string | null }) => {
     }).then(res => res.json()),
     async onSuccess(data) {
       if (data?.success) {
-        const user = (await getCurrentUser()) as TDecodedUser;
-        setUser(user);
+        try {
 
-        router.push(
-          redirect ||
-          (user?.role === "admin" || user?.role === "doctor"
-            ? `dashboard/${user?.role}`
-            : "/")
-        );
+          const user = (await getCurrentUser()) as TDecodedUser;
+          setUser(user);
+          router.push(
+            redirect ||
+            (user?.role === "admin" || user?.role === "doctor"
+              ? `dashboard/${user?.role}`
+              : "/")
+          );
+        } catch {
+          setUser(null);
+          router.push("/signin");
+        }
       } else {
         toast.error(data?.message || "Failed to signin user!");
       }
     }
   });
 };
+
 
 export const useUserRegister = () => {
   const router = useRouter();

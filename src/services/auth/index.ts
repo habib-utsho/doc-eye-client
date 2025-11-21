@@ -106,16 +106,15 @@ const getCurrentUser = async () => {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("DEaccessToken")?.value;
 
+
   if (!accessToken) return null;
   let decoded = null;
   try {
 
     decoded = await jwtDecode(accessToken);
-    console.log({ decoded });
 
     // if expired
     if (decoded?.exp && decoded.exp * 1000 < Date.now()) {
-      console.log("Token expired");
       const refreshed = await refreshToken();
       if (refreshed) {
         const newAccessToken = cookieStore.get("DEaccessToken")?.value;
