@@ -1,6 +1,7 @@
 "use server";
 
 import axiosInstance from "@/src/lib/axiosInstance";
+import { TSignin } from "@/src/types/user";
 import { jwtDecode } from "jwt-decode";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
@@ -57,29 +58,29 @@ const registerDoctor = async (payload: FormData) => {
 };
 
 
-// Signin user (Not used directly in client components due to cookies handling  )
-// const signinUser = async (payload: TSignin) => {
-//   try {
-//     const response = await axiosInstance.post(`/auth/login`, payload, {
-//       withCredentials: true,
-//     });
+// Signin user(Not used directly in client components due to cookies handling)
+const signinUser = async (payload: TSignin) => {
+  try {
+    const response = await axiosInstance.post(`/auth/login`, payload);
 
-//     // if (response.data?.success) {
-//     //   cookies().set("DEaccessToken", response?.data?.data?.accessToken);
-//     //   cookies().set("DErefreshToken", response?.data?.data?.refreshToken);
-//     // }
-//     return response.data;
-//   } catch (e: any) {
-//     throw new Error(
-//       `${e?.response?.data?.errorSources?.[0]?.path &&
-//       `${e?.response?.data?.errorSources?.[0]?.path}:`
-//       } ${e.response?.data?.errorSources?.[0]?.message}` ||
-//       e?.response?.data ||
-//       e.message ||
-//       "Failed to register doctor!"
-//     );
-//   }
-// };
+    if (response.data?.success) {
+      const cookieStore = await cookies();
+      cookieStore.delete("DEaccessToken");
+      cookieStore.delete("DErefreshToken");
+      // Set the tokens in cookies
+      cookieStore.set("DEaccessToken", response?.data?.data?.accessToken);
+      cookieStore.set("DErefreshToken", response?.data?.data?.refreshToken);
+    }
+    return response.data;
+  } catch (e: any) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to register doctor!");
+    throw new Error(message);
+  }
+};
 
 const toggleUserStatus = async (id: string) => {
   try {
@@ -158,20 +159,24 @@ const refreshToken = async () => {
 
     if (response.data?.success && response.data?.data) {
       const accessToken = response.data?.data?.accessToken;
+      const refreshToken = response.data?.data?.refreshToken;
 
       // Production requires sameSite: "none" for cross-origin cookies
       // Development can use "lax" or "strict"
-      const isProduction = process.env.NODE_ENV === "production";
+      // const isProduction = process.env.NODE_ENV === "production";
 
-      const cookieOptions = {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: (isProduction ? "none" : "lax") as "none" | "lax",
-      };
+      // const cookieOptions = {
+      //   httpOnly: true,
+      //   secure: isProduction,
+      //   sameSite: (isProduction ? "none" : "lax") as "none" | "lax",
+      // };
 
       // Store the new tokens in cookies
       const cookieStore = await cookies();
-      cookieStore.set("DEaccessToken", accessToken, cookieOptions);
+      cookieStore.delete("DEaccessToken");
+      cookieStore.delete("DErefreshToken");
+      cookieStore.set("DEaccessToken", accessToken);
+      cookieStore.set("DErefreshToken", refreshToken);
 
       return response.data;
     }
@@ -190,7 +195,7 @@ export {
   registerAdmin,
   registerPatient,
   registerDoctor,
-  // signinUser,
+  signinUser,
   toggleUserStatus,
   getCurrentUser,
   signOut,
