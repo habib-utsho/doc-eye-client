@@ -59,7 +59,7 @@ A production-grade, full-stack telemedicine platform built for performance, acce
 
 | Technology              | Purpose                                |
 | ----------------------- | -------------------------------------- |
-| Next.js 14 (App Router) | SSR, routing, API routes               |
+| Next.js 15 (App Router) | SSR, routing, API routes               |
 | TypeScript              | Type safety                            |
 | Tailwind CSS            | Utility-first styling                  |
 | Hero UI                 | Premium component library              |
@@ -108,9 +108,7 @@ yarn dev
 ```bash
 yarn build
 ```
-  
 
-  
 ## 🔒 License
 
-** Proprietary Software – All Rights Reserved**
+**Proprietary Software – All Rights Reserved**
