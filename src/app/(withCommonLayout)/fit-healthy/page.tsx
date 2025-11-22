@@ -171,9 +171,9 @@ const FitHealthyPage = () => {
                 <div className="flex gap-2 mt-4">
                   <Button
                     size="sm"
-                    color="primary"
                     variant="flat"
                     onPress={() => setWaterIntake(Math.min(waterIntake + 1, 8))}
+                    className="text-primary-500"
                   >
                     + Water
                   </Button>
