@@ -21,6 +21,10 @@ export const siteConfig = {
       label: "About",
       href: "/about-us",
     },
+    {
+      label: "Fit & Healthy",
+      href: "/fit-healthy",
+    },
   ],
   navMenuItems: [
     {

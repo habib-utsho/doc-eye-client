@@ -1,6 +1,6 @@
 import { CheckIcon } from "@/src/components/ui/icons";
 import Container from "@/src/components/ui/Container";
-import { Button } from "@heroui/button";
+import MyMotion from "@/src/components/ui/MyMotion";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Divider } from "@heroui/divider";
 import { Tooltip } from "@heroui/tooltip";
@@ -98,48 +98,79 @@ const HealthPlansPage = () => {
     },
   ];
 
+  const highlightPlans = new Set(["Gold Plan", "Family Plan"]);
+
   return (
-    <div className="min-h-[calc(100vh-64px)] py-4 md:py-6">
+    <div className="min-h-[calc(100vh-64px)] py-6 md:py-10">
       <Container>
-        <h2 className="text-4xl md:text-5xl font-extrabold text-primary drop-shadow-lg md:mb-8 text-center">
-          Health Plans
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <MyMotion y={35} delay={0.05}>
+          <header className="max-w-3xl mx-auto text-center mb-10 md:mb-14">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-primary drop-shadow-sm">
+              Health Plans
+            </h1>
+            <p className="mt-4 text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+              Choose the plan that fits your health journey. Transparent
+              pricing, meaningful features, and flexibility for individuals,
+              families, students, and seniors.
+            </p>
+          </header>
+        </MyMotion>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {healthPlans.map((hp, ind) => {
             const { planName, description, price, features } = hp;
+            const isHighlight = highlightPlans.has(planName);
             return (
-              <Card key={ind} className="space-y-4 relative pb-20">
-                <CardHeader className="justify-start items-start flex-col space-y-4">
-                  <h2 className="text-2xl md:text-3xl font-bold text-primary">
-                    {planName}
-                  </h2>
-                  <h3 className="font-bold text-xl">
-                    ৳{price}{" "}
-                    <span className="!text-lg font-semibold">/monthly</span>
-                  </h3>
-                </CardHeader>
-                <Divider />
-                <CardBody className="space-y-4">
-                  <Tooltip content={description}>
-                    <p className="text-paragraph min-h-[72px] line-clamp-3">
-                      {" "}
-                      {description}
-                    </p>
-                  </Tooltip>
-                  <ul className="space-y-3">
-                    {features?.map((feature, ind) => (
-                      <li key={ind} className="flex items-center gap-2">
-                        {" "}
-                        <span className="text-primary">
-                          <CheckIcon></CheckIcon>
-                        </span>{" "}
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </CardBody>
-                <SubscribeButton />
-              </Card>
+              <MyMotion key={planName} y={30} delay={0.1 + ind * 0.05}>
+                <Card
+                  aria-label={`${planName} pricing card`}
+                  className={`relative flex flex-col justify-between h-full space-y-4 pb-24 border hover:border-primary/50 transition shadow-sm hover:shadow-xl hover:-translate-y-1 duration-300 ${
+                    isHighlight
+                      ? "bg-gradient-to-br from-primary/5 to-primary/10"
+                      : ""
+                  }`}
+                >
+                  {isHighlight && (
+                    <span className="absolute top-4 right-4 inline-flex items-center rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white shadow-sm">
+                      Popular
+                    </span>
+                  )}
+                  <CardHeader className="justify-start items-start flex-col space-y-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-primary">
+                      {planName}
+                    </h2>
+                    <h3 className="font-bold text-xl">
+                      ৳{price}
+                      <span className="!text-lg font-semibold">/monthly</span>
+                    </h3>
+                  </CardHeader>
+                  <Divider />
+                  <CardBody className="space-y-5">
+                    <Tooltip content={description}>
+                      <p className="min-h-[72px] line-clamp-3 text-gray-600 dark:text-gray-300">
+                        {description}
+                      </p>
+                    </Tooltip>
+                    <ul className="space-y-3">
+                      {features.map((feature) => (
+                        <li
+                          key={feature}
+                          className="flex items-start gap-3 text-gray-700 dark:text-gray-300"
+                        >
+                          <span className="mt-1 text-primary">
+                            <CheckIcon />
+                          </span>
+                          <span className="leading-relaxed text-sm md:text-[15px]">
+                            {feature}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardBody>
+                  <div className="absolute left-0 right-0 bottom-4 px-4">
+                    <SubscribeButton />
+                  </div>
+                </Card>
+              </MyMotion>
             );
           })}
         </div>

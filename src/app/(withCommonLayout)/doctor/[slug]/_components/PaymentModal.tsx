@@ -149,6 +149,7 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
           backdrop:
             "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
         }}
+        className="max-w-3xl"
         motionProps={{
           variants: {
             enter: {
@@ -174,20 +175,138 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
           {(onClose) => (
             <>
               {/* Modal Header */}
-              <ModalHeader className="text-lg font-semibold text-gray-900">
-                Confirm Payment
+              <ModalHeader className="flex flex-col gap-1 border-b pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                    <DollarOutlined className="text-2xl text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                      Confirm Payment
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      Review details before proceeding
+                    </p>
+                  </div>
+                </div>
               </ModalHeader>
 
               {/* Modal Body */}
-              <ModalBody className="text-gray-700">
-                <p className="text-sm">
-                  You are about to make a payment using <b>{paymentType}</b>.
-                </p>
-                <p className="text-xs text-gray-500 mt-2">
-                  *This is a dummy payment simulation.
-                </p>
+              <ModalBody className="py-6 space-y-4">
+                {/* Appointment Details */}
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3">
+                  <h4 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                    Appointment Details
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Doctor:
+                      </span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {doctor.name}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Patient:
+                      </span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {patient.name}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Schedule:
+                      </span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {isAvailableNow
+                          ? "Now (Instant Consultation)"
+                          : `${moment(activeDate).format(
+                              "DD MMM, YYYY"
+                            )} at ${activeTime}`}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Type:
+                      </span>
+                      <span className="font-medium text-primary">
+                        Online Consultation
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Payment Breakdown */}
+                <div className="bg-gradient-to-br from-primary/5 to-purple-500/5 rounded-lg p-4 space-y-3 border border-primary/10">
+                  <h4 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                    Payment Breakdown
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Consultation Fee:
+                      </span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        ৳{amount.consultationFee}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Platform Fee:
+                      </span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        ৳{amount.platformFee}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        VAT (15%):
+                      </span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        ৳{amount.vat}
+                      </span>
+                    </div>
+                    <Divider className="my-2" />
+                    <div className="flex justify-between text-base font-bold">
+                      <span className="text-gray-900 dark:text-white">
+                        Total Amount:
+                      </span>
+                      <span className="text-primary text-lg">
+                        ৳{amount.total}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Payment Method */}
+                <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <div className="flex items-center gap-2">
+                    <DollarOutlined className="text-blue-600 dark:text-blue-400" />
+                    <span className="text-sm font-medium text-gray-900 dark:text-white">
+                      Payment Method:
+                    </span>
+                  </div>
+                  <span className="font-bold text-blue-600 dark:text-blue-400">
+                    {paymentType}
+                  </span>
+                </div>
+
+                {/* Info Alert */}
+                <Alert
+                  color="warning"
+                  variant="flat"
+                  title="Payment Notice"
+                  description="You will be redirected to the payment gateway to complete your transaction securely."
+                  className="text-xs"
+                />
               </ModalBody>
-              <ModalFooter>
+
+              {/* Modal Footer */}
+              <ModalFooter className="border-t pt-4 flex justify-between">
                 <Button color="danger" variant="light" onPress={onClose}>
                   Cancel
                 </Button>
@@ -197,9 +316,13 @@ const PaymentModal: React.FC<TPaymentModalProps> = ({
                     handlePaymentFunc();
                   }}
                   isLoading={isLoadingInitPayment}
-                  className="text-white"
+                  className="text-white font-semibold px-8"
+                  size="lg"
+                  startContent={!isLoadingInitPayment && <DollarOutlined />}
                 >
-                  Pay {amount.total} BDT
+                  {isLoadingInitPayment
+                    ? "Processing..."
+                    : `Pay ৳${amount.total}`}
                 </Button>
               </ModalFooter>
             </>

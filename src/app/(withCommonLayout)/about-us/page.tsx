@@ -1,5 +1,6 @@
 "use client";
 import Container from "@/src/components/ui/Container";
+import MyMotion from "@/src/components/ui/MyMotion";
 import { HeartFilledIcon } from "@/src/components/ui/icons";
 import { GlobalOutlined } from "@ant-design/icons";
 import { FaGraduationCap } from "react-icons/fa6";
@@ -42,48 +43,54 @@ const AboutUs = () => {
     <div className="min-h-screen py-12">
       {/* Intro */}
       <Container>
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-primary drop-shadow-lg">
-            Discover DocEye
-          </h2>
-          <p className="mt-4 text-gray-600 dark:text-gray-300 max-w-3xl mx-auto text-lg">
-            For years, we’ve been working with care and dedication, helping
-            people find their way to mental well-being and a happier, more
-            fulfilling life. It’s been a journey of impact and transformation,
-            and we’d love for you to be a part of it as we continue moving
-            forward together.
-          </p>
-        </div>
+        <MyMotion y={30} delay={0.05}>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-extrabold text-primary drop-shadow-lg">
+              Discover DocEye
+            </h2>
+            <p className="mt-4 text-gray-600 dark:text-gray-300 max-w-3xl mx-auto text-lg">
+              For years, we’ve been working with care and dedication, helping
+              people find their way to mental well-being and a happier, more
+              fulfilling life. It’s been a journey of impact and transformation,
+              and we’d love for you to be a part of it as we continue moving
+              forward together.
+            </p>
+          </div>
+        </MyMotion>
       </Container>
 
       {/* Hero Image (optional) */}
       <Container>
-        <div className="w-full flex justify-center mb-16">
-          <Image
-            src={about1}
-            alt="DocEye"
-            width={700}
-            height={500}
-            className="rounded-lg shadow-sm dark:shadow-md"
-          />
-        </div>
+        <MyMotion y={40} delay={0.1}>
+          <div className="w-full flex justify-center mb-16">
+            <Image
+              src={about1}
+              alt="DocEye"
+              width={700}
+              height={500}
+              className="rounded-lg shadow-sm dark:shadow-md"
+            />
+          </div>
+        </MyMotion>
       </Container>
 
       {/* What is DocEye */}
       <Container>
         <section className="mb-20">
-          <div className="max-w-4xl mx-auto text-center space-y-6">
-            <h3 className="text-3xl font-bold text-slate-800 dark:text-white">
-              What is DocEye?
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 text-md">
-              <b>DocEye</b> is an intelligent platform that connects patients
-              with top-tier doctors, specialists, and health services across the
-              country. Offering scheduling, medical records tracking, and secure
-              consultations all in one place. It's your digital health
-              companion.
-            </p>
-          </div>
+          <MyMotion y={30} delay={0.15}>
+            <div className="max-w-4xl mx-auto text-center space-y-6">
+              <h3 className="text-3xl font-bold text-slate-800 dark:text-white">
+                What is DocEye?
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 text-md">
+                <b>DocEye</b> is an intelligent platform that connects patients
+                with top-tier doctors, specialists, and health services across
+                the country. Offering scheduling, medical records tracking, and
+                secure consultations all in one place. It's your digital health
+                companion.
+              </p>
+            </div>
+          </MyMotion>
         </section>
       </Container>
 
@@ -98,15 +105,17 @@ const AboutUs = () => {
                   key={index}
                   className="bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-lg p-8 text-center shadow transition duration-300 hover:shadow-lg"
                 >
-                  <div className="mb-4 flex justify-center">
-                    <IconComponent className="text-4xl text-primary" />
-                  </div>
-                  <h4 className="text-xl font-semibold mb-2 dark:text-white">
-                    {feature.name}
-                  </h4>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {feature.description}
-                  </p>
+                  <MyMotion y={25} delay={0.2 + index * 0.05}>
+                    <div className="mb-4 flex justify-center">
+                      <IconComponent className="text-4xl text-primary" />
+                    </div>
+                    <h4 className="text-xl font-semibold mb-2 dark:text-white">
+                      {feature.name}
+                    </h4>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {feature.description}
+                    </p>
+                  </MyMotion>
                 </div>
               );
             })}
@@ -115,50 +124,57 @@ const AboutUs = () => {
       </Container>
 
       {/* Mission & Why Choose */}
-      <section className="text-center max-w-4xl mx-auto">
-        <h3 className="text-2xl md:text-3xl font-bold mb-6 text-slate-800 dark:text-white">
-          Our Mission
-        </h3>
-        <p className="text-gray-600 dark:text-gray-400 mb-12 leading-relaxed">
-          At DocEye, Our goal is to eliminate or control disabling or troubling
-          symptoms so the patient can function better. This treatment involves a
-          talking relationship between a therapist & patient.
-        </p>
-      </section>
+      <MyMotion y={25} delay={0.35}>
+        <section className="text-center max-w-4xl mx-auto">
+          <h3 className="text-2xl md:text-3xl font-bold mb-6 text-slate-800 dark:text-white">
+            Our Mission
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-12 leading-relaxed">
+            At DocEye, Our goal is to eliminate or control disabling or
+            troubling symptoms so the patient can function better. This
+            treatment involves a talking relationship between a therapist &
+            patient.
+          </p>
+        </section>
+      </MyMotion>
 
-      <WhyChooseUs />
+      <MyMotion y={25} delay={0.4}>
+        <WhyChooseUs />
+      </MyMotion>
 
       {/* CTA Banner */}
-      <section className="mt-24 text-center bg-primary-500 text-white p-10 rounded-lg shadow-md">
-        <h3 className="text-2xl md:text-3xl font-bold mb-4">
-          Be part of the future of healthcare
-        </h3>
-        <p className="mb-6 text-white/90">
-          Whether you're a doctor looking to expand, or a patient looking to
-          simplify health — DocEye is for you.
-        </p>
-        <div className="flex justify-center gap-4 flex-wrap">
-          <Link href="/signup">
-            <Button
-              variant="ghost"
-              className="text-white dark:text-white mt-5 hover:text-black"
-              size="lg"
-            >
-              Join as Doctor
-            </Button>
-          </Link>
-          <Link href="/specialty">
-            <Button
-              variant="solid"
-              className="text-primary dark:text-white mt-5"
-              size="lg"
-              href="/specialty"
-            >
-              Book your Appointment
-            </Button>
-          </Link>
-        </div>
-      </section>
+      <MyMotion y={35} delay={0.45}>
+        <section className="mt-24 text-center bg-primary-500 text-white p-10 rounded-lg shadow-md">
+          <h3 className="text-2xl md:text-3xl font-bold mb-4">
+            Be part of the future of healthcare
+          </h3>
+          <p className="mb-6 text-white/90">
+            Whether you're a doctor looking to expand, or a patient looking to
+            simplify health — DocEye is for you.
+          </p>
+          <div className="flex justify-center gap-4 flex-wrap">
+            <Link href="/signup">
+              <Button
+                variant="ghost"
+                className="text-white dark:text-white mt-5 hover:text-black"
+                size="lg"
+              >
+                Join as Doctor
+              </Button>
+            </Link>
+            <Link href="/specialty">
+              <Button
+                variant="solid"
+                className="text-primary dark:text-white mt-5"
+                size="lg"
+                href="/specialty"
+              >
+                Book your Appointment
+              </Button>
+            </Link>
+          </div>
+        </section>
+      </MyMotion>
     </div>
   );
 };
