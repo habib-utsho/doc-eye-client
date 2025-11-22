@@ -5,6 +5,7 @@ import {
   getAllDoctors,
   getDoctorByDoctorCode,
   getDoctorById,
+  updateDoctorById,
 } from "../services/doctor";
 import { toast } from "sonner";
 
@@ -27,15 +28,7 @@ export const useGetDoctorByDoctorCode = (id: string | null) =>
 export const useUpdateDoctorById = () =>
   useMutation({
     mutationKey: ["doctor"],
-    mutationFn: async ({ id, payload }: { id: string; payload: FormData }) => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/doctor/${id}`, {
-        method: "PATCH",
-        credentials: "include",
-        body: payload,
-      })
-      const data = await res.json()
-      return data
-    },
+    mutationFn: async ({ id, payload }: { id: string; payload: FormData }) => await updateDoctorById(id, payload),
     onSuccess(data) {
       if (data?.success) {
         toast.success(data?.message || "Doctor updated successfully!");

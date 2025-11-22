@@ -6,6 +6,7 @@ import {
   getSinglePatient,
   makePatientAdmin,
   updateFavoriteDoctors,
+  updatePatientById,
 } from "../services/patient";
 import { toast } from "sonner";
 
@@ -52,16 +53,7 @@ export const useUpdatePatientById = () =>
     // ({ id, payload }: { id: string; payload: FormData }) =>
     //   updatePatientById(id, payload),
 
-    mutationFn: async ({ id, payload }: { id: string; payload: FormData }) => {
-
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/patient/${id}`, {
-        method: "PATCH",
-        credentials: "include",
-        body: payload,
-      })
-      const data = await res.json()
-      return data
-    },
+    mutationFn: async ({ id, payload }: { id: string; payload: FormData }) => await updatePatientById(id, payload),
     onSuccess(data) {
       if (data?.success) {
         toast.success(data?.message || "Patient updated successfully!");

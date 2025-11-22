@@ -51,7 +51,7 @@ const DEForm = ({
   // console.log(errors, watch("currentWorkPlace"));
 
   return (
-    <FormProvider {...internalMethods}>
+    <FormProvider {...methodsToUse}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className={`w-full ${className}`}

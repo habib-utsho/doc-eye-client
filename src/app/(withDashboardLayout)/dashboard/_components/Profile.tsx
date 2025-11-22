@@ -124,14 +124,20 @@ export default function ProfilePage() {
     medicalDegree: myData?.medicalDegree,
     medicalSpecialties: myData?.medicalSpecialties?.map((ms) => ms?._id),
     availability: myData?.availability,
-    // workingExperiences: myData?.workingExperiences,
+    workingExperiences: myData?.workingExperiences?.map((we) => {
+      return {
+        ...we,
+        workingPeriodStart: we?.workingPeriodStart?.slice(0, 10),
+        workingPeriodEnd: we?.workingPeriodEnd?.slice(0, 10),
+      };
+    }),
   };
   const formMethods = useForm<FormValues>({
-    resolver: zodResolver(
-      userRole === "doctor"
-        ? authValidationSchema.doctorUpdateValidationSchema
-        : authValidationSchema.patientUpdateValidationSchema
-    ),
+    // resolver: zodResolver(
+    //   userRole === "doctor"
+    //     ? authValidationSchema.doctorUpdateValidationSchema
+    //     : authValidationSchema.patientUpdateValidationSchema
+    // ),
   });
 
   const {
@@ -158,6 +164,8 @@ export default function ProfilePage() {
       return;
     }
 
+    // console.log({ payload });
+    // return;
     formData.append("data", JSON.stringify(payload));
 
     if (previewUrl != myData?.profileImg && selectedFile) {
@@ -394,6 +402,13 @@ export default function ProfilePage() {
                     </div>
                   </div>
 
+                  {/* Bio */}
+                  <div className=" p-3 rounded-md shadow mt-6">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white  mb-3">
+                      Bio
+                    </h3>
+                    <p>{doctorData?.bio}</p>
+                  </div>
                   {/* Specialties */}
                   <div className=" p-3 rounded-md shadow mt-6">
                     <h3 className="text-lg font-semibold text-gray-800 dark:text-white  mb-3">
