@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
-import { TDecodedUser, TSignin } from "../types/user";
+import { TChangePassword, TDecodedUser, TSignin } from "../types/user";
 import {
+  changePassword,
   getCurrentUser,
   registerAdmin,
   registerDoctor,
@@ -38,6 +39,19 @@ export const useUserSignin = ({ redirect }: { redirect: string | null }) => {
         toast.error(data?.message || "Failed to signin user!");
       }
     }
+  });
+};
+export const useChangePassword = () => {
+  return useMutation({
+    mutationKey: ["changePassword"],
+    mutationFn: async (payload: TChangePassword) => await changePassword(payload),
+    onSuccess(data) {
+      toast.success(data?.message || "Password changed successfully!");
+    },
+    onError(error: any) {
+      toast.error(error?.message || "Failed to change password!");
+    }
+
   });
 };
 

@@ -1,7 +1,7 @@
 "use server";
 
 import axiosInstance from "@/src/lib/axiosInstance";
-import { TSignin } from "@/src/types/user";
+import { TChangePassword, TSignin } from "@/src/types/user";
 import { jwtDecode } from "jwt-decode";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
@@ -58,7 +58,7 @@ const registerDoctor = async (payload: FormData) => {
 };
 
 
-// Signin user(Not used directly in client components due to cookies handling)
+// Signin user
 const signinUser = async (payload: TSignin) => {
   try {
     const response = await axiosInstance.post(`/auth/login`, payload);
@@ -77,7 +77,22 @@ const signinUser = async (payload: TSignin) => {
     const errorSource = error?.response?.data?.errorSources?.[0];
     const message = errorSource?.path
       ? `${errorSource.path}: ${errorSource.message}`
-      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to register doctor!");
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to signin user!");
+    throw new Error(message);
+  }
+};
+
+const changePassword = async (payload: TChangePassword) => {
+  try {
+    const response = await axiosInstance.patch(`/auth/change-password`, payload);
+
+    return response.data;
+  } catch (e: any) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to change password!");
     throw new Error(message);
   }
 };
@@ -196,6 +211,7 @@ export {
   registerPatient,
   registerDoctor,
   signinUser,
+  changePassword,
   toggleUserStatus,
   getCurrentUser,
   signOut,

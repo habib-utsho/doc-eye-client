@@ -99,6 +99,10 @@ export type TSignin = {
   email: string;
   password: string;
 };
+export type TChangePassword = {
+  oldPassword: string;
+  newPassword: string;
+};
 
 // admin, doctor, patient
 

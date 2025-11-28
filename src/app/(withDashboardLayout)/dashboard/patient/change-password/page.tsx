@@ -1,9 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import {
-  LockOutlined,
-  EyeInvisibleOutlined,
-  EyeOutlined,
   CheckCircleFilled,
   CloseCircleFilled,
   SafetyCertificateOutlined,
@@ -12,15 +9,16 @@ import { Button } from "@heroui/button";
 import { Alert } from "@heroui/alert";
 import DEForm from "@/src/components/ui/Form/DEForm";
 import MyInp from "@/src/components/ui/Form/MyInp";
-import { MATCHED_PATH_HEADER } from "next/dist/lib/constants";
+import { useChangePassword } from "@/src/hooks/auth.hook";
 
 const ChangePasswordPage: React.FC = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { mutate: mutateChangePassword, isPending } = useChangePassword();
 
   // Password strength checks
   const checks = {
@@ -33,7 +31,7 @@ const ChangePasswordPage: React.FC = () => {
   const allChecksPassed = Object.values(checks).every(Boolean);
   const passwordsMatch = newPassword && newPassword === confirmPassword;
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async () => {
     setError(null);
     setSuccess(false);
 
@@ -50,7 +48,18 @@ const ChangePasswordPage: React.FC = () => {
       return;
     }
 
-    console.log({ oldPassword, newPassword });
+    mutateChangePassword(
+      { oldPassword, newPassword },
+      {
+        onSuccess(data) {
+          setSuccess(data?.message);
+        },
+        onError(e: any) {
+          console.log(e);
+          setError(e?.message);
+        },
+      }
+    );
   };
 
   return (
@@ -156,15 +165,15 @@ const ChangePasswordPage: React.FC = () => {
               <Button
                 type="submit"
                 disabled={
-                  isSubmitting ||
+                  isPending ||
                   !allChecksPassed ||
                   !oldPassword ||
                   !passwordsMatch
                 }
-                isLoading={isSubmitting}
+                isLoading={isPending}
                 className={`w-full h-12 text-lg font-semibold rounded-xl shadow-lg transition-all bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white disabled:opacity-50 disabled:cursor-not-allowed`}
               >
-                {isSubmitting ? "Updating Password..." : "Change Password"}
+                {isPending ? "Updating Password..." : "Change Password"}
               </Button>
             </DEForm>
 
