@@ -36,6 +36,7 @@ import {
   MedicineBoxOutlined,
 } from "@ant-design/icons";
 import { useGetPatientById } from "@/src/hooks/patient.hook";
+import FavoriteDoctorHeart from "../../../specialty/_components/FavoriteDoctorHeart";
 
 const DoctorCheckout = () => {
   const params = useParams() as { slug: string };
@@ -344,8 +345,12 @@ const DoctorCheckout = () => {
                     <div className="rounded-lg w-14 h-16 bg-primary-500 bg-opacity-20 mr-2" />
                   )}
                   <div>
-                    <h1 className="font-semibold text-lg">
-                      {doctor.doctorTitle} {doctor.name}
+                    <h1 className="font-semibold text-lg flex items-center gap-2">
+                      {doctor?.doctorTitle} {doctor?.name}{" "}
+                      <FavoriteDoctorHeart
+                        doctor={doctor}
+                        // className="absolute top-1 right-1 z-10"
+                      />
                     </h1>
                     <p className="text-sm text-gray-500">{doctor.doctorType}</p>
                     <p>{doctor.medicalDegree}</p>

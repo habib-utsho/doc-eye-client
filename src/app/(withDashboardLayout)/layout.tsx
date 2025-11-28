@@ -15,7 +15,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
         <Sidebar isLoading={isLoading} user={user} />
         <main className="flex-1 overflow-x-auto">
           <DashboardNavbar isLoading={isLoading} user={user} />
-          <div className="bg-background shadow m-2 md:m-4 rounded-md">
+          <div className="bg-background shadow dark:shadow-slate-700 m-2 md:m-4 rounded-md">
             {children}
           </div>
         </main>

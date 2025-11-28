@@ -58,14 +58,12 @@ export const updateSpecialty = async ({
     revalidateTag("specialty");
     return response.data;
   } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path &&
-      `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to update specialty!"
-    );
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to update specialty!");
+    throw new Error(message);
   }
 };
 export const deleteSpecialty = async (id: string) => {
@@ -74,13 +72,11 @@ export const deleteSpecialty = async (id: string) => {
     revalidateTag("specialty");
     return response.data;
   } catch (e: any) {
-    throw new Error(
-      `${e?.response?.data?.errorSources?.[0]?.path &&
-      `${e?.response?.data?.errorSources?.[0]?.path}:`
-      } ${e.response?.data?.errorSources?.[0]?.message}` ||
-      e?.response?.data ||
-      e.message ||
-      "Failed to update specialty!"
-    );
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to delete specialty!");
+    throw new Error(message);
   }
 };

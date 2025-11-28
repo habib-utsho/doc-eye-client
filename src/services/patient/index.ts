@@ -75,6 +75,7 @@ export const getSinglePatient = async (id: string | null) => {
 export const updateFavoriteDoctors = async (
   payload: { doctorId: string }
 ) => {
+  console.log(payload);
   try {
     const res = await axiosInstance.patch(
       `/patient/favorite-doctors`,

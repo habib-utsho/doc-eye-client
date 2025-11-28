@@ -129,7 +129,10 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
             </div>
           }
         >
-          <Card className="!shadow hover:!shadow-sm mb-4 md:mb-6 bg-white dark:bg-gray-800 bg-opacity-10 w-full !flex-1">
+          <Card className="!shadow hover:!shadow-sm mb-4 md:mb-6 bg-white dark:bg-gray-800 bg-opacity-10 w-full !flex-1 relative">
+            <h2 className="font-bold text-sm mb-2 absolute right-0 top-0 opacity-30 bg-primary text-white px-2 py-[2px] rounded-tr-md">
+              Current Workplace
+            </h2>
             <CardHeader className="pb-0 font-semibold text-lg md:text-xl">
               {doctor.currentWorkplace?.workPlace}
             </CardHeader>
@@ -167,9 +170,15 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 ">
             {doctor?.workingExperiences?.map(
-              (experience: TWorkingExperience) => {
+              (experience: TWorkingExperience, ind: number) => {
                 return (
-                  <Card className="shadow-sm bg-white dark:bg-gray-800">
+                  <Card
+                    key={ind}
+                    className="shadow-sm bg-white dark:bg-gray-800 relative"
+                  >
+                    <h2 className="font-bold text-sm mb-2 absolute right-0 top-0 opacity-30 bg-primary text-white px-2 py-[2px] rounded-tr-md">
+                      Past Experience
+                    </h2>
                     <CardHeader className="pb-0 font-semibold text-lg md:text-xl">
                       {experience.workPlace}
                     </CardHeader>

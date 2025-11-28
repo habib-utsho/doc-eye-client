@@ -98,6 +98,7 @@ const WhyUseDocEye = () => {
                   borderRightColor: theme === "light" ? "#ffffff" : "#0e001d",
                 }}
                 iconStyle={{ background: `${iconBg}`, color: "#fff" }}
+                iconClassName="flex items-center justify-center"
                 icon={icon}
               >
                 <MyMotion y={60}>

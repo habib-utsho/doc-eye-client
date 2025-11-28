@@ -26,7 +26,6 @@ const FavoriteDoctorHeart = ({
   } = useGetPatientById(user?.role === "patient" ? user?._id : null);
   const {
     mutate: handleFavoriteDoctors,
-
     isPending: isHandleFavoriteDoctorsLoading,
   } = useUpdateFavoriteDoctors();
 

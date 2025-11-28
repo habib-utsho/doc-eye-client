@@ -173,7 +173,7 @@ const FitHealthyPage = () => {
                     size="sm"
                     variant="flat"
                     onPress={() => setWaterIntake(Math.min(waterIntake + 1, 8))}
-                    className="text-primary-500"
+                    className="text-primary dark:text-white dark:bg-primary/50 font-semibold"
                   >
                     + Water
                   </Button>
@@ -182,6 +182,7 @@ const FitHealthyPage = () => {
                     color="success"
                     variant="flat"
                     onPress={() => setSteps(Math.min(steps + 1000, 10000))}
+                    className="font-semibold"
                   >
                     + Steps
                   </Button>

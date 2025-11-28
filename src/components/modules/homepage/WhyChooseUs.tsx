@@ -35,13 +35,16 @@ const WhyChooseUs = () => {
 
   return (
     <div
-      className="min-h-screen bg-left md:bg-bottom bg-no-repeat bg-cover relative"
-      style={{ backgroundImage: `url(${WhyChooseUsBg.src})` }}
+      className="min-h-screen bg-left md:bg-bottom bg-no-repeat bg-cover dark:bg-slate-800 dark:bg-blend-overlay"
+      style={{
+        backgroundImage: `url(${WhyChooseUsBg.src})`,
+      }}
     >
       <Container className="space-y-8 pr-0 lg:pr-[300px] pt-[50px] md:pt-[100px]">
         <CommonSectionTitle
           subTitle={"Why Choose Us"}
           title={"Why people Choose DocEye"}
+          subTitleClassName="dark:text-white dark:before:bg-white"
         ></CommonSectionTitle>
         <p>
           There are many variations of passages of Lorem Ipsum available, but
