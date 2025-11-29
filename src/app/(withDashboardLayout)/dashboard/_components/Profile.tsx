@@ -223,13 +223,13 @@ export default function ProfilePage() {
     return <Loading />;
   }
 
-  console.log({
-    myDataWorkingExp: myData?.workingExperiences,
-    localStateWX: workingExperiencesFields,
-    myData,
-    previewUrl,
-    selectedFile,
-  });
+  // console.log({
+  //   myDataWorkingExp: myData?.workingExperiences,
+  //   localStateWX: workingExperiencesFields,
+  //   myData,
+  //   previewUrl,
+  //   selectedFile,
+  // });
 
   return (
     <div className="min-h-screen p-4">

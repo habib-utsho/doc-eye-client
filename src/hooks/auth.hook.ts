@@ -1,11 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
-import { TChangePassword, TDecodedUser, TSignin } from "../types/user";
+import { TChangePassword, TDecodedUser, TForgetPassword, TResetPassword, TSignin } from "../types/user";
 import {
   changePassword,
+  forgetPassword,
   getCurrentUser,
   registerAdmin,
   registerDoctor,
   registerPatient,
+  resetPassword,
   signinUser,
   toggleUserStatus,
 } from "../services/auth";
@@ -52,6 +54,19 @@ export const useChangePassword = () => {
       toast.error(error?.message || "Failed to change password!");
     }
 
+  });
+};
+export const useForgetPassword = () => {
+  return useMutation({
+    mutationKey: ["forgetPassword"],
+    mutationFn: async (payload: TForgetPassword) => await forgetPassword(payload),
+
+  });
+};
+export const useResetPassword = () => {
+  return useMutation({
+    mutationKey: ["resetPassword"],
+    mutationFn: async (payload: TResetPassword) => await resetPassword(payload),
   });
 };
 

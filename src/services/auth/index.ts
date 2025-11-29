@@ -1,7 +1,7 @@
 "use server";
 
 import axiosInstance from "@/src/lib/axiosInstance";
-import { TChangePassword, TSignin } from "@/src/types/user";
+import { TChangePassword, TForgetPassword, TResetPassword, TSignin } from "@/src/types/user";
 import { jwtDecode } from "jwt-decode";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
@@ -93,6 +93,38 @@ const changePassword = async (payload: TChangePassword) => {
     const message = errorSource?.path
       ? `${errorSource.path}: ${errorSource.message}`
       : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to change password!");
+    throw new Error(message);
+  }
+};
+const forgetPassword = async (payload: TForgetPassword) => {
+  try {
+    const response = await axiosInstance.post(`/auth/forget-password`, payload);
+
+    return response.data;
+  } catch (e: any) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to forget password!");
+    throw new Error(message);
+  }
+};
+const resetPassword = async (payload: TResetPassword) => {
+  try {
+    const response = await axiosInstance.post(`/auth/reset-password`, payload, {
+      headers: {
+        Authorization: payload?.token || "",
+      }
+    });
+
+    return response.data;
+  } catch (e: any) {
+    const error = e as any;
+    const errorSource = error?.response?.data?.errorSources?.[0];
+    const message = errorSource?.path
+      ? `${errorSource.path}: ${errorSource.message}`
+      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to reset password!");
     throw new Error(message);
   }
 };
@@ -212,6 +244,8 @@ export {
   registerDoctor,
   signinUser,
   changePassword,
+  forgetPassword,
+  resetPassword,
   toggleUserStatus,
   getCurrentUser,
   signOut,

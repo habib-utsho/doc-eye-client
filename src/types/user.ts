@@ -103,6 +103,14 @@ export type TChangePassword = {
   oldPassword: string;
   newPassword: string;
 };
+export type TForgetPassword = {
+  email: string;
+};
+export type TResetPassword = {
+  email: string;
+  newPassword: string;
+  token: string;
+};
 
 // admin, doctor, patient
 

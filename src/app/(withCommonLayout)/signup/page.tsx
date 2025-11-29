@@ -503,8 +503,7 @@ const SignupPage = () => {
               <Button
                 isLoading={isPendingUserRegister || isPendingDoctorRegister}
                 type="submit"
-                color="primary"
-                className="text-white"
+                className="gradient-btn"
               >
                 Signup
               </Button>
