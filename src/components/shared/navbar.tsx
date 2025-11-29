@@ -79,7 +79,7 @@ export const Navbar = () => {
       </NavbarContent>
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => {
+          {siteConfig.navItems.map((item, index) => {
             const active = isActive(item.href);
             return (
               <NavbarMenuItem key={`${item.href}-${index}`}>
@@ -98,6 +98,9 @@ export const Navbar = () => {
           })}
         </div>
       </NavbarMenu>
+      <NavbarItem className="flex md:hidden">
+        <NavbarProfileDropdown />
+      </NavbarItem>
     </NextUINavbar>
   );
 };
