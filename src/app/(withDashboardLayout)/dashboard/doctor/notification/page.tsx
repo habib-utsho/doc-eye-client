@@ -1,6 +1,7 @@
 "use client";
 import MyMotion from "@/src/components/ui/MyMotion";
 import {
+  AimOutlined,
   CalendarOutlined,
   ClockCircleOutlined,
   MailOutlined,
@@ -11,7 +12,6 @@ import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Divider } from "@heroui/divider";
 import React from "react";
-import { FaHandSparkles } from "react-icons/fa6";
 import { toast } from "sonner";
 
 export default function NotificationPage() {
@@ -74,7 +74,7 @@ export default function NotificationPage() {
 
                 <div className="space-y-3">
                   <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                    <FaHandSparkles className="text-primary" />
+                    <AimOutlined className="text-primary" />
                   </div>
                   <h4 className="font-semibold text-slate-800 dark:text-slate-200">
                     Exciting Features
