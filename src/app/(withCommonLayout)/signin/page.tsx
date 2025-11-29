@@ -134,6 +134,7 @@ const SigninPage = () => {
     );
   };
 
+
   return (
     <div
       className="min-h-screen  flex items-center justify-center bg-cover bg-center bg-slate-800 bg-blend-overlay my-28 md:my-0"
@@ -203,14 +204,24 @@ const SigninPage = () => {
                   </Link>
                 )}
 
-                <Button
-                  isLoading={isPending || isPendingForgetPassword}
-                  type={isForgotPassword ? "button" : "submit"}
-                  onPress={() => isForgotPassword && handleForgetPasswordFunc()}
-                  className={`gradient-btn`}
-                >
-                  {isForgotPassword ? "Get Password Recovery Email" : "Signin"}
-                </Button>
+                {!isForgotPassword ? (
+                  <Button
+                    isLoading={isPending}
+                    type={"submit"}
+                    className={`gradient-btn`}
+                  >
+                    Signin
+                  </Button>
+                ) : (
+                  <Button
+                    isLoading={isPendingForgetPassword}
+                    type={"button"}
+                    onPress={() => handleForgetPasswordFunc()}
+                    className={`gradient-btn`}
+                  >
+                    Get Password Recovery Email
+                  </Button>
+                )}
 
                 {isForgotPassword ? (
                   <p className="text-slate-700">

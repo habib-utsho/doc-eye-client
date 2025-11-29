@@ -96,20 +96,20 @@ const changePassword = async (payload: TChangePassword) => {
     throw new Error(message);
   }
 };
-const forgetPassword = async (payload: TForgetPassword) => {
-  try {
-    const response = await axiosInstance.post(`/auth/forget-password`, payload);
+// const forgetPassword = async (payload: TForgetPassword) => {
+//   try {
+//     const response = await axiosInstance.post(`/auth/forget-password`, payload);
 
-    return response.data;
-  } catch (e: any) {
-    const error = e as any;
-    const errorSource = error?.response?.data?.errorSources?.[0];
-    const message = errorSource?.path
-      ? `${errorSource.path}: ${errorSource.message}`
-      : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to forget password!");
-    throw new Error(message);
-  }
-};
+//     return response.data;
+//   } catch (e: any) {
+//     const error = e as any;
+//     const errorSource = error?.response?.data?.errorSources?.[0];
+//     const message = errorSource?.path
+//       ? `${errorSource.path}: ${errorSource.message}`
+//       : (errorSource?.message || error?.response?.data?.message || error.message || "Failed to forget password!");
+//     throw new Error(message);
+//   }
+// };
 const resetPassword = async (payload: TResetPassword) => {
   try {
     const response = await axiosInstance.post(`/auth/reset-password`, payload, {
@@ -244,7 +244,7 @@ export {
   registerDoctor,
   signinUser,
   changePassword,
-  forgetPassword,
+  // forgetPassword,
   resetPassword,
   toggleUserStatus,
   getCurrentUser,

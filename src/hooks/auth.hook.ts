@@ -2,7 +2,6 @@ import { useMutation } from "@tanstack/react-query";
 import { TChangePassword, TDecodedUser, TForgetPassword, TResetPassword, TSignin } from "../types/user";
 import {
   changePassword,
-  forgetPassword,
   getCurrentUser,
   registerAdmin,
   registerDoctor,
@@ -59,7 +58,25 @@ export const useChangePassword = () => {
 export const useForgetPassword = () => {
   return useMutation({
     mutationKey: ["forgetPassword"],
-    mutationFn: async (payload: TForgetPassword) => await forgetPassword(payload),
+    mutationFn: async (payload: TForgetPassword) => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/forget-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        const errorSource = errorData?.errorSources?.[0];
+        const message = errorSource?.path
+          ? `${errorSource.path}: ${errorSource.message}`
+          : (errorSource?.message || errorData?.message || "Failed to forget password!");
+        throw new Error(message);
+      }
+
+      return response.json();
+    },
 
   });
 };
