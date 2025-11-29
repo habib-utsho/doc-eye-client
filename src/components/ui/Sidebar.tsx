@@ -9,11 +9,9 @@ import {
   DollarOutlined,
   HeartOutlined,
   BellOutlined,
-  GlobalOutlined,
   SolutionOutlined,
 } from "@ant-design/icons";
 import logo from "@/src/assets/img/logo.png";
-import useUserData from "@/src/hooks/user.hook";
 import { Button } from "@heroui/button";
 import React, { useState } from "react";
 import Image from "next/image";
@@ -27,7 +25,7 @@ import {
 } from "react-pro-sidebar";
 import { useTheme } from "next-themes";
 import { useSignOut } from "@/src/hooks/useSignOut.hook";
-import { TUser, TDecodedUser } from "@/src/types/user";
+import { TDecodedUser } from "@/src/types/user";
 
 // Dashboard routes
 type TSidebarRoute = {
@@ -93,9 +91,20 @@ const adminRoutes: TSidebarRoute[] = [
   },
   { name: "Profile", path: "/dashboard/admin/profile", icon: <UserOutlined /> },
   {
-    name: "Change password",
-    path: "/dashboard/admin/change-password",
-    icon: <LockOutlined />,
+    name: "Settings",
+    icon: <SettingOutlined />,
+    children: [
+      {
+        name: "Notification",
+        path: "/dashboard/admin/notification",
+        icon: <BellOutlined />,
+      },
+      {
+        name: "Change Password",
+        path: "/dashboard/admin/change-password",
+        icon: <LockOutlined />,
+      },
+    ],
   },
 ];
 
@@ -138,9 +147,20 @@ const doctorRoutes: TSidebarRoute[] = [
     icon: <UserOutlined />,
   },
   {
-    name: "Change password",
-    path: "/dashboard/doctor/change-password",
-    icon: <LockOutlined />,
+    name: "Settings",
+    icon: <SettingOutlined />,
+    children: [
+      {
+        name: "Notification",
+        path: "/dashboard/doctor/notification",
+        icon: <BellOutlined />,
+      },
+      {
+        name: "Change Password",
+        path: "/dashboard/doctor/change-password",
+        icon: <LockOutlined />,
+      },
+    ],
   },
 ];
 
