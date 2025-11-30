@@ -18,7 +18,6 @@ type TResetPassFieldType = {
 };
 
 
-
 const ResetPasswordPage = () => {
   const [success, setSuccess] = useState("");
   const [err, setErr] = useState("");

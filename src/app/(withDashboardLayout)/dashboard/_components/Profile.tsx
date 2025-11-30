@@ -18,7 +18,6 @@ import {
 } from "@/src/hooks/patient.hook";
 import { useGetAllSpecialties } from "@/src/hooks/specialty.hook";
 import useUserData from "@/src/hooks/user.hook";
-import { authValidationSchema } from "@/src/schemas/auth.schema";
 import { TSpecialty } from "@/src/types/specialty";
 import { TAdmin, TDoctor, TPatient, TUserRole } from "@/src/types/user";
 import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
@@ -762,45 +761,24 @@ export default function ProfilePage() {
                             //   )
                             // }
                           />
+                        </div>
+                        <div className="flex flex-col md:flex-row gap-4">
                           <MyInp
                             type="text"
                             name="currentWorkplace.designation"
                             label="Designation"
                             placeholder="e.g., Assistant Professor"
-                            // value={currentWorkplace.designation}
-                            // onChange={(e) =>
-                            //   onCurrentWorkplaceChange(
-                            //     "designation",
-                            //     e.target.value
-                            //   )
-                            // }
                           />
-                        </div>
-                        <div className="flex flex-col md:flex-row gap-4">
                           <MyInp
                             type="date"
                             name="currentWorkplace.workingPeriodStart"
                             label="Working period start"
-                            // value={currentWorkplace.workingPeriodStart}
-                            // onChange={(e) =>
-                            //   onCurrentWorkplaceChange(
-                            //     "workingPeriodStart",
-                            //     e.target.value
-                            //   )
-                            // }
                           />
-                          <MyInp
+                          {/* <MyInp
                             type="date"
                             name="currentWorkplace.workingPeriodEnd"
                             label="Working period End"
-                            // value={currentWorkplace.workingPeriodEnd}
-                            // onChange={(e) =>
-                            //   onCurrentWorkplaceChange(
-                            //     "workingPeriodEnd",
-                            //     e.target.value
-                            //   )
-                            // }
-                          />
+                          /> */}
                         </div>
                       </div>
                     </div>

@@ -129,7 +129,7 @@ const doctorSignupValidationSchema = z.object({
   doctorType: z
     .string(z.enum(["Medical", "Dental", "Veterinary"]))
     .min(1, "Doctor type is required."),
-  medicalSpecialties: z.array(z.string()).optional(),
+  medicalSpecialties: z.array(z.string()),
   medicalDegree: z.string().min(1, "Medical Degree is required."),
   totalExperienceYear: z.number().min(1, "Total Experience is required."),
   currentWorkplace: z.object({

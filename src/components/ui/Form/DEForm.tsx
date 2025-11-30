@@ -32,7 +32,13 @@ const DEForm = ({
   }
   const internalMethods = useForm(formConfig);
   const methodsToUse = methods || internalMethods;
-  const { handleSubmit, reset } = methodsToUse;
+  const {
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = methodsToUse;
+
+  console.log(errors, 'errors from DEForm');
 
   const prevDefaultValuesRef = useRef<string>();
 

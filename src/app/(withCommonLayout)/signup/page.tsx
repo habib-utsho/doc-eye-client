@@ -1,14 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import signinBG from "@/src/assets/img/Sign/signinBG.jpg";
 import Link from "next/link";
 import MyInp from "@/src/components/ui/Form/MyInp";
 import { Button } from "@heroui/button";
-import { SubmitHandler } from "react-hook-form";
+import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { bloodGroups, districts, genders } from "@/src/constant/user.constant";
 import { authValidationSchema } from "@/src/schemas/auth.schema";
-import { TPatient } from "@/src/types/user";
+import { TDoctor, TPatient } from "@/src/types/user";
 import { useDoctorRegister, useUserRegister } from "@/src/hooks/auth.hook";
 import Container from "@/src/components/ui/Container";
 import DEForm from "@/src/components/ui/Form/DEForm";
@@ -19,16 +19,19 @@ import { TSpecialty } from "@/src/types/specialty";
 import { Divider } from "@heroui/divider";
 import { subtitle } from "@/src/components/primitives";
 import { days } from "@/src/constant/index.constant";
-import { DeleteIcon, PlusIcon } from "@/src/components/ui/icons";
+import { PlusIcon } from "@/src/components/ui/icons";
 import { toast } from "sonner";
 import MyUpload from "@/src/components/ui/Form/MyUpload";
 import {
   UserOutlined,
   MedicineBoxOutlined,
   SolutionOutlined,
+  MinusOutlined,
 } from "@ant-design/icons";
+import Empty from "@/src/components/shared/Empty";
 
-// Need to change password
+type FormValues = Partial<TPatient & TDoctor>;
+
 const SignupPage = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -36,46 +39,34 @@ const SignupPage = () => {
 
   const { mutate: handleRegisterUser, isPending: isPendingUserRegister } =
     useUserRegister();
-  const {
-    mutate: handleRegisterDoctor,
-    isPending: isPendingDoctorRegister,
-    error,
-  } = useDoctorRegister();
+  const { mutate: handleRegisterDoctor, isPending: isPendingDoctorRegister } =
+    useDoctorRegister();
 
   const { data: specialties, isLoading: isLoadingSpecialties } =
     useGetAllSpecialties([{ name: "limit", value: 5000 }]);
 
   // Working Experiences
-  const [workingExperiences, setWorkingExperiences] = useState([
-    {
-      workPlace: "",
-      department: "",
-      designation: "",
-      workingPeriodStart: "",
-      workingPeriodEnd: "",
-    },
-  ]);
-  const onAddExperience = () => {
-    setWorkingExperiences([
-      ...workingExperiences,
-      {
-        workPlace: "",
-        department: "",
-        designation: "",
-        workingPeriodStart: "",
-        workingPeriodEnd: "",
-      },
-    ]);
-  };
-  const onRemoveExperience = (index: number) => {
-    setWorkingExperiences(workingExperiences.filter((_, i) => i !== index));
-  };
-  const onExperienceChange = (index: number, key: string, value: string) => {
-    const updatedExperiences = workingExperiences.map((experience, i) => {
-      return i === index ? { ...experience, [key]: value } : experience;
-    });
-    setWorkingExperiences(updatedExperiences);
-  };
+  const formMethods = useForm<FormValues>({
+    resolver: zodResolver(
+      activeTab === "doctor"
+        ? authValidationSchema.doctorSignupValidationSchema
+        : authValidationSchema.patientSignupValidationSchema
+    ),
+  });
+  const {
+    control,
+
+    formState: { errors },
+  } = formMethods;
+
+  const {
+    fields: workingExperiencesFields,
+    append: appendWorkingExperiences,
+    remove: removeWorkingExperiences,
+  } = useFieldArray({
+    control,
+    name: "workingExperiences",
+  });
 
   const reusableInp = (
     <div className="space-y-4">
@@ -249,102 +240,137 @@ const SignupPage = () => {
               <div className="flex flex-col md:flex-row gap-4">
                 <MyInp
                   type="text"
-                  name="currentWorkplace.workplace"
+                  name="currentWorkplace.workPlace"
                   label="Workplace"
                   placeholder="e.g., Dhaka Medical College"
                 />
                 <MyInp
                   type="text"
-                  name="currentWorkPlace.department"
+                  name="currentWorkplace.department"
                   label="Department"
                   placeholder="e.g., Orthopaedics"
-                />
-                <MyInp
-                  type="text"
-                  name="currentWorkPlace.designation"
-                  label="Designation"
-                  placeholder="e.g., Assistant Professor"
                 />
               </div>
               <div className="flex flex-col md:flex-row gap-4">
                 <MyInp
-                  type="date"
-                  name="availability.workingPeriodStart"
-                  label="Working period start"
+                  type="text"
+                  name="currentWorkplace.designation"
+                  label="Designation"
+                  placeholder="e.g., Assistant Professor"
                 />
                 <MyInp
                   type="date"
-                  name="availability.workingPeriodEnd"
-                  label="Working period End"
+                  name="currentWorkplace.workingPeriodStart"
+                  label="Working period start"
                 />
+                {/* <MyInp
+                  type="date"
+                  name="currentWorkplace.workingPeriodEnd"
+                  label="Working period End"
+                /> */}
               </div>
             </div>
           </div>
           {/* Working experiences */}
-          <div>
-            <h2 className={`${subtitle()}`}>Working Experiences</h2>
-            <Divider className="w-[200px] mb-3" />
+          <div className="shadow p-4 rounded-md">
+            <h2 className="font-semibold">Working Experiences</h2>
+            <Divider className="mt-1 mb-6" />
 
-            <div className="space-y-4">
-              {workingExperiences.map((experience, index) => (
-                <div key={index} className="space-y-4 border p-4 rounded-md">
-                  <div className="text-right">
-                    <Button
-                      size="sm"
-                      variant="bordered"
-                      className="text-danger"
-                      onClick={() => onRemoveExperience(index)}
-                      isIconOnly
-                    >
-                      <DeleteIcon />
-                    </Button>
+            {workingExperiencesFields.length == 0 ? (
+              <Empty
+                className="h-[80px] cursor-pointer"
+                description="Add Input First"
+                onClick={() =>
+                  appendWorkingExperiences({
+                    workPlace: "",
+                    department: "",
+                    designation: "",
+                    workingPeriodStart: "",
+                    workingPeriodEnd: "",
+                  })
+                }
+              />
+            ) : (
+              <>
+                {workingExperiencesFields.map((field, index) => (
+                  <div className="shadow p-2 rounded-md mb-4" key={field.id}>
+                    <h2 className="font-semibold text-primary dark:text-white">
+                      Exp-{index + 1}
+                    </h2>
+                    <div className="text-right">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="shadow"
+                        className="my-2"
+                        onPress={() => removeWorkingExperiences(index)}
+                        aria-label="remove working exp"
+                      >
+                        <MinusOutlined />
+                      </Button>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="flex flex-col md:flex-row gap-4">
+                        <MyInp
+                          name={`workingExperiences[${index}].workPlace`}
+                          type="text"
+                          label="Workplace"
+                          placeholder="Enter workplace"
+                          defaultValue={field.workPlace}
+                        />
+                        <MyInp
+                          name={`workingExperiences[${index}].department`}
+                          type="text"
+                          label="Department"
+                          placeholder="Enter department"
+                          defaultValue={field.department}
+                        />
+                        <MyInp
+                          name={`workingExperiences[${index}].designation`}
+                          type="text"
+                          label="Designation"
+                          placeholder="Enter designation"
+                          defaultValue={field.designation}
+                        />
+                      </div>
+                      <div className="flex flex-col md:flex-row gap-4">
+                        <MyInp
+                          name={`workingExperiences[${index}].workingPeriodStart`}
+                          type="date"
+                          label="Working period start"
+                          placeholder="Enter working period start"
+                          defaultValue={field.workingPeriodStart}
+                        />
+                        <MyInp
+                          name={`workingExperiences[${index}].workingPeriodEnd`}
+                          type="date"
+                          label="Working period end"
+                          placeholder="Enter working period end"
+                          defaultValue={field.workingPeriodEnd}
+                        />
+                      </div>
+                    </div>
                   </div>
-
-                  <div className="flex flex-col md:flex-row gap-4">
-                    <MyInp
-                      type="text"
-                      name={`workingExperiences[${index}].workPlace`}
-                      placeholder="e.g., Dhaka Medical College"
-                      label="Work Place"
-                    />
-                    <MyInp
-                      type="text"
-                      name={`workingExperiences[${index}].department`}
-                      placeholder="e.g., Orthopaedics"
-                      label="Department"
-                    />
-                    <MyInp
-                      type="text"
-                      name={`workingExperiences[${index}].designation`}
-                      placeholder="e.g., Assistant Professor"
-                      label="Designation"
-                    />
-                  </div>
-                  <div className="flex flex-col md:flex-row gap-4">
-                    <MyInp
-                      type="date"
-                      name={`workingExperiences[${index}].workingPeriodStart`}
-                      label="Working Period Start"
-                    />
-                    <MyInp
-                      type="date"
-                      name={`workingExperiences[${index}].workingPeriodEnd`}
-                      label="Working Period End"
-                    />
-                  </div>
-                </div>
-              ))}
-
-              <Button
-                size="sm"
-                color="primary"
-                className="!text-white"
-                onClick={onAddExperience}
-                isIconOnly
-              >
-                <PlusIcon />
-              </Button>
-            </div>
+                ))}
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="shadow"
+                  className="mt-2"
+                  onPress={() =>
+                    appendWorkingExperiences({
+                      workPlace: "",
+                      department: "",
+                      designation: "",
+                      workingPeriodStart: "",
+                      workingPeriodEnd: "",
+                    })
+                  }
+                >
+                  <PlusIcon />
+                </Button>
+              </>
+            )}
           </div>
           {/* Availability */}
           <div>
@@ -392,38 +418,39 @@ const SignupPage = () => {
 
   const defaultValues = {
     name: "Habib Utsho",
-    email: "utsho926@gmail.com",
-    phone: "01706785160",
+    // email: "utsho926@gmail.com",
+    // phone: "01706785160",
     dateOfBirth: "2000-05-05",
-    // gender: "Male",
+    gender: "Male",
     district: "Dhaka",
     bloodGroup: "AB-",
     password: "1234@@aA",
     bio: "I am a doctor",
-    // doctorTitle: "Dr.",
-    // doctorType: "Medical",
-    totalExperienceYear: 12,
-    // currentWorkplace: {
-    //   workPlace: "City Hospital",
-    //   department: "Internal Medicine",
-    //   designation: "Senior Physician",
-    //   workingPeriodStart: "2022-05-05T00:00:00.000+00:00",
-    //   workingPeriodEnd: "2024-05-05T00:00:00.000+00:00",
-    // },
+    doctorTitle: "Dr.",
+    doctorType: "Medical",
+    totalExperienceYear: 7,
+    currentWorkplace: {
+      workPlace: "Dhaka Medical College",
+      department: "Internal Medicine",
+      designation: "Senior Physician",
+      workingPeriodStart: "2022-05-05",
+    },
     consultationFee: 1000,
     followupFee: 600,
-    nid: "663543434423",
-    bmdc: "55754",
+    // nid: "663543434423",
+    // bmdc: "55754",
     medicalDegree: "BCS(Health), MBBS",
-    // availability: {
-    //   dayStart: "Saturday",
-    //   dayEnd: "Thursday",
-    //   timeStart: "09:00",
-    //   timeEnd: "17:00",
-    // },
+    availability: {
+      dayStart: "Saturday",
+      dayEnd: "Thursday",
+      timeStart: "13:00",
+      timeEnd: "23:30",
+    },
   };
 
-  const onSubmit: SubmitHandler<TPatient> = async (payload: TPatient) => {
+  const onSubmit: SubmitHandler<TPatient> = async (
+    payload: Partial<TPatient & TDoctor>
+  ) => {
     const formData = new FormData();
     if (!previewUrl) {
       toast.error("Please upload your avatar");
@@ -431,10 +458,9 @@ const SignupPage = () => {
     }
     const updatedValues = {
       ...payload,
-      dateOfBirth: new Date(payload?.dateOfBirth),
+      dateOfBirth: new Date(payload?.dateOfBirth ? payload?.dateOfBirth : ""),
     };
 
-    // return;
     formData.append("file", selectedFile as Blob);
     formData.append("data", JSON.stringify(updatedValues));
 
@@ -459,6 +485,18 @@ const SignupPage = () => {
     });
   };
 
+  // Default value for working experiences
+  useEffect(() => {
+    removeWorkingExperiences();
+    appendWorkingExperiences({
+      workPlace: "Rajshahi Medical College",
+      department: "Medical",
+      designation: "Sub-assistant professor",
+      workingPeriodStart: "2021-05-05",
+      workingPeriodEnd: "2024-05-05",
+    });
+  }, [appendWorkingExperiences, removeWorkingExperiences]);
+
   return (
     <div
       className="min-h-screen  flex items-center justify-center bg-cover bg-center bg-slate-800 bg-blend-overlay my-28 md:my-0"
@@ -466,13 +504,9 @@ const SignupPage = () => {
     >
       <Container className="w-full xl:w-4/6 mx-auto">
         <DEForm
+          methods={formMethods}
           onSubmit={onSubmit}
           defaultValues={defaultValues}
-          resolver={zodResolver(
-            activeTab === "doctor"
-              ? authValidationSchema.doctorSignupValidationSchema
-              : authValidationSchema.patientSignupValidationSchema
-          )}
         >
           <div className="shadow  my-5 md:my-32 rounded-md bg-background py-14 px-8">
             <div className="mb-8 space-y-1">
