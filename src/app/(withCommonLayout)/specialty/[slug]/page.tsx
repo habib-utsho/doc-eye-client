@@ -10,6 +10,7 @@ const SpecialtyPage = async ({
 }) => {
   const resolvedParams = await params;
   // console.log(resolvedParams.slug, "slug");
+  
 
   // TODO: Need here pagination or infinite scroll
   const doctors = await getAllDoctors([
