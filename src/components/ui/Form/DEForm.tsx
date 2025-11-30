@@ -38,8 +38,6 @@ const DEForm = ({
     formState: { errors },
   } = methodsToUse;
 
-  console.log(errors, 'errors from DEForm');
-
   const prevDefaultValuesRef = useRef<string>();
 
   useEffect(() => {

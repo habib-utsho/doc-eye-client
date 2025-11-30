@@ -134,7 +134,6 @@ const SigninPage = () => {
     );
   };
 
-
   return (
     <div
       className="min-h-screen  flex items-center justify-center bg-cover bg-center bg-slate-800 bg-blend-overlay my-28 md:my-0"
@@ -146,7 +145,7 @@ const SigninPage = () => {
         }  mx-auto`}
       >
         <DEForm
-          onSubmit={onSubmit}
+          onSubmit={isForgotPassword ? () => {} : onSubmit}
           defaultValues={defaultValues}
           resolver={zodResolver(authValidationSchema.signinValidationSchema)}
           methods={formMethods}
