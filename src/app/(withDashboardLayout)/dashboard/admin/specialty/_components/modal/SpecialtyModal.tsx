@@ -16,7 +16,6 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@heroui/modal";
-import { select } from "@heroui/theme";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
@@ -24,8 +23,10 @@ import { toast } from "sonner";
 
 const SpecialtyModal = ({
   updatedSpecialty,
+  refetchSpecialties,
 }: {
   updatedSpecialty?: TSpecialty | null;
+  refetchSpecialties?: () => void;
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -61,11 +62,18 @@ const SpecialtyModal = ({
     }
 
     if (updatedSpecialty?._id) {
-      updateSpecialty({ id: updatedSpecialty._id, payload: formData });
+      updateSpecialty(
+        { id: updatedSpecialty._id, payload: formData }
+      );
       return;
     }
 
-    createSpecialty(formData);
+    createSpecialty(formData, {
+      onSuccess: () => {
+        refetchSpecialties?.();
+        toast.success("Specialty created successfully");
+      },
+    });
   };
 
   useEffect(() => {
@@ -79,7 +87,14 @@ const SpecialtyModal = ({
           "Failed to create/update specialty"
       );
     }
-  }, [isSuccessCreateSpecialty, isSuccessUpdateSpecialty]);
+  }, [
+    isSuccessCreateSpecialty,
+    isSuccessUpdateSpecialty,
+    isCreateSpecialtyError,
+    isUpdateSpecialtyError,
+    createError,
+    updateError,
+  ]);
 
   return (
     <>

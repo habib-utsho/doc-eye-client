@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   createSpecialty,
@@ -25,12 +25,17 @@ export const useCreateSpecialty = () => {
   });
 };
 export const useUpdateSpecialty = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: ["specialty"],
     mutationFn: async ({ id, payload }: { id: string; payload: FormData }) =>
       await updateSpecialty({ id, payload }),
     async onSuccess(data) {
       if (data?.success) {
+        queryClient.invalidateQueries({
+          queryKey: ["specialty"],
+        });
         toast.success(data?.message || "Specialty updated successfully!");
       } else {
         toast.error(data?.message || "Failed to update specialty!");
@@ -42,11 +47,15 @@ export const useUpdateSpecialty = () => {
   });
 };
 export const useDeleteSpecialty = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["specialty"],
     mutationFn: async (id: string) => await deleteSpecialty(id),
     async onSuccess(data) {
       if (data?.success) {
+        queryClient.invalidateQueries({
+          queryKey: ["specialty"],
+        });
         toast.success(data?.message || "Specialty deleted successfully!");
       } else {
         toast.error(data?.message || "Failed to delete specialty!");

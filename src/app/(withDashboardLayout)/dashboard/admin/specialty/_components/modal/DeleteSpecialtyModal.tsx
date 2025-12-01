@@ -9,8 +9,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@heroui/modal";
-import React, { useEffect } from "react";
-
+import React, { useEffect, useState } from "react";
 const DeleteSpecialtyModal = ({
   id,
   handler,
@@ -23,12 +22,15 @@ const DeleteSpecialtyModal = ({
   isSuccess: boolean;
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [closeModal, setCloseModal] = useState<(() => void) | null>(null);
 
+  // Close modal after success
   useEffect(() => {
-    if (isSuccess) {
-      onOpenChange();
+    if (isSuccess && closeModal) {
+      closeModal();
     }
-  }, [isSuccess]);
+  }, [isSuccess, closeModal]);
+
   return (
     <>
       <Button
@@ -39,33 +41,38 @@ const DeleteSpecialtyModal = ({
         isLoading={isLoading}
         onPress={onOpen}
       />
+
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                Delete specialty
-              </ModalHeader>
-              <ModalBody>
-                Are you sure you want to delete this specialty?
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Cancel
-                </Button>
-                <Button
-                  color="primary"
-                  onPress={() => {
-                    handler(id);
-                  }}
-                  isLoading={isLoading}
-                  className="text-white"
-                >
-                  Delete
-                </Button>
-              </ModalFooter>
-            </>
-          )}
+          {(onClose) => {
+            // store stable onClose function
+            if (!closeModal) setCloseModal(() => onClose);
+
+            return (
+              <>
+                <ModalHeader>Delete specialty</ModalHeader>
+
+                <ModalBody>
+                  Are you sure you want to delete this specialty?
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button color="danger" variant="light" onPress={onClose}>
+                    Cancel
+                  </Button>
+
+                  <Button
+                    color="primary"
+                    onPress={() => handler(id)}
+                    isLoading={isLoading}
+                    className="text-white"
+                  >
+                    Delete
+                  </Button>
+                </ModalFooter>
+              </>
+            );
+          }}
         </ModalContent>
       </Modal>
     </>

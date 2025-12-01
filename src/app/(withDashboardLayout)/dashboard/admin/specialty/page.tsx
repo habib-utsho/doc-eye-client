@@ -19,23 +19,37 @@ import { TSpecialty } from "@/src/types/specialty";
 import { Pagination } from "@heroui/pagination";
 import { Spinner } from "@heroui/spinner";
 import { Input } from "@heroui/input";
+import { Tabs, Tab } from "@heroui/tabs";
 import useDebounce from "@/src/hooks/useDebounce";
+import MyMotion from "@/src/components/ui/MyMotion";
 import SpecialtyModal from "./_components/modal/SpecialtyModal";
 import DeleteSpecialtyModal from "./_components/modal/DeleteSpecialtyModal";
 
 const SpecialtyPage = () => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "active" | "deleted"
+  >("active");
   const debounceSearch = useDebounce(searchTerm, 500);
 
-  const { data: specialties, isLoading: isLoadingSpecialties } =
-    useGetAllSpecialties([
-      { name: "page", value: pagination.page },
-      { name: "limit", value: pagination.limit },
-      ...(debounceSearch
-        ? [{ name: "searchTerm", value: debounceSearch }]
-        : []),
-    ]);
+  const {
+    data: specialties,
+    isLoading: isLoadingSpecialties,
+    refetch,
+  } = useGetAllSpecialties([
+    { name: "page", value: pagination.page },
+    { name: "limit", value: pagination.limit },
+    ...(debounceSearch ? [{ name: "searchTerm", value: debounceSearch }] : []),
+    ...(statusFilter === "all"
+      ? []
+      : [
+          {
+            name: "isDeleted",
+            value: statusFilter === "deleted" ? true : false,
+          },
+        ]),
+  ]);
 
   const {
     mutate: deleteSpecialtyMutate,
@@ -43,34 +57,27 @@ const SpecialtyPage = () => {
     isSuccess: isSuccessDeleteSpecialty,
   } = useDeleteSpecialty();
 
-  const rows = specialties?.data?.map((specialty: TSpecialty, ind: number) => {
-    return {
-      key: ind,
-      ind: ind + 1,
-      name: specialty.name,
-      isDeleted: specialty.isDeleted,
-      icon: (
-        <Image
-          src={specialty.icon}
-          alt={specialty.name}
-          width={50}
-          height={50}
+  const rows = specialties?.data?.map((specialty: TSpecialty, ind: number) => ({
+    key: ind,
+    ind: ind + 1,
+    name: specialty.name,
+    isDeleted: specialty.isDeleted,
+    icon: (
+      <Image src={specialty.icon} alt={specialty.name} width={50} height={50} />
+    ),
+    description: specialty.description,
+    actions: (
+      <div className="flex items-center gap-1">
+        <SpecialtyModal updatedSpecialty={specialty} />
+        <DeleteSpecialtyModal
+          id={specialty?._id}
+          handler={deleteSpecialtyMutate}
+          isLoading={isLoadingDeleteSpecialty}
+          isSuccess={isSuccessDeleteSpecialty}
         />
-      ),
-      description: specialty.description,
-      actions: (
-        <div className="flex items-center gap-1">
-          <SpecialtyModal updatedSpecialty={specialty} />
-          <DeleteSpecialtyModal
-            id={specialty?._id}
-            handler={deleteSpecialtyMutate}
-            isLoading={isLoadingDeleteSpecialty}
-            isSuccess={isSuccessDeleteSpecialty}
-          />
-        </div>
-      ),
-    };
-  });
+      </div>
+    ),
+  }));
 
   const columns = [
     {
@@ -97,20 +104,38 @@ const SpecialtyPage = () => {
 
   return (
     <div className="w-full p-4">
-      <div className="flex justify-between items-center mb-8 gap-4">
-        <div className="flex items-center gap-2">
-          <Input
-            name="search"
-            startContent={<SearchIcon />}
-            placeholder="Search specialty..."
-            onChange={(e) => setSearchTerm(e.target.value)}
-            isClearable
-            onClear={() => setSearchTerm("")}
-          />
-        </div>
+      <MyMotion y={20}>
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <Input
+              name="search"
+              startContent={<SearchIcon />}
+              placeholder="Search specialty..."
+              onChange={(e) => setSearchTerm(e.target.value)}
+              isClearable
+              onClear={() => setSearchTerm("")}
+              className="flex-1 md:flex-initial"
+            />
+            <Tabs
+              aria-label="Filter by status"
+              selectedKey={statusFilter}
+              onSelectionChange={(key) => {
+                setStatusFilter(key as "all" | "active" | "deleted");
+                setPagination({ page: 1, limit: 10 });
+              }}
+              color="secondary"
+              variant="bordered"
+              className="min-w-[280px] "
+            >
+              <Tab key="active" title="Active" />
+              <Tab key="deleted" title="Deleted" />
+              <Tab key="all" title="All" />
+            </Tabs>
+          </div>
 
-        <SpecialtyModal />
-      </div>
+          <SpecialtyModal refetchSpecialties={refetch} />
+        </div>
+      </MyMotion>
 
       {/* Specialties */}
       <Table

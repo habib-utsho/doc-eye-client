@@ -5,11 +5,9 @@ import { TFilterQuery } from "@/src/types";
 import { revalidateTag } from "next/cache";
 
 export const getSpecialties = async (query: TFilterQuery[] | undefined) => {
-  const fetchOption = {
-    next: {
-      tags: ["specialty"],
-      revalidate: 60,
-    },
+  const fetchOption: RequestInit & { next?: { tags: string[] } } = {
+    // cache: "no-store" as RequestCache,
+    next: { tags: ["specialty"], revalidate: 60 },
   };
   const params = new URLSearchParams();
   if (query) {
