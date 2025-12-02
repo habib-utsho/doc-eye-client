@@ -22,7 +22,7 @@ const SpecialtySection = ({ specialties }: { specialties: TSpecialty[] }) => {
             >
               <Link
                 href={`/specialty/${item._id}`}
-                className="group flex items-center gap-5 border p-4 rounded-xl bg-white dark:bg-slate-800 shadow-sm hover:shadow-lg transition duration-400 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                className="h-full group flex items-center gap-5 border p-4 rounded-xl bg-white dark:bg-slate-800 shadow-sm hover:shadow-lg transition duration-400 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
               >
                 <figure>
                   <Image

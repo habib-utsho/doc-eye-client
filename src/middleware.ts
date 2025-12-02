@@ -7,18 +7,24 @@ const authRoutes = ["/signin", "/signup"];
 
 type TRole = keyof typeof roleBaseRoutes;
 
-const roleBaseRoutes = {
-  admin: ["/admin", /^\/dashboard/], // regex for /dashboard/:id or anything start with dashboard
-  doctor: [/^\/dashboard/], // regex for /dashboard/:id or anything start with dashboard
-  patient: [/^\/dashboard/], // regex for /dashboard/:id or anything start with dashboard
+const roleBaseRoutes: Record<string, RegExp[]> = {
+  admin: [
+    /^\/dashboard\/admin/,
+    /^\/dashboard\/admin\/.*/,
+  ],
+  doctor: [
+    /^\/dashboard\/doctor/,
+    /^\/dashboard\/doctor\/.*/,
+  ],
+  patient: [
+    /^\/dashboard\/patient/,
+    /^\/dashboard\/patient\/.*/,
+  ],
 };
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
-  //  Try to get current user
   const user = (await getCurrentUser()) as TDecodedUser | null;
-  // console.log({ user });
 
 
   //  Still no user → not authenticated → redirect to signin
@@ -42,9 +48,22 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.redirect(new URL("/", request.url));
+  // return NextResponse.redirect(new URL("/", request.url));
+  //  If not allowed ; send to their own dashboard (not home page!)
+  return NextResponse.redirect(new URL(getDashboardPath(user?.role), request.url));
+}
+
+
+// Helper: return correct dashboard home
+function getDashboardPath(role: string) {
+  const map: Record<string, string> = {
+    admin: "/dashboard/admin",
+    doctor: "/dashboard/doctor",
+    patient: "/dashboard/patient",
+  };
+  return map[role.toLowerCase()] || "/";
 }
 
 export const config = {
-  matcher: ["/signin", "/dashboard/:page*", "/profile/:page*"],
+  matcher: ["/signin", "/signup", "/dashboard/:page*"],
 };

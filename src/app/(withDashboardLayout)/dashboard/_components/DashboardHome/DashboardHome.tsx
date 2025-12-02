@@ -7,7 +7,6 @@ import {
   InfoCircleOutlined,
   ShopOutlined,
   StarOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import { Card, CardBody } from "@heroui/card";
 import { Skeleton } from "@heroui/skeleton";
@@ -24,7 +23,6 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Legend,
   BarChart,
   Bar,
   ResponsiveContainer,
@@ -39,6 +37,7 @@ import Link from "next/link";
 import { MedicineBoxOutlined } from "@ant-design/icons";
 import { Badge } from "@heroui/badge";
 import { TSpecialty } from "@/src/types/specialty";
+import EarningsGraph from "./EarningsGraph";
 
 const appointmentsSummaryCOLORS = ["#3b82f6", "#06b6d4", "#f97316"];
 const satisfactionPatientSummaryCOLORS = ["#4CAF50", "#FFC107", "#F44336"];
@@ -151,14 +150,22 @@ const DashboardHome = ({ role }: { role: TUserRole }) => {
     {
       name: "Pending",
       value: data?.data?.totalPendingAppointments,
+      color: "#f59e0b",
     },
     {
       name: "Completed",
       value: data?.data?.totalCompletedAppointments,
+      color: "#10b981",
+    },
+    {
+      name: "Confirmed",
+      value: data?.data?.totalConfirmedAppointments,
+      color: "#008000",
     },
     {
       name: "Canceled",
       value: data?.data?.totalCanceledAppointments,
+      color: "#ef4444",
     },
   ];
 
@@ -207,7 +214,7 @@ const DashboardHome = ({ role }: { role: TUserRole }) => {
                   : updatedStats.map((stat, index) => (
                       <div
                         key={index}
-                        className="p-4 rounded-xl flex justify-between"
+                        className="p-4 rounded-xl flex justify-between shadow"
                         style={{ backgroundColor: stat.background }}
                       >
                         <div>
@@ -220,7 +227,7 @@ const DashboardHome = ({ role }: { role: TUserRole }) => {
                           <div className="text-xl font-semibold mb-1 text-black">
                             {stat.value}
                           </div>
-                          <h3 className="text-md font-semibold text-black">
+                          <h3 className="text-md  text-gray-600">
                             {stat.title}
                           </h3>
                         </div>
@@ -231,6 +238,7 @@ const DashboardHome = ({ role }: { role: TUserRole }) => {
 
             <Divider className="mt-[35px] mb-[20px]" />
 
+            <EarningsGraph />
             {/* Upcoming appointments */}
             <div>
               {role == "doctor" ? (
@@ -278,6 +286,23 @@ const DashboardHome = ({ role }: { role: TUserRole }) => {
                     </Pie>
                     <Tooltip />
                     {/* <Legend verticalAlign="top" align="center" /> */}
+
+                    <text
+                      x="50%"
+                      y="50%"
+                      textAnchor="middle"
+                      className="text-4xl font-bold fill-gray-700"
+                    >
+                      {data?.data?.totalAppointments || 0}
+                    </text>
+                    <text
+                      x="50%"
+                      y="58%"
+                      textAnchor="middle"
+                      className="text-sm fill-gray-500"
+                    >
+                      Total
+                    </text>
                   </PieChart>
                 </ResponsiveContainer>
               </Card>
@@ -370,11 +395,16 @@ const DashboardHome = ({ role }: { role: TUserRole }) => {
                   </h2>
                   <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={satisfactionData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
+                      <CartesianGrid strokeDasharray="4 4" stroke="#f0f0f0" />
+
+                      <XAxis
+                        dataKey="name"
+                        angle={-20}
+                        tick={{ fontSize: 12 }}
+                      />
                       <YAxis />
                       <Tooltip />
-                      <Bar dataKey="value">
+                      <Bar dataKey="value" radius={[12, 12, 0, 0]}>
                         {satisfactionData.map((entry, index) => (
                           <Cell
                             key={`cell-${index}`}

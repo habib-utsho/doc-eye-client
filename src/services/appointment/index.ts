@@ -62,6 +62,7 @@ export const updateAppointmentStatusById = async ({
     );
     revalidateTag("appointment");
     revalidateTag("stats");
+    revalidateTag("earnings");
     return response.data;
   } catch (e: unknown) {
     const error = e as any;

@@ -13,6 +13,7 @@ export const makePaymentInit = async (payload: TCreateAppointment) => {
     revalidateTag("appointment");
     revalidateTag("doctor");
     revalidateTag("stats");
+    revalidateTag("earnings");
     return response.data;
   } catch (e: unknown) {
     const error = e as any;

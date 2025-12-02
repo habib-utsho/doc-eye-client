@@ -231,7 +231,6 @@ const AdminAppointmentsPage = ({
     );
   };
 
-  console.log({ appointments });
 
   return (
     <div className="w-full p-4">
