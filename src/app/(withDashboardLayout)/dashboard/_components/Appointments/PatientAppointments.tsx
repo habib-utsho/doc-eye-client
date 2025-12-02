@@ -76,6 +76,9 @@ const PatientAppointmentsPage = ({
         ? firstLetterCapital(appointment?.symptoms)
         : "N/A",
       // schedule: <AppointmentScheduleCountdown schedule={appointment?.schedule} />,
+      schedule: (
+        <AppointmentScheduleCountdown schedule={appointment?.schedule} />
+      ),
       paymentStatus: firstLetterCapital(appointment?.payment?.status),
       status: (
         <Button

@@ -54,10 +54,11 @@ const CompleteAppointmentsModal = ({
       medicalReportValidationSchema.createMedicalReportZodSchema
     ),
     defaultValues: {
-      medications: [{ name: "", dosage: "", frequency: "", duration: "" }],
-      problems: [""],
-      advices: [""],
-      tests: [""],
+      diagnosis: "Black fever",
+      medications: [{ name: "Napa", dosage: "500mg", frequency: "1-0-1", duration: "3 days" }],
+      problems: ["ঠান্ডা কাশি", "মাথা ঝিমঝিম করা", "সর্দি, হাচি"],
+      advices: ["কুশুম গরম পানি দিয়ে কুলকুচি করতে হবে", "ঠান্ডা লাগানো যাবেনা", "ওষুধ নিয়মিত খেতে হবে"],
+      tests: ["Test with thermometer"],
     },
   });
 

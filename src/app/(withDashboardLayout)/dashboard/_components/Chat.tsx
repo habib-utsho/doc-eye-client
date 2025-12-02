@@ -25,6 +25,7 @@ import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { TCreateMessage, TMessage } from "@/src/types/message";
 import { useGetAllMessages } from "@/src/hooks/message.hook";
 import { Skeleton } from "@heroui/skeleton";
+import AppointmentScheduleCountdown from "./Appointments/AppointmentScheduleCountdown";
 
 type ChatProps = {
   from: TUserRole;
@@ -143,12 +144,11 @@ const Chat = ({ from, doctor, patient, appointment }: ChatProps) => {
                 <div className="flex flex-col text-left text-sm text-gray-600">
                   <span className="text-xs font-medium">Appointment</span>
                   <span title={moment(appointment.schedule).format("LLLL")}>
-                    {moment(appointment.schedule).format(
-                      "DD-MMM-YYYY ⏰ hh:mm A"
-                    )}
-                  </span>
-                  <span className="text-xs text-gray-400">
-                    {moment(appointment.schedule).fromNow()}
+                    {
+                      <AppointmentScheduleCountdown
+                        schedule={appointment?.schedule}
+                      />
+                    }
                   </span>
                 </div>
 
