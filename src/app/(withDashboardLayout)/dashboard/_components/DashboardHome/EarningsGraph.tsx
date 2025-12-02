@@ -43,12 +43,10 @@ const EarningsGraph = () => {
   const totalEarnings = earnings?.data?.totalAmount || 0;
   const totalAppointments = earnings?.data?.totalPayments || 0;
 
-  console.log({ selectedYear, earnings });
-
   return (
     <Card className="shadow-2xl border-0 overflow-hidden">
       {/* Gradient Header */}
-      <div className="bg-gradient-to-r from-primary via-purple-500 to-secondary text-white p-6">
+      <div className="bg-gradient-to-r from-primary to-purple-500  text-white p-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h3 className="text-2xl font-bold">

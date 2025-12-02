@@ -4,7 +4,7 @@ import {
   useUpdateAppointmentStatusById,
 } from "@/src/hooks/appointment.hook";
 import useDebounce from "@/src/hooks/useDebounce";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DETable from "../../_components/DETable";
 import Image from "next/image";
 import moment from "moment";
@@ -27,6 +27,7 @@ import Chat from "../Chat";
 import VideoCall from "../VideoCall";
 import Link from "next/link";
 import { EyeOutlined } from "@ant-design/icons";
+import AppointmentScheduleCountdown from "./AppointmentScheduleCountdown";
 
 const DoctorAppointmentsPage = ({
   state = "upcoming",
@@ -57,8 +58,6 @@ const DoctorAppointmentsPage = ({
   ]);
   const { mutate: updateAppointmentStatus, isPending: isLoadingUpdateStatus } =
     useUpdateAppointmentStatusById();
-
-  // console.log({ appointments });
 
   const rows = appointments?.data?.map(
     (appointment: TAppointment, ind: number) => ({
@@ -94,7 +93,8 @@ const DoctorAppointmentsPage = ({
       symptoms: appointment?.symptoms
         ? firstLetterCapital(appointment?.symptoms)
         : "N/A",
-      schedule: moment(appointment?.schedule).format("DD-MMM-YYYY ⏰ hh:mm A"),
+
+      schedule: <AppointmentScheduleCountdown schedule={appointment?.schedule} />,
       paymentStatus: firstLetterCapital(appointment?.payment?.status),
       // status: firstLetterCapital(appointment?.status),
       status: (
@@ -181,7 +181,7 @@ const DoctorAppointmentsPage = ({
           )}
           <Button
             as={Link}
-            href={`/dashboard/patient/appointment/${appointment._id}`}
+            href={`/dashboard/doctor/appointment/${appointment._id}`}
             isIconOnly
             color="primary"
             variant="light"

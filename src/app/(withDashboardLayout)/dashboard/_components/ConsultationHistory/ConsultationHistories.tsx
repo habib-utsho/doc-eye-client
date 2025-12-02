@@ -10,6 +10,7 @@ import useUserData from "@/src/hooks/user.hook";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { useGetAllMedicalReport } from "@/src/hooks/medicalReport.hook";
 import { TUserRole } from "@/src/types/user";
+import AppointmentScheduleCountdown from "../Appointments/AppointmentScheduleCountdown";
 
 const ConsultationHistories = ({ from }: { from: TUserRole }) => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
@@ -20,10 +21,14 @@ const ConsultationHistories = ({ from }: { from: TUserRole }) => {
 
   const { data: consultationHistory, isLoading: isLoadingConsultationHistory } =
     useGetAllMedicalReport([
-      {
-        name: user?.role === "doctor" ? "doctor" : "patient",
-        value: user?._id,
-      },
+      ...(user?.role === "admin"
+        ? []
+        : [
+            {
+              name: user?.role === "doctor" ? "doctor" : "patient",
+              value: user?._id,
+            },
+          ]),
       { name: "searchTerm", value: debounceSearch },
       { name: "page", value: pagination.page },
       { name: "limit", value: pagination.limit },
@@ -67,9 +72,12 @@ const ConsultationHistories = ({ from }: { from: TUserRole }) => {
       followUp: history?.followUpDate
         ? moment(history?.followUpDate).format("DD-MMM-YYYY")
         : "N/A",
-      schedule: moment(history?.appointment?.schedule).format(
-        "DD-MMM-YYYY ⏰ hh:mm A"
+      schedule: (
+        <AppointmentScheduleCountdown
+          schedule={history?.appointment?.schedule}
+        />
       ),
+
       createdAt: moment(history?.createdAt).format("DD-MMM-YYYY ⏰ hh:mm A"),
     })
   );

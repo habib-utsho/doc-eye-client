@@ -28,6 +28,7 @@ import { DownloadIcon } from "@/src/components/ui/icons";
 import AppointmentPDF from "../AppointmentPDF";
 import Chat from "../Chat";
 import VideoCall from "../VideoCall";
+import AppointmentScheduleCountdown from "./AppointmentScheduleCountdown";
 
 const AppointmentDetailsPage = () => {
   const { id } = useParams();
@@ -93,7 +94,7 @@ const AppointmentDetailsPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-secondary/10 py-8 px-4 rounded-md">
-      <Container className="max-w-6xl">
+      <Container className="max-w-full">
         {/* Header */}
         <MyMotion y={20} className="mb-6">
           <div className="flex justify-between items-center">
@@ -117,7 +118,7 @@ const AppointmentDetailsPage = () => {
           <div className="lg:col-span-2 space-y-6">
             {/* Doctor Information */}
             <MyMotion y={20} delay={0.1}>
-              <Card className="shadow-lg">
+              <Card className="shadow">
                 <CardHeader className="bg-primary/10 pb-4">
                   <div className="flex items-center gap-3">
                     <MedicineBoxOutlined className="text-2xl text-primary" />
@@ -235,7 +236,7 @@ const AppointmentDetailsPage = () => {
 
             {/* Patient Information */}
             <MyMotion y={20} delay={0.2}>
-              <Card className="shadow-lg">
+              <Card className="shadow">
                 <CardHeader className="bg-secondary/10 pb-4">
                   <div className="flex items-center gap-3">
                     <UserOutlined className="text-2xl text-secondary" />
@@ -338,8 +339,8 @@ const AppointmentDetailsPage = () => {
           <div className="space-y-6">
             {/* Appointment Info */}
             <MyMotion y={20} delay={0.3}>
-              <Card className="shadow-lg">
-                <CardHeader className="pb-4 flex justify-between gap-2 items-center">
+              <Card className="shadow">
+                <CardHeader className="pb-4 flex flex-wrap justify-between gap-2 items-center">
                   <div className="flex items-center gap-3">
                     <CalendarOutlined className="text-2xl text-primary" />
                     <h2 className="text-xl font-semibold">Appointment Info</h2>
@@ -405,12 +406,9 @@ const AppointmentDetailsPage = () => {
                       <ClockCircleOutlined className="text-primary mt-1" />
                       <div>
                         <p className="text-sm text-default-500">Schedule</p>
-                        <p className="font-semibold text-lg">
-                          {moment(appointment.schedule).format("DD MMM YYYY")}
-                        </p>
-                        <p className="text-default-600">
-                          {moment(appointment.schedule).format("hh:mm A")}
-                        </p>
+                        <AppointmentScheduleCountdown
+                          schedule={appointment?.schedule}
+                        />
                       </div>
                     </div>
                   </div>
@@ -445,7 +443,7 @@ const AppointmentDetailsPage = () => {
 
             {/* Payment Info */}
             <MyMotion y={20} delay={0.4}>
-              <Card className="shadow-lg">
+              <Card className="shadow">
                 <CardHeader className="bg-success/10 pb-4">
                   <div className="flex items-center gap-3">
                     <DollarOutlined className="text-2xl text-success" />
@@ -517,7 +515,7 @@ const AppointmentDetailsPage = () => {
 
             {/* Action Buttons */}
             <MyMotion y={20} delay={0.5}>
-              <Card className="shadow-lg">
+              <Card className="shadow">
                 <CardBody className="gap-3">
                   <Button
                     type="button"

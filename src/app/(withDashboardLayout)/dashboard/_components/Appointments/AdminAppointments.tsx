@@ -27,6 +27,7 @@ import Chat from "../Chat";
 import VideoCall from "../VideoCall";
 import Link from "next/link";
 import { EyeOutlined } from "@ant-design/icons";
+import AppointmentScheduleCountdown from "./AppointmentScheduleCountdown";
 
 const AdminAppointmentsPage = ({
   state = "upcoming",
@@ -93,7 +94,7 @@ const AdminAppointmentsPage = ({
       symptoms: appointment?.symptoms
         ? firstLetterCapital(appointment?.symptoms)
         : "N/A",
-      schedule: moment(appointment?.schedule).format("DD-MMM-YYYY ⏰ hh:mm A"),
+      schedule: <AppointmentScheduleCountdown schedule={appointment?.schedule} />,
       paymentStatus: firstLetterCapital(appointment?.payment?.status),
       // status: firstLetterCapital(appointment?.status),
       status: (
@@ -180,7 +181,7 @@ const AdminAppointmentsPage = ({
           )}
           <Button
             as={Link}
-            href={`/dashboard/patient/appointment/${appointment._id}`}
+            href={`/dashboard/admin/appointment/${appointment._id}`}
             isIconOnly
             color="primary"
             variant="light"
@@ -230,7 +231,6 @@ const AdminAppointmentsPage = ({
       }
     );
   };
-
 
   return (
     <div className="w-full p-4">

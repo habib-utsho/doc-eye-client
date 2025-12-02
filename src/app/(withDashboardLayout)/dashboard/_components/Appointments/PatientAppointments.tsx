@@ -15,11 +15,11 @@ import {
   CheckCircleFilled,
   CheckCircleOutlined,
   EyeOutlined,
-  StarOutlined,
 } from "@ant-design/icons";
 import Chat from "../Chat";
 import VideoCall from "../VideoCall";
 import Link from "next/link";
+import AppointmentScheduleCountdown from "./AppointmentScheduleCountdown";
 
 const PatientAppointmentsPage = ({
   state = "upcoming",
@@ -75,7 +75,7 @@ const PatientAppointmentsPage = ({
       symptoms: appointment?.symptoms
         ? firstLetterCapital(appointment?.symptoms)
         : "N/A",
-      schedule: moment(appointment?.schedule).format("DD-MMM-YYYY ⏰ hh:mm A"),
+      // schedule: <AppointmentScheduleCountdown schedule={appointment?.schedule} />,
       paymentStatus: firstLetterCapital(appointment?.payment?.status),
       status: (
         <Button
