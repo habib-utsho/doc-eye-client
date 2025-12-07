@@ -41,7 +41,7 @@ const AppointmentScheduleCountdown = ({
       color = "text-primary";
     } else if (h > 0) {
       text = `In ${h}h ${m}m ${s}s`;
-      color = "text-secondary";
+      color = "text-primary";
     } else if (m > 5) {
       text = `In ${m}m ${s}s`;
       color = "text-success";

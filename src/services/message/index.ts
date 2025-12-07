@@ -1,13 +1,19 @@
 "use server";
 
 import { TFilterQuery } from "@/src/types";
-import { cache } from "react";
+import { cookies } from "next/headers";
 
 export const getMessages = async (query: TFilterQuery[] | undefined) => {
-    const fetchOption = {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("DEaccessToken")?.value;
+    const fetchOption: RequestInit = {
+        method: "GET",
         next: {
             tags: ["message"],
             revalidate: 0,
+        },
+        headers: {
+            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         },
     };
     const params = new URLSearchParams();

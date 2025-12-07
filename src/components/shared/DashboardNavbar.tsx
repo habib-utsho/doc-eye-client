@@ -97,7 +97,10 @@ export const DashboardNavbar = ({
 
       <NavbarContent className="flex basis-1/5 sm:basis-full" justify="end">
         <NavbarItem>
-          <MessageIcon className="text-xl cursor-pointer" />
+          <MessageIcon
+            className="text-xl cursor-pointer"
+            onClick={() => router.push(`/dashboard/${role}/messages`)}
+          />
         </NavbarItem>
         {!isLoading && (
           <NavbarItem>
