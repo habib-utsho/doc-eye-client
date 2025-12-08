@@ -1,25 +1,16 @@
 import {
   Navbar as NextUINavbar,
   NavbarContent,
-  NavbarMenu,
-  NavbarMenuToggle,
   NavbarBrand,
   NavbarItem,
-  NavbarMenuItem,
 } from "@heroui/navbar";
-import { Link } from "@heroui/link";
-import NextLink from "next/link";
-import logo from "@/src/assets/img/logo.png";
-import { siteConfig } from "@/src/config/site";
 import { ThemeSwitch } from "@/src/components/theme-switch";
 import {
-  GithubIcon,
   MessageIcon,
   NotificationIcon,
 } from "@/src/components/ui/icons";
-import Image from "next/image";
 import NavbarProfileDropdown from "./NavbarProfileDropdown";
-import { TUser, TDecodedUser } from "@/src/types/user";
+import { TDecodedUser } from "@/src/types/user";
 import { usePathname, useRouter } from "next/navigation";
 import { HomeOutlined, RightOutlined } from "@ant-design/icons";
 import { useMemo } from "react";

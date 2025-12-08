@@ -208,8 +208,8 @@ export default function DoctorMessagesPage() {
                   Select a conversation
                 </h3>
                 <p className="text-gray-500 mt-2 max-w-sm mx-auto">
-                  Choose a patient from the list to view messages and continue
-                  the conversation.
+                  Choose a appointment from the list to view messages and
+                  continue the conversation.
                 </p>
               </div>
             </div>

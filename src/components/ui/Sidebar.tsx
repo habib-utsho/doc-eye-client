@@ -228,12 +228,16 @@ const patientRoutes: TSidebarRoute[] = [
 const Sidebar = ({
   isLoading,
   user,
+  collapsed,
+  setCollapsed,
 }: {
   isLoading: boolean;
   user: TDecodedUser;
+  collapsed: boolean;
+  setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
+  // const [collapsed, setCollapsed] = useState(false);
   const { handleSignOut } = useSignOut();
 
   const { theme } = useTheme();
@@ -277,8 +281,11 @@ const Sidebar = ({
           component={<Link href={route.path || "#"} />}
           active={isActive}
           icon={route.icon}
-          className={`${isDark && "hover:text-black"} ${
-            isActive ? "font-semibold text-primary bg-slate-300" : ""
+          className={`${isDark && "hover:text-black"} 
+          ${
+            isActive
+              ? "font-semibold text-primary bg-slate-300 rounded-r-full"
+              : ""
           }`}
         >
           {route.name}
@@ -297,13 +304,13 @@ const Sidebar = ({
       backgroundColor={isDark ? `#374151` : `#f3f4f6`}
       breakPoint="md"
       transitionDuration={300}
-      // rootStyles={{
-      //   position: "fixed",
-      //   height: "100vh",
-      //   top: 0,
-      //   left: 0,
-      //   zIndex: 1000,
-      // }}
+      rootStyles={{
+        position: "fixed",
+        height: "100vh",
+        top: 0,
+        left: 0,
+        zIndex: 1000,
+      }}
     >
       <Menu
         menuItemStyles={{

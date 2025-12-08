@@ -19,6 +19,9 @@ import {
   SendOutlined,
 } from "@ant-design/icons";
 import { Skeleton } from "@heroui/skeleton";
+import Link from "next/link";
+import useUserData from "@/src/hooks/user.hook";
+import { ExternalLink } from "lucide-react";
 
 type TChatProps = {
   from: TUserRole;
@@ -28,6 +31,7 @@ type TChatProps = {
 };
 const ChatBody = ({ from, doctor, patient, appointment }: TChatProps) => {
   const chatId = generateChatId(appointment);
+  const { user, isLoading: isUserLoading } = useUserData();
 
   //   console.log({ chatId, from, doctor, patient, appointment }, "chatId");
 
@@ -113,7 +117,20 @@ const ChatBody = ({ from, doctor, patient, appointment }: TChatProps) => {
       <div className="p-4 flex justify-between items-center gap-4 border-b">
         {/* Left: Appointment Time */}
         <div className="flex flex-col text-left text-sm text-gray-600">
-          <span className="text-xs font-medium">Appointment</span>
+          <span className="text-xs font-medium">
+            {" "}
+            <Button
+              as={Link}
+              href={`/dashboard/${user?.role}/appointment/${appointment._id}`}
+              color="primary"
+              variant="light"
+              aria-label="Appointment details"
+              isLoading={isUserLoading}
+              className="px-1 py-1 font-semibold h-auto"
+            >
+              Appointment <ExternalLink className="w-4 h-4" />
+            </Button>
+          </span>
           <span title={moment(appointment.schedule).format("LLLL")}>
             {<AppointmentScheduleCountdown schedule={appointment?.schedule} />}
           </span>
