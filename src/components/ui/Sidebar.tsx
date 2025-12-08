@@ -230,14 +230,17 @@ const Sidebar = ({
   user,
   collapsed,
   setCollapsed,
+  toggled,
+  setToggled,
 }: {
   isLoading: boolean;
   user: TDecodedUser;
   collapsed: boolean;
   setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+  toggled: boolean;
+  setToggled: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const pathname = usePathname();
-  // const [collapsed, setCollapsed] = useState(false);
   const { handleSignOut } = useSignOut();
 
   const { theme } = useTheme();
@@ -255,7 +258,6 @@ const Sidebar = ({
   const renderRoutes = (routes: TSidebarRoute[]) => {
     return routes.map((route) => {
       if (route.children) {
-        // Check if any child is active for submenu highlighting
         const hasActiveChild = route.children.some(
           (child) =>
             pathname === child.path || pathname.startsWith(child.path + "/")
@@ -272,7 +274,6 @@ const Sidebar = ({
         );
       }
 
-      // Check if current route is active (exact match)
       const isActive = pathname === route.path;
 
       return (
@@ -281,6 +282,7 @@ const Sidebar = ({
           component={<Link href={route.path || "#"} />}
           active={isActive}
           icon={route.icon}
+          onClick={() => setToggled(false)} // Close sidebar on mobile when clicking a menu item
           className={`${isDark && "hover:text-black"} 
           ${
             isActive
@@ -294,13 +296,15 @@ const Sidebar = ({
     });
   };
 
+
   return (
     <ReactProSidebar
       collapsed={collapsed}
       width="230px"
       collapsedWidth="80px"
       rtl={false}
-      toggled
+      toggled={toggled}
+      onBackdropClick={() => setToggled(false)}
       backgroundColor={isDark ? `#374151` : `#f3f4f6`}
       breakPoint="md"
       transitionDuration={300}
@@ -352,42 +356,6 @@ const Sidebar = ({
         </div>
       </Menu>
     </ReactProSidebar>
-  );
-
-  // Original return
-  return (
-    <div className="h-screen bg-white dark:bg-gray-700 border-r w-[200px] sticky top-0 left-0 pb-12">
-      <Link className="flex items-center justify-center gap-1 pt-3" href="/">
-        <Image src={logo} height={40} width={40} alt="logo" />
-        <p className="font-bold text-inherit">DocEye</p>
-      </Link>
-
-      <ul className="rounded mt-4 mb-2 px-2 space-y-1">
-        {routes.map((route: TSidebarRoute) => {
-          const isMatch = pathname === route.path;
-          if (!route.path) return null;
-          return (
-            <li
-              key={route.path}
-              className={`${
-                isMatch ? "bg-[#ededed] dark:bg-gray-600" : ""
-              }  hover:bg-[#dadada] dark:hover:bg-gray-500 transition-all duration-500 text-sm rounded-md`}
-            >
-              <Link href={route.path} className={"block p-2 px-3"}>
-                {route.name}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-
-      <Button
-        startContent={<SignOutIcon className="size-5 " />}
-        className="absolute bottom-1 left-0 right-0 text-red-500 w-[92%] mx-auto"
-      >
-        Signout
-      </Button>
-    </div>
   );
 };
 
