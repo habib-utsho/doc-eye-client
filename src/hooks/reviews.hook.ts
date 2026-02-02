@@ -2,11 +2,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { TFilterQuery } from "../types";
 import { createReview, deleteReview, getReviews, updateReview } from "../services/reviews";
+import { TCreateReview } from "../types/review";
 
 export const useCreateReview = () => {
     return useMutation({
         mutationKey: ["reviews"],
-        mutationFn: async (payload: FormData) => await createReview(payload),
+        mutationFn: async (payload: TCreateReview) => await createReview(payload),
         async onSuccess(data) {
             if (data?.success) {
                 toast.success(data?.message || "Review created successfully!");

@@ -2,6 +2,8 @@
 
 import axiosInstance from "@/src/lib/axiosInstance";
 import { TFilterQuery } from "@/src/types";
+import { TCreateReview } from "@/src/types/review";
+import { TCreateReview } from "@/src/types/review";
 import { revalidateTag } from "next/cache";
 
 export const getReviews = async (query: TFilterQuery[] | undefined) => {
@@ -22,7 +24,7 @@ export const getReviews = async (query: TFilterQuery[] | undefined) => {
     return response.json();
 };
 
-export const createReview = async (payload: FormData) => {
+export const createReview = async (payload: TCreateReview) => {
     try {
         const response = await axiosInstance.post(`/review`, payload);
         revalidateTag("reviews");

@@ -40,7 +40,7 @@ export default function DoctorMessagesPage() {
 
   const appointments = (res?.data || []) as TAppointment[];
   const selectedAppointment = appointments.find(
-    (appt: any) => generateChatId(appt) === selectedChatId
+    (appt: any) => generateChatId(appt) === selectedChatId,
   );
 
   if (loadingUser || isLoading) {
