@@ -3,11 +3,11 @@ import { getDoctorByDoctorCode } from "@/src/services/doctor";
 import { TDoctor } from "@/src/types/user";
 import Image from "next/image";
 import React from "react";
-import DoctorTabs from "./_components/DoctorTabs";
 import isDoctorAvailable from "@/src/utils/isDoctorAvailable";
 import { Badge } from "@heroui/badge";
 import BookingButton from "./_components/BookingButton";
 import FavoriteDoctorHeart from "../../specialty/_components/FavoriteDoctorHeart";
+import DoctorTabs from "./_components/doctor-tabs/DoctorTabs";
 
 const DoctorDetailsPage = async ({
   params,
@@ -15,14 +15,9 @@ const DoctorDetailsPage = async ({
   params: Promise<{ slug: string }>;
 }) => {
   const resolvedParams = await params;
-  // console.log(resolvedParams.slug, "slug");
   const doctorRes = await getDoctorByDoctorCode(resolvedParams.slug);
   const doctor = doctorRes?.data as TDoctor;
-  // console.log(doctor, "doctor");
   const isDoctorAvailableP = isDoctorAvailable(doctor);
-  // console.log(isDoctorAvailableP, "isDoctorAvailableP");
-
-  // console.log(isDoctorAvailableP, "isDoctorAvailableP");
   return (
     <div className="py-8 space-y-4 md:space-y-8 bg-slate-50 dark:bg-gray-900">
       <div className=" py-4">

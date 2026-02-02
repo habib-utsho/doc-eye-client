@@ -24,7 +24,7 @@ import {
 } from "next/navigation";
 import { useGetDoctorByDoctorCode } from "@/src/hooks/doctor.hook";
 import useUserData from "@/src/hooks/user.hook";
-import Loading from "@/src/components/ui/Loading";
+
 import { TDoctor } from "@/src/types/user";
 import PaymentModal from "../_components/PaymentModal";
 import { useGetAllAppointments } from "@/src/hooks/appointment.hook";
@@ -37,6 +37,7 @@ import {
 } from "@ant-design/icons";
 import { useGetPatientById } from "@/src/hooks/patient.hook";
 import FavoriteDoctorHeart from "../../../specialty/_components/FavoriteDoctorHeart";
+import CheckoutSkeleton from "@/src/components/ui/CheckoutSkeleton";
 
 const DoctorCheckout = () => {
   const params = useParams() as { slug: string };
@@ -67,7 +68,7 @@ const DoctorCheckout = () => {
   ]);
 
   const { data: patient, isLoading: isPatientLoading } = useGetPatientById(
-    user?._id || ""
+    user?._id || "",
   );
 
   // console.log({
@@ -81,7 +82,8 @@ const DoctorCheckout = () => {
   //   doctor,
   // });
 
-  if (isDoctorLoading || isUserLoading || isPatientLoading) return <Loading />;
+  if (isDoctorLoading || isUserLoading || isPatientLoading)
+    return <CheckoutSkeleton />;
 
   const vat5Percent = Math.round((doctor?.consultationFee / 100) * 5);
   const totalAmount =
@@ -214,7 +216,7 @@ const DoctorCheckout = () => {
                   defaultValue={activePaymentMethod}
                   onValueChange={(e) =>
                     setActivePaymentMethod(
-                      e as "bKash" | "SSLCOMMERZ" | "aamarPay"
+                      e as "bKash" | "SSLCOMMERZ" | "aamarPay",
                     )
                   }
                 >
@@ -297,7 +299,7 @@ const DoctorCheckout = () => {
                       vat: vat5Percent,
                       total: totalAmount,
                       platformFee: Number(
-                        process.env.NEXT_PUBLIC_PER_CONSULTATION_SERVICE_FEE!
+                        process.env.NEXT_PUBLIC_PER_CONSULTATION_SERVICE_FEE!,
                       ),
                     }}
                     isDisabled={

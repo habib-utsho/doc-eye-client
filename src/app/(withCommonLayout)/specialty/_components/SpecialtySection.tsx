@@ -9,6 +9,7 @@ import MyMotion from "@/src/components/ui/MyMotion";
 const SpecialtySection = ({ specialties }: { specialties: TSpecialty[] }) => {
   return (
     <>
+      {" "}
       {specialties?.length === 0 ? (
         <Empty description="No specialty found" />
       ) : (

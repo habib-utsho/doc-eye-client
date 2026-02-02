@@ -13,9 +13,9 @@ import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Tab, Tabs } from "@heroui/tabs";
 import moment from "moment";
 import React from "react";
+import ReviewTab from "./ReviewTab";
 
 const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
-  // console.log(doctor, "doctor");
   return (
     <MyMotion y={50}>
       <Tabs aria-label="Options">
@@ -52,9 +52,9 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
                           {doctor.availability?.dayEnd}{" "}
                         </span>
                         {`(${convertTo12HourTime(
-                          doctor.availability?.timeStart
+                          doctor.availability?.timeStart,
                         )} - ${convertTo12HourTime(
-                          doctor.availability?.timeEnd
+                          doctor.availability?.timeEnd,
                         )})`}
                       </div>
                     </div>
@@ -154,12 +154,12 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
                   <p className="text-gray-500 text-sm">Working Period</p>
                   <p className="text-font-semibold">
                     {moment(doctor.currentWorkplace?.workingPeriodStart).format(
-                      "Do MMM, YYYY"
+                      "Do MMM, YYYY",
                     )}{" "}
                     -{" "}
                     {doctor.currentWorkplace?.workingPeriodEnd
                       ? moment(
-                          doctor.currentWorkplace?.workingPeriodEnd
+                          doctor.currentWorkplace?.workingPeriodEnd,
                         ).format("Do MMM, YYYY")
                       : "Running"}
                   </p>
@@ -209,18 +209,18 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
                         <p className="text-gray-500 text-sm">Working Period</p>
                         <p className="text-font-semibold">
                           {moment(experience.workingPeriodStart).format(
-                            "Do MMM, YYYY"
+                            "Do MMM, YYYY",
                           )}{" "}
                           -{" "}
                           {moment(experience.workingPeriodEnd).format(
-                            "Do MMM, YYYY"
+                            "Do MMM, YYYY",
                           )}
                         </p>
                       </div>
                     </CardBody>
                   </Card>
                 );
-              }
+              },
             )}
           </div>
         </Tab>
@@ -234,7 +234,7 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
         >
           <Card className="p-2 bg-white dark:bg-gray-800">
             <CardBody>
-              Reviews and ratings will be available soon. Stay tuned.
+              <ReviewTab doctor={doctor} />
             </CardBody>
           </Card>
         </Tab>

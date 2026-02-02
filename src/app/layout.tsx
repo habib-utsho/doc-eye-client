@@ -1,7 +1,5 @@
 import "@/src/styles/globals.css";
 import { Metadata, Viewport } from "next";
-import clsx from "clsx";
-
 import { siteConfig } from "@/src/config/site";
 import { poppins } from "@/src/config/fonts";
 import { Providers } from "../lib/providers";
@@ -34,11 +32,11 @@ export default function RootLayout({
     <html suppressHydrationWarning lang="en">
       <head />
       <body
-        className={clsx(
+        className={`
           "min-h-screen bg-background antialiased",
-          poppins.variable,
-          poppins.className
-        )}
+          ${poppins.variable},
+          ${poppins.className}
+        `}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           {children}
