@@ -16,6 +16,7 @@ import React from "react";
 import ReviewTab from "./ReviewTab";
 
 const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
+  console.log({ doctor });
   return (
     <MyMotion y={50}>
       <Tabs aria-label="Options">
@@ -129,42 +130,34 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
             </div>
           }
         >
-          <Card className="!shadow hover:!shadow-sm mb-4 md:mb-6 bg-white dark:bg-gray-800 bg-opacity-10 w-full !flex-1 relative">
-            <h2 className="font-bold text-sm mb-2 absolute right-0 top-0 opacity-30 bg-primary text-white px-2 py-[2px] rounded-tr-md">
+          <Card className="!shadow hover:!shadow-sm mb-4 md:mb-6 bg-white dark:bg-gray-800 w-full !flex-1 relative pt-4 sm:pt-0">
+            <h2 className="font-bold text-sm mb-2 absolute right-0 w-full text-center sm:w-auto top-0 bg-primary text-white px-2 py-[2px] rounded-tr-md">
               Current Workplace
             </h2>
             <CardHeader className="pb-0 font-semibold text-lg md:text-xl">
               {doctor.currentWorkplace?.workPlace}
             </CardHeader>
-            <CardBody>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                <div>
-                  <p className="text-gray-500 text-sm">Department</p>
-                  <p className="text-font-semibold">
-                    {doctor.currentWorkplace?.department}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-gray-500 text-sm">Designation</p>
-                  <p className="text-font-semibold">
-                    {doctor.currentWorkplace?.designation}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-gray-500 text-sm">Working Period</p>
-                  <p className="text-font-semibold">
-                    {moment(doctor.currentWorkplace?.workingPeriodStart).format(
-                      "Do MMM, YYYY",
-                    )}{" "}
-                    -{" "}
-                    {doctor.currentWorkplace?.workingPeriodEnd
-                      ? moment(
-                          doctor.currentWorkplace?.workingPeriodEnd,
-                        ).format("Do MMM, YYYY")
-                      : "Running"}
-                  </p>
-                </div>
+            <CardBody className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <InfoItem
+                  label={"Department"}
+                  value={doctor.currentWorkplace?.department}
+                />
+                <InfoItem
+                  label={"Designation"}
+                  value={doctor.currentWorkplace?.designation}
+                />
               </div>
+              <InfoItem
+                label={"Working Period"}
+                value={`${moment(doctor.currentWorkplace?.workingPeriodStart).format("Do MMM, YYYY")} - ${
+                  doctor.currentWorkplace?.workingPeriodEnd
+                    ? moment(doctor.currentWorkplace?.workingPeriodEnd).format(
+                        "Do MMM, YYYY",
+                      )
+                    : "Running"
+                }`}
+              />
             </CardBody>
           </Card>
 
@@ -174,16 +167,16 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
                 return (
                   <Card
                     key={ind}
-                    className="shadow-sm bg-white dark:bg-gray-800 relative"
+                    className="shadow-sm bg-white dark:bg-gray-800 relative pt-4 sm:pt-0"
                   >
-                    <h2 className="font-bold text-sm mb-2 absolute right-0 top-0 opacity-30 bg-primary text-white px-2 py-[2px] rounded-tr-md">
+                    <h2 className="font-bold text-sm mb-2 absolute right-0 top-0 opacity-30 bg-primary text-white px-2 py-[2px] rounded-tr-md w-full text-center sm:w-auto">
                       Past Experience
                     </h2>
                     <CardHeader className="pb-0 font-semibold text-lg md:text-xl">
                       {experience.workPlace}
                     </CardHeader>
-                    <CardBody>
-                      <div className="grid grid-cols-2 gap-2">
+                    <CardBody className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {Object.keys(experience).map((key) => {
                           if (
                             key === "workPlace" ||
@@ -193,30 +186,28 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
                           )
                             return;
                           return (
-                            <div>
-                              <p className="text-gray-500 text-sm">
-                                {camelCaseToSpace(key)}
-                              </p>
-                              <p className="text-font-semibold">
-                                {experience[key as keyof TWorkingExperience]}
-                              </p>
-                            </div>
+                            <InfoItem
+                              key={key}
+                              label={camelCaseToSpace(key)}
+                              value={
+                                experience[key as keyof TWorkingExperience]
+                              }
+                              compact
+                            />
                           );
                         })}
                       </div>
 
-                      <div>
-                        <p className="text-gray-500 text-sm">Working Period</p>
-                        <p className="text-font-semibold">
-                          {moment(experience.workingPeriodStart).format(
-                            "Do MMM, YYYY",
-                          )}{" "}
-                          -{" "}
-                          {moment(experience.workingPeriodEnd).format(
-                            "Do MMM, YYYY",
-                          )}
-                        </p>
-                      </div>
+                      <InfoItem
+                        label={"Working Period"}
+                        value={`${moment(experience?.workingPeriodStart).format("Do MMM, YYYY")} - ${
+                          experience?.workingPeriodEnd
+                            ? moment(experience?.workingPeriodEnd).format(
+                                "Do MMM, YYYY",
+                              )
+                            : "Running"
+                        }`}
+                      />
                     </CardBody>
                   </Card>
                 );
@@ -244,3 +235,26 @@ const DoctorTabs = ({ doctor }: { doctor: TDoctor }) => {
 };
 
 export default DoctorTabs;
+
+function InfoItem({
+  label,
+  value,
+  compact,
+}: {
+  label: string;
+  value?: string | number | null;
+  compact?: boolean;
+}) {
+  return (
+    <div
+      className={`rounded-xl border border-default-200/60 bg-default-50/40 px-4 ${
+        compact ? "py-3" : "py-4"
+      }`}
+    >
+      <p className="text-xs font-medium text-default-500">{label}</p>
+      <p className="mt-1 text-sm font-semibold text-foreground">
+        {value ? String(value) : "Not provided"}
+      </p>
+    </div>
+  );
+}
