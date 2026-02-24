@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 import { Badge } from "@heroui/badge";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Appointments from "../_components/Appointments";
 import { Button } from "@heroui/button";
@@ -38,6 +38,7 @@ import {
 import { useGetPatientById } from "@/src/hooks/patient.hook";
 import FavoriteDoctorHeart from "../../../specialty/_components/FavoriteDoctorHeart";
 import CheckoutSkeleton from "@/src/components/ui/CheckoutSkeleton";
+import { toast } from "sonner";
 
 const DoctorCheckout = () => {
   const params = useParams() as { slug: string };
@@ -82,7 +83,14 @@ const DoctorCheckout = () => {
   //   doctor,
   // });
 
-  if (isDoctorLoading || isUserLoading || isPatientLoading)
+  // Redirect to signin if user is not logged in
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      router.replace(`/signin?redirect=${pathname}`);
+    }
+  }, [user, isUserLoading, pathname, router]);
+
+  if (isDoctorLoading || isPatientLoading || isUserLoading)
     return <CheckoutSkeleton />;
 
   const vat5Percent = Math.round((doctor?.consultationFee / 100) * 5);
@@ -90,8 +98,6 @@ const DoctorCheckout = () => {
     vat5Percent +
     doctor?.consultationFee +
     Number(process.env.NEXT_PUBLIC_PER_CONSULTATION_SERVICE_FEE!);
-
-  console.log(patient);
 
   return (
     <div className="py-6 bg-slate-50 dark:bg-gray-900">
