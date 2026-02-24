@@ -152,6 +152,7 @@ const ReviewTab = ({ doctor }: { doctor: TDoctor }) => {
     );
   }
 
+  console.log({ reviews });
   return (
     <div className="space-y-6">
       {/* Write Review Section */}
@@ -389,47 +390,113 @@ const ReviewTab = ({ doctor }: { doctor: TDoctor }) => {
           <Empty description="No reviews available for this doctor." />
         ) : (
           <div className="space-y-4">
-            {reviews?.data?.map((review: TReview) => (
-              <Card key={review._id}>
-                <CardBody className="py-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Image
-                          src={review.patient?.profileImg}
-                          height={60}
-                          width={60}
-                          alt={review.patient?.name}
-                          className="h-[60px] w-[60px] rounded-full"
-                        />
-                        <p className="font-semibold text-md">
-                          {review.patient?.name || "Anonymous"}
-                        </p>
+            {reviews?.data?.map((review: TReview) => {
+              const name = review.patient?.name || "Anonymous";
+              const img = review.patient?.profileImg || "";
+              const dateLabel = new Date(review.createdAt).toLocaleDateString(
+                undefined,
+                {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                },
+              );
+
+              return (
+                <Card
+                  key={review._id}
+                  shadow="sm"
+                  radius="lg"
+                  className="border border-default-200/60 bg-content1/80 backdrop-blur transition-all hover:-translate-y-0.5 hover:shadow-md"
+                >
+                  <CardBody className="p-5 sm:p-6">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start gap-3">
+                        <div className="relative">
+                          <Image
+                            src={img}
+                            height={52}
+                            width={52}
+                            alt={name}
+                            className="h-[52px] w-[52px] rounded-full object-cover ring-2 ring-default-200"
+                          />
+                          <span className="absolute -bottom-1 -right-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-success text-[10px] font-semibold text-white ring-2 ring-default">
+                            ✓
+                          </span>
+                        </div>
+
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                            <p className="truncate text-base font-semibold text-foreground">
+                              {name}
+                            </p>
+                            <span className="text-xs text-default-500">•</span>
+                            <p className="text-xs text-default-500">
+                              {dateLabel}
+                            </p>
+                          </div>
+
+                          <div className="mt-1 flex items-center gap-2">
+                            <div className="flex items-center gap-0.5">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <StarIcon
+                                  key={i}
+                                  className={`h-4 w-4 ${
+                                    i < (review.rating || 0)
+                                      ? "text-warning fill-current"
+                                      : "text-default-300 fill-current"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+
+                            <span className="text-sm font-semibold text-foreground">
+                              {review.rating}/5
+                            </span>
+
+                            <span className="rounded-full bg-default-100 px-2 py-0.5 text-xs font-medium text-default-600">
+                              Patient review
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <p className="text-sm text-gray-500">
-                        {new Date(review.createdAt).toLocaleDateString()}
+
+                      <div className="hidden sm:flex flex-col items-end gap-1">
+                        <span
+                          className={`rounded-full  px-2 py-1 text-xs font-semibold ${
+                            review.rating >= 4
+                              ? "bg-success/20 text-success"
+                              : review.rating >= 3
+                                ? "bg-warning/20 text-warning"
+                                : "bg-danger/20 text-danger"
+                          }
+                        `}
+                        >
+                          {review.rating >= 4
+                            ? "Highly Recommended"
+                            : review.rating >= 3
+                              ? "Recommended"
+                              : "Not Recommended"}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="mt-4">
+                      <p className="text-sm leading-relaxed text-default-700">
+                        {review.comment || "No comment provided."}
                       </p>
                     </div>
-                    <div className="flex items-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <StarIcon
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < review.rating
-                              ? "text-yellow-400 fill-current"
-                              : "text-gray-300 fill-current"
-                          }`}
-                        />
-                      ))}
-                      <span className="ml-2 font-semibold">
-                        {review.rating}/5
-                      </span>
+
+                    <div className="mt-5 flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-xs text-default-500">
+                        <span className="h-1.5 w-1.5 rounded-full bg-default-300" />
+                        <span>Shared publicly</span>
+                      </div>
                     </div>
-                  </div>
-                  <p className="text-gray-700 text-sm">{review.comment}</p>
-                </CardBody>
-              </Card>
-            ))}
+                  </CardBody>
+                </Card>
+              );
+            })}
             <Pagination
               initialPage={pagination.page}
               size={"md"}

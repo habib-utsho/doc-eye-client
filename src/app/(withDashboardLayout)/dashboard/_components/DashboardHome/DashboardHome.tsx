@@ -54,7 +54,10 @@ const DashboardHome = ({ role }: { role: TUserRole }) => {
       name: "Moderately",
       value: data?.data?.moderatelySatisfiedPatients || 0,
     },
-    { name: "Dissatisfied", value: data?.data?.dissatisfiedPatients || 0 },
+    {
+       name: "Dissatisfied", 
+       value: data?.data?.dissatisfiedPatients || 0 
+      },
   ];
 
   const updatedStats = [
@@ -91,8 +94,8 @@ const DashboardHome = ({ role }: { role: TUserRole }) => {
         role == "doctor"
           ? "Total Patients Attended"
           : role == "admin"
-          ? "Total Patients"
-          : "Most Consulted Doctor",
+            ? "Total Patients"
+            : "Most Consulted Doctor",
       value:
         role == "doctor" ? (
           data?.data?.doctor?.patientAttended
@@ -132,14 +135,14 @@ const DashboardHome = ({ role }: { role: TUserRole }) => {
         role == "doctor"
           ? "Total Experiences"
           : role == "admin"
-          ? "Total Doctors"
-          : "Total Doctors Consulted",
+            ? "Total Doctors"
+            : "Total Doctors Consulted",
       value:
         role == "doctor"
           ? `${data?.data?.doctor?.totalExperienceYear} years`
           : role == "admin"
-          ? data?.data?.totalDoctors
-          : data?.data?.totalDoctorsConsulted,
+            ? data?.data?.totalDoctors
+            : data?.data?.totalDoctorsConsulted,
       icon: <ShopOutlined style={{ fontSize: "24px", color: "white" }} />,
       background: "rgb(231, 237, 255)",
       color: "rgb(57, 106, 255)",
@@ -180,8 +183,8 @@ const DashboardHome = ({ role }: { role: TUserRole }) => {
             {role == "doctor"
               ? data?.data?.doctor?.name
               : role == "admin"
-              ? data?.data?.admin?.name
-              : data?.data?.patient?.name}
+                ? data?.data?.admin?.name
+                : data?.data?.patient?.name}
           </strong>
           , Welcome back in {firstLetterCapital(role)} Dashboard 👋
         </h2>
@@ -366,7 +369,7 @@ const DashboardHome = ({ role }: { role: TUserRole }) => {
                             >
                               {spec.name}
                             </Badge>
-                          )
+                          ),
                         )}
                       </div>
 
