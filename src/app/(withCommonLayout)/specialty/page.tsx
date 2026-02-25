@@ -5,7 +5,6 @@ import SpecialtySection from "./_components/SpecialtySection";
 import SpecialtyLoadingCard from "./_components/SpecialtyLoadingCard";
 import SpecialtyErrorCard from "./_components/SpecialtyErrorCard";
 import { getSpecialties } from "@/src/services/specialty";
-import MyInp from "@/src/components/ui/Form/MyInp";
 import SpecialtySearchInp from "./_components/SpecialtySearchInp";
 
 const SpecialtyPage = async ({
@@ -14,7 +13,6 @@ const SpecialtyPage = async ({
   searchParams: Promise<any>;
 }) => {
   const searchParamsRes = await searchParams;
-  console.log({ searchParamsRes });
 
   const specialties = await getSpecialties([
     { name: "limit", value: 500000 },
