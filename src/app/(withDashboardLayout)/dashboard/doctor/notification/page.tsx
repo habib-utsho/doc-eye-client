@@ -1,5 +1,5 @@
 "use client";
-import MyMotion from "@/src/components/ui/MyMotion";
+import MyMotion from "@/src/components/ui/animation/MyMotion";
 import {
   AimOutlined,
   CalendarOutlined,

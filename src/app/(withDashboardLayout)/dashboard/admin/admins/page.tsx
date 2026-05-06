@@ -12,30 +12,43 @@ import { SearchIcon } from "@/src/components/ui/icons";
 import DeleteUserModal from "../../_components/DeleteUserModal";
 import { useToggleUserStatus } from "@/src/hooks/auth.hook";
 import useUserData from "@/src/hooks/user.hook";
+import { TResponse } from "@/src/types";
 
-const AdminsPage = () => {
+const AdminsPage = ({
+  adminsProp,
+  isLoadingAdminsProp,
+  refetchAdminsProp,
+}: {
+  adminsProp?: TResponse<TAdmin[]>;
+  isLoadingAdminsProp?: boolean;
+  refetchAdminsProp?: () => void;
+}) => {
   const { user, isLoading: isUserLoading } = useUserData();
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
   const {
-    data: admins,
-    isLoading: isLoadingAdmins,
-    refetch: refetchAdmins,
-  } = useGetAllAdmin([
-    {
-      name: "searchTerm",
-      value: debounceSearch,
-    },
-    {
-      name: "page",
-      value: pagination.page,
-    },
-    {
-      name: "limit",
-      value: pagination.limit,
-    },
-  ]);
+    data: adminsFetched,
+    isLoading: isLoadingAdminsFetched,
+    refetch: refetchAdminsFetched,
+  } = useGetAllAdmin(
+    [
+      {
+        name: "searchTerm",
+        value: debounceSearch,
+      },
+      {
+        name: "page",
+        value: pagination.page,
+      },
+      {
+        name: "limit",
+        value: pagination.limit,
+      },
+    ],
+    !adminsProp,
+  );
+
   const {
     mutate: deleteAdminMutate,
     isPending: isLoadingDeleteAdmin,
@@ -46,6 +59,10 @@ const AdminsPage = () => {
     isPending: isLoadingToggleUserStatus,
     isSuccess: isSuccessToggleUserStatus,
   } = useToggleUserStatus();
+
+  const admins = adminsProp || adminsFetched;
+  const isLoadingAdmins = isLoadingAdminsProp || isLoadingAdminsFetched;
+  const refetchAdmins = refetchAdminsProp || refetchAdminsFetched;
 
   const rows = admins?.data?.map((admin: TAdmin, ind: number) => ({
     _id: admin?._id,

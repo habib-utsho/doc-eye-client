@@ -17,7 +17,7 @@ import {
   StarOutlined,
 } from "@ant-design/icons";
 import { title, subtitle } from "@/src/components/primitives";
-import MyMotion from "@/src/components/ui/MyMotion";
+import MyMotion from "@/src/components/ui/animation/MyMotion";
 
 const healthQuotes = [
   {
@@ -340,7 +340,7 @@ const FitHealthyPage = () => {
                         Soon
                       </Chip>
                     </div>
-                  )
+                  ),
                 )}
               </CardBody>
             </MyMotion>

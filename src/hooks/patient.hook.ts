@@ -10,10 +10,11 @@ import {
 } from "../services/patient";
 import { toast } from "sonner";
 
-export const useGetAllPatients = (query: TFilterQuery[] | undefined) =>
+export const useGetAllPatients = (query: TFilterQuery[] | undefined, enabled: boolean = true) =>
   useQuery({
     queryKey: ["patient", query],
     queryFn: () => getAllPatient(query),
+    enabled,
   });
 
 export const useGetPatientById = (id: string | null) =>

@@ -26,12 +26,21 @@ import DoctorDetailsModal from "./_components/modal/DoctorDetailsModal";
 import { Button } from "@heroui/button";
 import { Select, SelectItem } from "@heroui/select";
 import { useGetAllSpecialties } from "@/src/hooks/specialty.hook";
+import { TResponse } from "@/src/types";
 
-const DoctorsPage = () => {
+const DoctorsPage = ({
+  doctorsProp,
+  isLoadingDoctorsProp,
+  refetchDoctorsProp,
+}: {
+  doctorsProp?: TResponse<TDoctor[]>;
+  isLoadingDoctorsProp?: boolean;
+  refetchDoctorsProp?: () => void;
+}) => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [specialty, setSpecialty] = useState<string | null>(null);
   const [consultationFeeSort, setConsultationFeeSort] = useState<string | null>(
-    null
+    null,
   );
   const [totalExperienceYearSort, setTotalExperienceYearSort] = useState<
     string | null
@@ -39,43 +48,51 @@ const DoctorsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
   const {
-    data: doctors,
-    isLoading: isLoadingDoctors,
-    refetch: refetchDoctors,
-  } = useGetAllDoctors([
-    ...(debounceSearch
-      ? [
-          {
-            name: "searchTerm",
-            value: debounceSearch,
-          },
-        ]
-      : []),
-    ...(specialty
-      ? [
-          {
-            name: "medicalSpecialties",
-            value: specialty,
-          },
-        ]
-      : []),
-    ...(consultationFeeSort || totalExperienceYearSort
-      ? [
-          {
-            name: "sort",
-            value: `${consultationFeeSort} ${totalExperienceYearSort}`,
-          },
-        ]
-      : []),
-    {
-      name: "page",
-      value: pagination.page,
-    },
-    {
-      name: "limit",
-      value: pagination.limit,
-    },
-  ]);
+    data: doctorsFetched,
+    isLoading: isLoadingDoctorsFetched,
+    refetch: refetchDoctorsFetched,
+  } = useGetAllDoctors(
+    [
+      ...(debounceSearch
+        ? [
+            {
+              name: "searchTerm",
+              value: debounceSearch,
+            },
+          ]
+        : []),
+      ...(specialty
+        ? [
+            {
+              name: "medicalSpecialties",
+              value: specialty,
+            },
+          ]
+        : []),
+      ...(consultationFeeSort || totalExperienceYearSort
+        ? [
+            {
+              name: "sort",
+              value: `${consultationFeeSort} ${totalExperienceYearSort}`,
+            },
+          ]
+        : []),
+      {
+        name: "page",
+        value: pagination.page,
+      },
+      {
+        name: "limit",
+        value: pagination.limit,
+      },
+    ],
+    !doctorsProp,
+  );
+
+  const doctors = doctorsProp ?? doctorsFetched;
+  const isLoadingDoctors = isLoadingDoctorsProp ?? isLoadingDoctorsFetched;
+  const refetchDoctors = refetchDoctorsProp ?? refetchDoctorsFetched;
+
   const { data: specialties, isLoading: isLoadingSpecialties } =
     useGetAllSpecialties([
       {
@@ -162,7 +179,7 @@ const DoctorsPage = () => {
           {doctor?.currentWorkplace?.designation},{" "}
           <ClockCircleOutlined className="mr-1" />
           {moment(doctor?.currentWorkplace?.workingPeriodStart).format(
-            "YYYY"
+            "YYYY",
           )}{" "}
           - Running
         </p>

@@ -94,7 +94,9 @@ const DoctorAppointmentsPage = ({
         ? firstLetterCapital(appointment?.symptoms)
         : "N/A",
 
-      schedule: <AppointmentScheduleCountdown schedule={appointment?.schedule} />,
+      schedule: (
+        <AppointmentScheduleCountdown schedule={appointment?.schedule} />
+      ),
       paymentStatus: firstLetterCapital(appointment?.payment?.status),
       // status: firstLetterCapital(appointment?.status),
       status: (
@@ -191,9 +193,9 @@ const DoctorAppointmentsPage = ({
         </div>
       ),
       createdAt: moment(appointment?.createdAt).format(
-        "DD-MMM-YYYY ⏰ hh:mm A"
+        "DD-MMM-YYYY ⏰ hh:mm A",
       ),
-    })
+    }),
   );
 
   const columns = [
@@ -211,13 +213,13 @@ const DoctorAppointmentsPage = ({
 
   const handleAppointmentApproval = (
     appointment: TAppointment,
-    status: "confirmed" | "canceled" | "completed"
+    status: "confirmed" | "canceled" | "completed",
   ) => {
     if (appointment.status === "confirmed" && status === "completed") {
       onOpen();
       setAppointmentForModal(appointment);
       toast.error(
-        "Please complete the appointment by adding a medical report."
+        "Please complete the appointment by adding a medical report.",
       );
 
       return;
@@ -228,7 +230,7 @@ const DoctorAppointmentsPage = ({
         onSuccess: () => {
           refetchAppointments();
         },
-      }
+      },
     );
   };
 

@@ -39,9 +39,13 @@ export const useGetAppointmentById = (id: string | undefined) => {
   });
 };
 
-export const useGetAllAppointments = (query: TFilterQuery[] | undefined) => {
+export const useGetAllAppointments = (
+  query: TFilterQuery[] | undefined,
+  enabled: boolean = true,
+) => {
   return useQuery({
     queryKey: ["appointment", query],
     queryFn: async () => await getAppointments(query),
+    enabled,
   });
 };

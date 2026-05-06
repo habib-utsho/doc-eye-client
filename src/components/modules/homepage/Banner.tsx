@@ -10,7 +10,7 @@ import Image from "next/image";
 import Container from "../../ui/Container";
 import { subtitle, title } from "../../primitives";
 import { useTheme } from "next-themes";
-import MyMotion from "../../ui/MyMotion";
+import MyMotion from "../../ui/animation/MyMotion";
 
 const Banner = () => {
   const services = [

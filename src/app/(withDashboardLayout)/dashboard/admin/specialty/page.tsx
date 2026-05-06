@@ -21,11 +21,18 @@ import { Spinner } from "@heroui/spinner";
 import { Input } from "@heroui/input";
 import { Tabs, Tab } from "@heroui/tabs";
 import useDebounce from "@/src/hooks/useDebounce";
-import MyMotion from "@/src/components/ui/MyMotion";
+import MyMotion from "@/src/components/ui/animation/MyMotion";
 import SpecialtyModal from "./_components/modal/SpecialtyModal";
 import DeleteSpecialtyModal from "./_components/modal/DeleteSpecialtyModal";
+import { TResponse } from "@/src/types";
 
-const SpecialtyPage = () => {
+const SpecialtyPage = ({
+  specialtiesProp,
+  isLoadingSpecialtiesProp,
+}: {
+  specialtiesProp?: TResponse<TSpecialty[]>;
+  isLoadingSpecialtiesProp?: boolean;
+}) => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<
@@ -34,22 +41,31 @@ const SpecialtyPage = () => {
   const debounceSearch = useDebounce(searchTerm, 500);
 
   const {
-    data: specialties,
-    isLoading: isLoadingSpecialties,
+    data: specialtiesFetched,
+    isLoading: isLoadingSpecialtiesFetched,
     refetch,
-  } = useGetAllSpecialties([
-    { name: "page", value: pagination.page },
-    { name: "limit", value: pagination.limit },
-    ...(debounceSearch ? [{ name: "searchTerm", value: debounceSearch }] : []),
-    ...(statusFilter === "all"
-      ? []
-      : [
-          {
-            name: "isDeleted",
-            value: statusFilter === "deleted" ? true : false,
-          },
-        ]),
-  ]);
+  } = useGetAllSpecialties(
+    [
+      { name: "page", value: pagination.page },
+      { name: "limit", value: pagination.limit },
+      ...(debounceSearch
+        ? [{ name: "searchTerm", value: debounceSearch }]
+        : []),
+      ...(statusFilter === "all"
+        ? []
+        : [
+            {
+              name: "isDeleted",
+              value: statusFilter === "deleted" ? true : false,
+            },
+          ]),
+    ],
+    !specialtiesProp,
+  );
+
+  const specialties = specialtiesProp ?? specialtiesFetched;
+  const isLoadingSpecialties =
+    isLoadingSpecialtiesProp ?? isLoadingSpecialtiesFetched;
 
   const {
     mutate: deleteSpecialtyMutate,

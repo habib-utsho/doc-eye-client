@@ -28,11 +28,18 @@ import VideoCall from "../VideoCall";
 import Link from "next/link";
 import { EyeOutlined } from "@ant-design/icons";
 import AppointmentScheduleCountdown from "./AppointmentScheduleCountdown";
+import { TResponse } from "@/src/types";
 
 const AdminAppointmentsPage = ({
   state = "upcoming",
+  appointmentsProp,
+  isLoadingAppointmentsProp,
+  refetchAppointmentsProp,
 }: {
-  state: "upcoming" | "expired";
+  state?: "upcoming" | "expired" | "all";
+  appointmentsProp?: TResponse<TAppointment[]>;
+  isLoadingAppointmentsProp?: boolean;
+  refetchAppointmentsProp?: () => void;
 }) => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
@@ -43,18 +50,28 @@ const AdminAppointmentsPage = ({
   const [appointmentForModal, setAppointmentForModal] =
     useState<TAppointment | null>(null);
 
-  const { isLoading: isLoadingUser, user } = useUserData();
+  const { isLoading: isLoadingUser } = useUserData();
 
   const {
-    data: appointments,
-    isLoading: isLoadingAppointments,
-    refetch: refetchAppointments,
-  } = useGetAllAppointments([
-    { name: "searchTerm", value: debounceSearch },
-    { name: "page", value: pagination.page },
-    { name: "limit", value: pagination.limit },
-    { name: "state", value: state },
-  ]);
+    data: fetchedAppointments,
+    isLoading: isLoadingFetchedAppointments,
+    refetch: refetchFetchedAppointments,
+  } = useGetAllAppointments(
+    [
+      { name: "searchTerm", value: debounceSearch },
+      { name: "page", value: pagination.page },
+      { name: "limit", value: pagination.limit },
+      ...(state === "all" ? [] : [{ name: "state", value: state }]),
+    ],
+    !appointmentsProp,
+  );
+
+  const appointments = appointmentsProp ?? fetchedAppointments;
+  const isLoadingAppointments =
+    isLoadingAppointmentsProp ?? isLoadingFetchedAppointments;
+  const refetchAppointments =
+    refetchAppointmentsProp ?? refetchFetchedAppointments;
+
   const { mutate: updateAppointmentStatus, isPending: isLoadingUpdateStatus } =
     useUpdateAppointmentStatusById();
 
@@ -94,7 +111,9 @@ const AdminAppointmentsPage = ({
       symptoms: appointment?.symptoms
         ? firstLetterCapital(appointment?.symptoms)
         : "N/A",
-      schedule: <AppointmentScheduleCountdown schedule={appointment?.schedule} />,
+      schedule: (
+        <AppointmentScheduleCountdown schedule={appointment?.schedule} />
+      ),
       paymentStatus: firstLetterCapital(appointment?.payment?.status),
       // status: firstLetterCapital(appointment?.status),
       status: (
@@ -191,9 +210,9 @@ const AdminAppointmentsPage = ({
         </div>
       ),
       createdAt: moment(appointment?.createdAt).format(
-        "DD-MMM-YYYY ⏰ hh:mm A"
+        "DD-MMM-YYYY ⏰ hh:mm A",
       ),
-    })
+    }),
   );
 
   const columns = [
@@ -211,13 +230,13 @@ const AdminAppointmentsPage = ({
 
   const handleAppointmentApproval = (
     appointment: TAppointment,
-    status: "confirmed" | "canceled" | "completed"
+    status: "confirmed" | "canceled" | "completed",
   ) => {
     if (appointment.status === "confirmed" && status === "completed") {
       onOpen();
       setAppointmentForModal(appointment);
       toast.error(
-        "Please complete the appointment by adding a medical report."
+        "Please complete the appointment by adding a medical report.",
       );
 
       return;
@@ -228,7 +247,7 @@ const AdminAppointmentsPage = ({
         onSuccess: () => {
           refetchAppointments();
         },
-      }
+      },
     );
   };
 

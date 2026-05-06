@@ -12,14 +12,15 @@ export const useCreateMedicalReport = () => {
     mutationKey: ["medicalReport"],
     mutationFn: async (payload: TCreateMedicalReport) =>
       await createMedicalReport(payload),
-    async onSuccess(data) {},
-    onError(error) {},
+    async onSuccess(data) { },
+    onError(error) { },
   });
 };
-export const useGetAllMedicalReport = (query: TFilterQuery[] | undefined) =>
+export const useGetAllMedicalReport = (query: TFilterQuery[] | undefined, enabled: boolean = true) =>
   useQuery({
     queryKey: ["medicalReport", query],
     queryFn: () => getAllMedicalReport(query),
+    enabled,
   });
 
 export const useGetSingleMedicalReportById = (id: string | undefined) => {

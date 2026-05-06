@@ -10,10 +10,11 @@ import { toast } from "sonner";
 import axios from "axios";
 import axiosInstance from "../lib/axiosInstance";
 
-export const useGetAllAdmin = (query: TFilterQuery[] | undefined) =>
+export const useGetAllAdmin = (query: TFilterQuery[] | undefined, enabled: boolean = true) =>
   useQuery({
     queryKey: ["admin", query],
     queryFn: () => getAllAdmin(query),
+    enabled: enabled,
   });
 export const useGetAdminById = (id: string | null) =>
   useQuery({

@@ -8,13 +8,14 @@ export const useInitPayment = () => {
     mutationKey: ["payment"],
     mutationFn: async (payload: TCreateAppointment) =>
       await makePaymentInit(payload),
-    async onSuccess(data) {},
-    onError(error) {},
+    async onSuccess(data) { },
+    onError(error) { },
   });
 };
-export const useGetAllPayment = (query: TFilterQuery[] | undefined) => {
+export const useGetAllPayment = (query: TFilterQuery[] | undefined, enabled: boolean = true) => {
   return useQuery({
     queryKey: ["payment", query],
     queryFn: async () => await getAllPayment(query),
+    enabled,
   });
 };

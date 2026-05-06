@@ -6,7 +6,7 @@ import Image from "next/image";
 import CommonSectionTitle from "../../ui/CommonSectionTitle";
 import { ArrowRightIcon, PhoneIcon } from "../../ui/icons";
 import Container from "../../ui/Container";
-import MyMotion from "../../ui/MyMotion";
+import MyMotion from "../../ui/animation/MyMotion";
 import { subtitle, title } from "../../primitives";
 import { Divider } from "@heroui/divider";
 

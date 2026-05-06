@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Container from "@/src/components/ui/Container";
 import { motion } from "framer-motion";
-import MyMotion from "@/src/components/ui/MyMotion";
+import MyMotion from "@/src/components/ui/animation/MyMotion";
 import { InfoIcon } from "@/src/components/ui/icons";
 import useUserData from "@/src/hooks/user.hook";
 

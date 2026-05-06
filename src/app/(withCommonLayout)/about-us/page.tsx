@@ -1,6 +1,6 @@
 "use client";
 import Container from "@/src/components/ui/Container";
-import MyMotion from "@/src/components/ui/MyMotion";
+import MyMotion from "@/src/components/ui/animation/MyMotion";
 import { HeartFilledIcon } from "@/src/components/ui/icons";
 import { GlobalOutlined } from "@ant-design/icons";
 import { FaGraduationCap } from "react-icons/fa6";

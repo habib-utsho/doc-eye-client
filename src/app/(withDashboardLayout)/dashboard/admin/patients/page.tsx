@@ -17,29 +17,41 @@ import { useToggleUserStatus } from "@/src/hooks/auth.hook";
 import PatientDetailsModal from "./_components/modal/PatientDetailsModal";
 import { SearchIcon } from "@/src/components/ui/icons";
 import MakePatientToAdminModal from "../../_components/MakePatientToAdminModal";
+import { TResponse } from "@/src/types";
 
-const PatientsPage = () => {
+const PatientsPage = ({
+  patientsProp,
+  isLoadingPatientsProp,
+  refetchPatientsProp,
+}: {
+  patientsProp?: TResponse<TPatient[]>;
+  isLoadingPatientsProp?: boolean;
+  refetchPatientsProp?: () => void;
+}) => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
   const {
-    data: patients,
-    isLoading: isLoadingPatients,
-    refetch: refetchPatients,
-  } = useGetAllPatients([
-    {
-      name: "searchTerm",
-      value: debounceSearch,
-    },
-    {
-      name: "page",
-      value: pagination.page,
-    },
-    {
-      name: "limit",
-      value: pagination.limit,
-    },
-  ]);
+    data: patientsFetched,
+    isLoading: isLoadingPatientsFetched,
+    refetch: refetchPatientsFetched,
+  } = useGetAllPatients(
+    [
+      {
+        name: "searchTerm",
+        value: debounceSearch,
+      },
+      {
+        name: "page",
+        value: pagination.page,
+      },
+      {
+        name: "limit",
+        value: pagination.limit,
+      },
+    ],
+    !patientsProp,
+  );
 
   const {
     mutate: deletePatientMutate,
@@ -48,6 +60,10 @@ const PatientsPage = () => {
   } = useDeletePatientById();
   const { mutate: toggleUserStatus, isPending: isLoadingToggleUserStatus } =
     useToggleUserStatus();
+
+  const patients = patientsProp ?? patientsFetched;
+  const isLoadingPatients = isLoadingPatientsProp ?? isLoadingPatientsFetched;
+  const refetchPatients = refetchPatientsProp ?? refetchPatientsFetched;
 
   const rows = patients?.data?.map((patient: TPatient, ind: number) => ({
     _id: patient?._id,

@@ -101,7 +101,7 @@ const ManagePatientsPage = () => {
           <PatientDetailsModal patient={appointment.patient} />
         </div>
       ),
-    })
+    }),
   );
 
   const columns = [

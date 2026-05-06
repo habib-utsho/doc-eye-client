@@ -1,5 +1,5 @@
 "use client";
-import MyMotion from "@/src/components/ui/MyMotion";
+import MyMotion from "@/src/components/ui/animation/MyMotion";
 import { TDoctor, TWorkingExperience } from "@/src/types/user";
 import { convertTo12HourTime } from "@/src/utils/24FourHourTimeTo12HourTime";
 import { camelCaseToSpace } from "@/src/utils/camelCaseToSpace";

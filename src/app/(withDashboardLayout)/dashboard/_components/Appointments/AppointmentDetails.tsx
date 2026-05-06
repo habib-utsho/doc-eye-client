@@ -7,7 +7,7 @@ import { Divider } from "@heroui/divider";
 import { Button } from "@heroui/button";
 import { Avatar } from "@heroui/avatar";
 import moment from "moment";
-import MyMotion from "@/src/components/ui/MyMotion";
+import MyMotion from "@/src/components/ui/animation/MyMotion";
 import Container from "@/src/components/ui/Container";
 import Loading from "@/src/components/ui/Loading";
 import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
@@ -213,7 +213,8 @@ const AppointmentDetailsPage = () => {
                       <p className="text-xs text-default-500">
                         Since{" "}
                         {moment(
-                          appointment.doctor.currentWorkplace.workingPeriodStart
+                          appointment.doctor.currentWorkplace
+                            .workingPeriodStart,
                         ).format("MMM YYYY")}
                       </p>
                     </div>
@@ -292,7 +293,7 @@ const AppointmentDetailsPage = () => {
                       <p className="font-semibold">
                         {moment().diff(
                           moment(appointment.patient.dateOfBirth),
-                          "years"
+                          "years",
                         )}{" "}
                         years
                       </p>
@@ -433,7 +434,7 @@ const AppointmentDetailsPage = () => {
                     <p className="text-sm text-default-500 mb-1">Created At</p>
                     <p className="text-sm">
                       {moment(appointment.createdAt).format(
-                        "DD MMM YYYY, hh:mm A"
+                        "DD MMM YYYY, hh:mm A",
                       )}
                     </p>
                   </div>

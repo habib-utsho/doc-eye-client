@@ -11,7 +11,7 @@ import CommonSectionTitle from "../../ui/CommonSectionTitle";
 import { Button } from "@heroui/button";
 import Container from "../../ui/Container";
 import { subtitle } from "../../primitives";
-import MyMotion from "../../ui/MyMotion";
+import MyMotion from "../../ui/animation/MyMotion";
 import Link from "next/link";
 
 const Services = () => {

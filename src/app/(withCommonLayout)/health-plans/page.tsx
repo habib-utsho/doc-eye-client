@@ -1,6 +1,6 @@
 import { CheckIcon } from "@/src/components/ui/icons";
 import Container from "@/src/components/ui/Container";
-import MyMotion from "@/src/components/ui/MyMotion";
+import MyMotion from "@/src/components/ui/animation/MyMotion";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Divider } from "@heroui/divider";
 import { Tooltip } from "@heroui/tooltip";

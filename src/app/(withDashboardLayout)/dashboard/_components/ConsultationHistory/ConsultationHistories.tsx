@@ -11,16 +11,29 @@ import { firstLetterCapital } from "@/src/utils/firstLetterCapital";
 import { useGetAllMedicalReport } from "@/src/hooks/medicalReport.hook";
 import { TUserRole } from "@/src/types/user";
 import AppointmentScheduleCountdown from "../Appointments/AppointmentScheduleCountdown";
+import { TResponse } from "@/src/types";
+import { TMedicalReport } from "@/src/types/medicalReport.type";
 
-const ConsultationHistories = ({ from }: { from: TUserRole }) => {
+const ConsultationHistories = ({
+  consultationHistoryProp,
+  isLoadingConsultationHistoryProp,
+  from,
+}: {
+  from: TUserRole;
+  consultationHistoryProp?: TResponse<TMedicalReport[]>;
+  isLoadingConsultationHistoryProp?: boolean;
+}) => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [searchTerm, setSearchTerm] = useState("");
   const debounceSearch = useDebounce(searchTerm, 500);
 
   const { isLoading: isLoadingUser, user } = useUserData();
 
-  const { data: consultationHistory, isLoading: isLoadingConsultationHistory } =
-    useGetAllMedicalReport([
+  const {
+    data: consultationHistoryFetched,
+    isLoading: isLoadingConsultationHistoryFetched,
+  } = useGetAllMedicalReport(
+    [
       ...(user?.role === "admin"
         ? []
         : [
@@ -32,7 +45,14 @@ const ConsultationHistories = ({ from }: { from: TUserRole }) => {
       { name: "searchTerm", value: debounceSearch },
       { name: "page", value: pagination.page },
       { name: "limit", value: pagination.limit },
-    ]);
+    ],
+    !consultationHistoryProp,
+  );
+
+  const consultationHistory =
+    consultationHistoryProp ?? consultationHistoryFetched;
+  const isLoadingConsultationHistory =
+    isLoadingConsultationHistoryProp ?? isLoadingConsultationHistoryFetched;
 
   const rows = consultationHistory?.data?.map(
     (history: any, index: number) => ({
@@ -65,7 +85,7 @@ const ConsultationHistories = ({ from }: { from: TUserRole }) => {
         </div>
       ),
       appointmentType: firstLetterCapital(
-        history?.appointment?.appointmentType
+        history?.appointment?.appointmentType,
       ),
       problems: history?.problems?.join(", ") || "N/A",
       diagnosis: history?.diagnosis || "N/A",
@@ -79,7 +99,7 @@ const ConsultationHistories = ({ from }: { from: TUserRole }) => {
       ),
 
       createdAt: moment(history?.createdAt).format("DD-MMM-YYYY ⏰ hh:mm A"),
-    })
+    }),
   );
 
   const columns = [
@@ -93,12 +113,6 @@ const ConsultationHistories = ({ from }: { from: TUserRole }) => {
     { key: "followUp", label: "Follow-up Date" },
     { key: "createdAt", label: "Created At" },
   ];
-
-  console.log({
-    consultationHistory,
-    isLoadingConsultationHistory,
-    isLoadingUser,
-  });
 
   return (
     <div className="w-full p-4">

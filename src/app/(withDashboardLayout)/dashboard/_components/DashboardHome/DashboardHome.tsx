@@ -1,6 +1,6 @@
 "use client";
 
-import MyMotion from "@/src/components/ui/MyMotion";
+import MyMotion from "@/src/components/ui/animation/MyMotion";
 import { useGetStats } from "@/src/hooks/stats.hook";
 import {
   EyeOutlined,
@@ -38,6 +38,7 @@ import { MedicineBoxOutlined } from "@ant-design/icons";
 import { Badge } from "@heroui/badge";
 import { TSpecialty } from "@/src/types/specialty";
 import EarningsGraph from "./EarningsGraph";
+import Analytics from "./Analytics";
 
 const appointmentsSummaryCOLORS = ["#3b82f6", "#06b6d4", "#f97316"];
 const satisfactionPatientSummaryCOLORS = ["#4CAF50", "#FFC107", "#F44336"];
@@ -55,9 +56,9 @@ const DashboardHome = ({ role }: { role: TUserRole }) => {
       value: data?.data?.moderatelySatisfiedPatients || 0,
     },
     {
-       name: "Dissatisfied", 
-       value: data?.data?.dissatisfiedPatients || 0 
-      },
+      name: "Dissatisfied",
+      value: data?.data?.dissatisfiedPatients || 0,
+    },
   ];
 
   const updatedStats = [
@@ -436,9 +437,13 @@ const DashboardHome = ({ role }: { role: TUserRole }) => {
           >
             <Card className="p-2">
               <CardBody>
-                <h2 className="font-semibold text-xl my-4 text-center text-primary">
-                  *Analytics section will be available soon. Stay tuned.
-                </h2>
+                {role === "admin" ? (
+                  <Analytics role={role} />
+                ) : (
+                  <h2 className="font-semibold text-xl my-4 text-center text-primary">
+                    *Analytics section will be available soon. Stay tuned.
+                  </h2>
+                )}
               </CardBody>
             </Card>
           </Tab>

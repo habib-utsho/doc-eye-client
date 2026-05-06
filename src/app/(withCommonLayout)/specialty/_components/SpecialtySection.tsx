@@ -4,7 +4,7 @@ import { Image } from "@heroui/image";
 import { Tooltip } from "@heroui/tooltip";
 import Link from "next/link";
 import React from "react";
-import MyMotion from "@/src/components/ui/MyMotion";
+import MyMotion from "@/src/components/ui/animation/MyMotion";
 
 const SpecialtySection = ({ specialties }: { specialties: TSpecialty[] }) => {
   return (

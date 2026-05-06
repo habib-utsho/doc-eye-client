@@ -9,10 +9,11 @@ import {
 } from "../services/doctor";
 import { toast } from "sonner";
 
-export const useGetAllDoctors = (query: TFilterQuery[] | undefined) =>
+export const useGetAllDoctors = (query: TFilterQuery[] | undefined, enabled: boolean = true) =>
   useQuery({
     queryKey: ["doctor", query],
     queryFn: () => getAllDoctors(query),
+    enabled,
   });
 export const useGetDoctorById = (id: string | undefined) =>
   useQuery({

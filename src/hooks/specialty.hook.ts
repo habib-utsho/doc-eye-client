@@ -67,9 +67,10 @@ export const useDeleteSpecialty = () => {
   });
 };
 
-export const useGetAllSpecialties = (query: TFilterQuery[] | undefined) => {
+export const useGetAllSpecialties = (query: TFilterQuery[] | undefined, enabled: boolean = true) => {
   return useQuery({
     queryKey: ["specialty", query],
     queryFn: async () => await getSpecialties(query),
+    enabled,
   });
 };

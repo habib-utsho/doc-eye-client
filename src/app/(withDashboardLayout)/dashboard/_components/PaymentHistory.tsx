@@ -21,18 +21,32 @@ import {
   useDisclosure,
 } from "@heroui/modal";
 import { TAppointment } from "@/src/types/appointment";
+import { TResponse } from "@/src/types";
 
-const PaymentHistory = () => {
+const PaymentHistory = ({
+  paymentsProp,
+  isLoadingPaymentsProp,
+}: {
+  paymentsProp?: TResponse<TPayment[]>;
+  isLoadingPaymentsProp?: boolean;
+}) => {
   const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   const [selectedAppointment, setSelectedAppointment] =
     useState<TAppointment | null>(null);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const { data: payments, isLoading: isLoadingPayments } = useGetAllPayment([
-    { name: "page", value: pagination.page },
-    { name: "limit", value: pagination.limit },
-  ]);
+  const { data: paymentsFetched, isLoading: isLoadingPaymentsFetched } =
+    useGetAllPayment(
+      [
+        { name: "page", value: pagination.page },
+        { name: "limit", value: pagination.limit },
+      ],
+      !paymentsProp,
+    );
+
+  const payments = paymentsProp ?? paymentsFetched;
+  const isLoadingPayments = isLoadingPaymentsProp ?? isLoadingPaymentsFetched;
 
   const rows = payments?.data?.map((payment: TPayment, ind: number) => ({
     _id: payment?._id,
@@ -71,8 +85,8 @@ const PaymentHistory = () => {
           payment.status === "confirmed"
             ? "text-success bg-success "
             : payment.status === "canceled"
-            ? "text-danger bg-danger"
-            : "text-warning bg-warning"
+              ? "text-danger bg-danger"
+              : "text-warning bg-warning"
         }`}
       >
         {firstLetterCapital(payment.status)}
@@ -141,7 +155,7 @@ const PaymentHistory = () => {
                   <div className="text-sm text-gray-600 dark:text-gray-300">
                     Scheduled on{" "}
                     {moment(selectedAppointment?.schedule).format(
-                      "DD-MMM-YYYY hh:mm A"
+                      "DD-MMM-YYYY hh:mm A",
                     )}
                   </div>
                 </div>

@@ -49,6 +49,7 @@ const FilteredDoctorList = ({ initialDoctors, specialtySlug }: Props) => {
       />
       <div className="col-span-12 sm:col-span-8 lg:col-span-9 flex flex-col gap-4">
         {doctors?.length === 0 ? (
+          // TODO: update with empty data component
           <div className="text-gray-500 font-semibold">
             No doctors found for the selected filters.
           </div>
