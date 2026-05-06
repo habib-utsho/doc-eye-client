@@ -8,6 +8,7 @@ const nextConfig = {
       },
     ],
   },
+  // TODO: Need to fix the type errors
   typescript: {
     ignoreBuildErrors: true,
   },

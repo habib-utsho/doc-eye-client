@@ -1,8 +1,15 @@
 import { TFilterQuery } from "@/src/types";
+import { cookies } from "next/headers";
 
 export const talkToDB = async (query: TFilterQuery[] | undefined) => {
+
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("DEaccessToken")?.value;
+
     const fetchOption: RequestInit = {
-        credentials: "include",
+        headers: {
+            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
         cache: "no-store",
     };
 
