@@ -1,3 +1,4 @@
+'use server'
 import { TFilterQuery } from "@/src/types";
 import { cookies } from "next/headers";
 
